@@ -1,0 +1,83 @@
+[
+    {
+        "city": "Delhi",
+        "co2": 412.5,
+        "o3": 0.03,
+        "voc": 0.45,
+        "pm25": 35,
+        "temperature": 28,
+        "timestamp": "2025-11-02 16:53:43"
+    },
+    {
+        "city": "Delhi",
+        "co2": 412.5,
+        "o3": 0.03,
+        "voc": 0.45,
+        "pm25": 35,
+        "temperature": 28,
+        "timestamp": "2025-11-02 16:53:46"
+    },
+    {
+        "city": "Delhi",
+        "co2": 410.2,
+        "o3": 0.02,
+        "voc": 0.35,
+        "pm25": 28,
+        "temperature": 29,
+        "timestamp": "2025-11-02 17:53:42"
+    },
+    {
+        "city": "Delhi",
+        "co2": 425.8,
+        "o3": 0.05,
+        "voc": 0.55,
+        "pm25": 48,
+        "temperature": 26,
+        "timestamp": "2025-11-02 17:53:50"
+    },
+    {
+        "city": "Mumbai",
+        "co2": 389.5,
+        "o3": 0.04,
+        "voc": 0.41,
+        "pm25": 35,
+        "temperature": 31,
+        "timestamp": "2025-11-02 17:53:57"
+    },
+    {
+        "city": "Bangalore",
+        "co2": 460.3,
+        "o3": 0.01,
+        "voc": 0.29,
+        "pm25": 15,
+        "temperature": 24,
+        "timestamp": "2025-11-02 17:54:07"
+    },
+    {
+        "city": "Delhi",
+        "co2": 512.7,
+        "o3": 0.09,
+        "voc": 0.71,
+        "pm25": 95,
+        "temperature": 30,
+        "timestamp": "2025-11-02 17:54:22"
+    },
+    {
+        "city": "Kerala",
+        "co2": 375.4,
+        "o3": 0.02,
+        "voc": 0.22,
+        "pm25": 10,
+        "temperature": 33,
+        "timestamp": "2025-11-02 17:54:30"
+    },
+    {
+        "city": "Goa",
+        "co2": 400.8,
+        "o3": 0.03,
+        "voc": 0.33,
+        "pm25": 25,
+        "temperature": 32,
+        "timestamp": "2025-11-02 17:54:36"
+    }
+]

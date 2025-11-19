@@ -1,0 +1,44 @@
+# backend/backend/routes/hybrid_routes.py
+from flask import Blueprint, jsonify, request
+from utils.hybrid_utils import generate_hybrid_forecast
+
+hybrid_bp = Blueprint("hybrid_bp", __name__)
+
+@hybrid_bp.route("/hybrid_forecast/<path:city>", methods=["GET"])
+def hybrid_forecast(city):
+    """
+    GET /api/hybrid_forecast/<city>?horizon=24
+    city can include spaces (URL-encoded). horizon is months (int).
+    """
+    # get horizon from querystring (default 24)
+    horizon = request.args.get("horizon", default=24)
+    try:
+        horizon = int(horizon)
+    except Exception:
+        return jsonify({"error": "Invalid horizon. Must be integer months."}), 400
+
+    try:
+        result = generate_hybrid_forecast(city, horizon_months=horizon)
+
+        # If a function encountered a model-not-found, it returns {"error": "..."}
+        if not result:
+            return jsonify({"error": "No forecast generated"}), 500
+        if "error" in result:
+            # return 404 for model-not-found-like errors, 400 for invalid input if used
+            return jsonify(result), 404
+
+        # success
+        return jsonify({
+            "status": "success",
+            "city": result.get("city", city),
+            "forecast_horizon_months": result.get("forecast_horizon_months", horizon),
+            "forecast_count": len(result.get("forecast", [])),
+            "forecast": result.get("forecast", []),
+            "message": "Hybrid forecast generated successfully"
+        }), 200
+
+    except FileNotFoundError as fnf:
+        return jsonify({"error": str(fnf)}), 404
+    except Exception as e:
+        # log exception server-side if you use logging (not added here to keep snippet minimal)
+        return jsonify({"error": "An internal error occurred while generating hybrid forecast", "details": str(e)}), 500

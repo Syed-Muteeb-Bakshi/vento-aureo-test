@@ -1,0 +1,3331 @@
+country,year_month,aqi_value
+Albania,2022-07,32.9375
+Albania,2022-08,30.6875
+Albania,2022-09,15.565217391304348
+Albania,2023-01,9.0
+Albania,2023-03,72.0
+Albania,2023-04,28.0
+Albania,2023-05,19.75
+Albania,2023-06,34.0
+Albania,2023-07,17.5
+Albania,2023-08,17.666666666666668
+Albania,2024-06,19.8
+Albania,2024-07,21.25
+Albania,2024-08,26.8
+Albania,2024-09,25.0
+Albania,2024-10,26.6
+Albania,2024-11,56.0
+Albania,2024-12,13.5
+Albania,2025-01,36.2
+Albania,2025-02,29.5
+Albania,2025-03,20.75
+Albania,2025-04,15.25
+Albania,2025-05,14.6
+Albania,2025-06,35.333333333333336
+Albania,2025-07,11.0
+Albania,2025-08,23.75
+Albania,2025-09,4.0
+Algeria,2022-07,65.0
+Algeria,2022-08,65.0
+Algeria,2022-09,65.0
+Algeria,2023-01,65.0
+Algeria,2023-03,50.0
+Algeria,2023-04,54.333333333333336
+Algeria,2023-05,25.25
+Algeria,2023-06,53.0
+Algeria,2023-07,62.0
+Algeria,2023-08,62.666666666666664
+Algeria,2024-06,41.6
+Algeria,2024-07,32.5
+Algeria,2024-08,54.2
+Algeria,2024-09,63.5
+Algeria,2024-10,68.0
+Algeria,2024-11,62.0
+Algeria,2024-12,47.25
+Algeria,2025-01,69.6
+Algeria,2025-02,73.0
+Algeria,2025-03,102.0
+Andorra,2022-07,37.75
+Andorra,2022-08,34.0
+Andorra,2022-09,27.652173913043477
+Andorra,2023-01,9.0
+Andorra,2023-03,35.0
+Andorra,2023-04,22.0
+Andorra,2023-05,23.5
+Andorra,2023-06,34.4
+Andorra,2023-07,26.5
+Andorra,2023-08,22.666666666666668
+Andorra,2024-06,40.0
+Andorra,2024-07,26.0
+Andorra,2024-08,46.6
+Andorra,2024-09,15.25
+Andorra,2024-10,19.0
+Andorra,2024-11,12.25
+Andorra,2024-12,8.5
+Andorra,2025-01,13.0
+Andorra,2025-02,10.0
+Andorra,2025-03,19.25
+Andorra,2025-04,16.25
+Andorra,2025-05,17.2
+Andorra,2025-06,45.25
+Andorra,2025-07,22.4
+Andorra,2025-08,36.25
+Andorra,2025-09,13.0
+Angola,2022-07,123.8125
+Angola,2022-08,111.46875
+Angola,2022-09,96.52173913043478
+Angola,2023-01,45.0
+Angola,2023-03,80.0
+Angola,2023-04,72.5
+Angola,2023-05,105.0
+Angola,2023-06,126.6
+Angola,2023-07,138.75
+Angola,2023-08,129.66666666666666
+Argentina,2022-07,46.125
+Argentina,2022-08,35.34375
+Argentina,2022-09,34.82608695652174
+Argentina,2023-01,19.0
+Argentina,2023-03,25.0
+Argentina,2023-04,41.25
+Argentina,2023-05,22.25
+Argentina,2023-06,47.4
+Argentina,2023-07,26.0
+Argentina,2023-08,11.333333333333334
+Argentina,2024-06,58.8
+Argentina,2024-07,53.5
+Argentina,2024-08,44.0
+Argentina,2024-09,44.0
+Argentina,2024-10,23.0
+Argentina,2024-11,18.5
+Argentina,2024-12,16.5
+Argentina,2025-01,22.4
+Argentina,2025-02,17.5
+Argentina,2025-03,22.75
+Argentina,2025-04,25.5
+Argentina,2025-05,20.6
+Argentina,2025-06,37.0
+Argentina,2025-07,14.0
+Argentina,2025-08,27.75
+Argentina,2025-09,20.0
+Armenia,2022-07,55.75
+Armenia,2022-08,55.9375
+Armenia,2022-09,72.34782608695652
+Armenia,2023-01,95.0
+Armenia,2023-03,30.0
+Armenia,2023-04,28.5
+Armenia,2023-05,23.75
+Armenia,2023-06,33.8
+Armenia,2023-07,42.5
+Armenia,2023-08,29.0
+Armenia,2024-06,31.2
+Armenia,2024-07,41.0
+Armenia,2024-08,41.4
+Armenia,2024-09,46.0
+Armenia,2024-10,53.2
+Armenia,2024-11,79.0
+Armenia,2024-12,110.75
+Armenia,2025-01,97.8
+Armenia,2025-02,67.5
+Armenia,2025-03,54.0
+Armenia,2025-04,36.5
+Armenia,2025-05,40.2
+Armenia,2025-06,31.75
+Armenia,2025-07,44.4
+Armenia,2025-08,44.0
+Armenia,2025-09,72.0
+Australia,2022-07,52.6875
+Australia,2022-08,50.40625
+Australia,2022-09,43.95652173913044
+Australia,2023-01,59.0
+Australia,2023-03,29.0
+Australia,2023-04,47.5
+Australia,2023-05,44.5
+Australia,2023-06,39.0
+Australia,2023-07,46.75
+Australia,2023-08,61.666666666666664
+Australia,2024-06,55.4
+Australia,2024-07,61.75
+Australia,2024-08,57.2
+Australia,2024-09,48.0
+Australia,2024-10,49.8
+Australia,2024-11,53.0
+Australia,2024-12,47.5
+Australia,2025-01,41.0
+Australia,2025-02,50.25
+Australia,2025-03,43.25
+Australia,2025-04,52.25
+Australia,2025-05,45.6
+Australia,2025-06,51.75
+Australia,2025-07,44.8
+Australia,2025-08,43.75
+Australia,2025-09,36.0
+Austria,2022-07,39.625
+Austria,2022-08,28.8125
+Austria,2022-09,21.608695652173914
+Austria,2023-01,24.0
+Austria,2023-03,24.0
+Austria,2023-04,43.75
+Austria,2023-05,45.25
+Austria,2023-06,47.6
+Austria,2023-07,23.0
+Austria,2023-08,33.666666666666664
+Austria,2024-06,39.8
+Austria,2024-07,32.0
+Austria,2024-08,39.6
+Austria,2024-09,44.5
+Austria,2024-10,47.0
+Austria,2024-11,73.0
+Austria,2024-12,60.25
+Austria,2025-01,66.8
+Austria,2025-02,76.5
+Austria,2025-03,62.5
+Austria,2025-04,50.5
+Austria,2025-05,35.6
+Austria,2025-06,42.75
+Austria,2025-07,21.4
+Austria,2025-08,46.0
+Austria,2025-09,15.0
+Azerbaijan,2022-07,21.8125
+Azerbaijan,2022-08,33.40625
+Azerbaijan,2022-09,47.391304347826086
+Azerbaijan,2023-01,32.0
+Azerbaijan,2023-03,40.0
+Azerbaijan,2023-04,45.25
+Azerbaijan,2023-05,28.75
+Azerbaijan,2023-06,38.6
+Azerbaijan,2023-07,38.5
+Azerbaijan,2023-08,45.333333333333336
+Azerbaijan,2024-06,41.4
+Azerbaijan,2024-07,39.75
+Azerbaijan,2024-08,39.6
+Azerbaijan,2024-09,45.75
+Azerbaijan,2024-10,50.8
+Azerbaijan,2024-11,37.25
+Azerbaijan,2024-12,63.75
+Azerbaijan,2025-01,50.2
+Azerbaijan,2025-02,45.0
+Azerbaijan,2025-03,59.0
+Azerbaijan,2025-04,42.5
+Azerbaijan,2025-05,25.4
+Azerbaijan,2025-06,25.75
+Azerbaijan,2025-07,25.6
+Azerbaijan,2025-08,18.333333333333332
+Azerbaijan,2025-09,25.0
+Bahrain,2022-07,126.25
+Bahrain,2022-08,160.96774193548387
+Bahrain,2022-09,132.26315789473685
+Bahrain,2023-04,97.5
+Bahrain,2023-05,83.75
+Bahrain,2023-06,120.2
+Bahrain,2023-07,159.5
+Bahrain,2023-08,115.66666666666667
+Bahrain,2024-06,99.0
+Bahrain,2024-07,96.5
+Bahrain,2024-08,142.5
+Bahrain,2024-09,149.0
+Bahrain,2024-10,101.2
+Bahrain,2024-11,79.75
+Bahrain,2024-12,121.25
+Bahrain,2025-01,87.5
+Bahrain,2025-02,79.75
+Bahrain,2025-03,70.0
+Bahrain,2025-07,111.4
+Bahrain,2025-08,122.66666666666667
+Bangladesh,2022-07,141.0
+Bangladesh,2022-08,141.0
+Bangladesh,2022-09,141.0
+Bangladesh,2023-01,141.0
+Bangladesh,2023-03,150.0
+Bangladesh,2023-04,156.0
+Bangladesh,2023-05,138.5
+Bangladesh,2023-06,129.2
+Bangladesh,2023-07,98.75
+Bangladesh,2023-08,110.0
+Bangladesh,2024-06,114.8
+Bangladesh,2024-07,106.5
+Bangladesh,2024-08,115.6
+Bangladesh,2024-09,139.25
+Bangladesh,2024-10,123.0
+Bangladesh,2024-11,223.75
+Bangladesh,2024-12,274.0
+Bangladesh,2025-01,289.8
+Bangladesh,2025-02,268.0
+Bangladesh,2025-03,152.0
+Bangladesh,2025-05,66.66666666666667
+Bangladesh,2025-06,58.0
+Bangladesh,2025-07,54.75
+Bangladesh,2025-08,63.0
+Bangladesh,2025-09,58.0
+Belarus,2022-07,31.625
+Belarus,2022-08,42.28125
+Belarus,2022-09,27.52173913043478
+Belarus,2023-01,55.0
+Belarus,2023-03,54.0
+Belarus,2023-04,51.5
+Belarus,2023-05,46.75
+Belarus,2023-06,37.2
+Belarus,2023-07,38.0
+Belarus,2023-08,10.333333333333334
+Belarus,2024-06,24.4
+Belarus,2024-07,24.0
+Belarus,2024-08,34.8
+Belarus,2024-09,56.0
+Belarus,2024-10,30.6
+Belarus,2024-11,45.0
+Belarus,2024-12,27.0
+Belarus,2025-01,37.2
+Belarus,2025-02,40.5
+Belarus,2025-03,58.25
+Belarus,2025-04,29.0
+Belarus,2025-05,20.8
+Belarus,2025-06,22.25
+Belarus,2025-07,21.0
+Belarus,2025-08,21.0
+Belarus,2025-09,59.0
+Belgium,2022-07,40.25
+Belgium,2022-08,38.125
+Belgium,2022-09,30.47826086956522
+Belgium,2023-01,11.0
+Belgium,2023-03,32.0
+Belgium,2023-04,56.75
+Belgium,2023-05,57.75
+Belgium,2023-06,72.8
+Belgium,2023-07,35.5
+Belgium,2023-08,179.0
+Belgium,2024-06,74.6
+Belgium,2024-07,52.25
+Belgium,2024-08,67.8
+Belgium,2024-09,71.0
+Belgium,2024-10,62.8
+Belgium,2024-11,66.25
+Belgium,2024-12,74.25
+Belgium,2025-01,75.6
+Belgium,2025-02,94.5
+Belgium,2025-03,96.75
+Belgium,2025-04,77.0
+Belgium,2025-05,55.8
+Belgium,2025-06,48.5
+Belgium,2025-07,51.4
+Belgium,2025-08,54.5
+Belgium,2025-09,25.0
+Belize,2022-07,19.375
+Belize,2022-08,16.1875
+Belize,2022-09,11.08695652173913
+Belize,2023-01,45.0
+Belize,2023-03,29.0
+Belize,2023-04,33.5
+Belize,2023-05,38.75
+Belize,2023-06,29.0
+Belize,2023-07,26.5
+Belize,2023-08,24.0
+Belize,2024-06,63.0
+Belize,2024-07,21.0
+Belize,2024-08,17.8
+Belize,2024-09,28.5
+Belize,2024-10,84.0
+Bermuda,2022-07,16.375
+Bermuda,2022-08,10.375
+Bermuda,2022-09,13.695652173913043
+Bermuda,2023-01,1.0
+Bermuda,2023-03,10.0
+Bermuda,2023-04,12.5
+Bermuda,2023-05,22.5
+Bermuda,2023-06,16.8
+Bermuda,2023-07,16.5
+Bermuda,2023-08,16.333333333333332
+Bermuda,2024-06,10.8
+Bermuda,2024-07,14.0
+Bermuda,2024-08,25.4
+Bermuda,2024-09,9.75
+Bermuda,2024-10,2.0
+Bolivia,2022-07,50.3125
+Bolivia,2022-08,52.40625
+Bolivia,2022-09,91.47826086956522
+Bolivia,2023-03,8.0
+Bolivia,2023-04,7.25
+Bolivia,2023-05,15.5
+Bolivia,2023-06,42.0
+Bolivia,2023-07,76.25
+Bolivia,2023-08,42.333333333333336
+Bolivia,2024-06,52.0
+Bolivia,2024-07,72.25
+Bolivia,2024-08,98.4
+Bolivia,2024-09,148.5
+Bolivia,2024-10,91.0
+Bosnia and Herzegovina,2022-07,64.6875
+Bosnia and Herzegovina,2022-08,62.34375
+Bosnia and Herzegovina,2022-09,57.391304347826086
+Bosnia and Herzegovina,2023-01,159.0
+Bosnia and Herzegovina,2023-03,61.0
+Bosnia and Herzegovina,2023-04,69.25
+Bosnia and Herzegovina,2023-05,46.5
+Bosnia and Herzegovina,2023-06,58.0
+Bosnia and Herzegovina,2023-07,65.0
+Bosnia and Herzegovina,2023-08,55.333333333333336
+Bosnia and Herzegovina,2024-06,33.2
+Bosnia and Herzegovina,2024-07,41.25
+Bosnia and Herzegovina,2024-08,51.2
+Bosnia and Herzegovina,2024-09,44.0
+Bosnia and Herzegovina,2024-10,47.2
+Bosnia and Herzegovina,2024-11,90.75
+Bosnia and Herzegovina,2024-12,69.25
+Bosnia and Herzegovina,2025-01,103.6
+Bosnia and Herzegovina,2025-02,96.5
+Bosnia and Herzegovina,2025-03,52.25
+Bosnia and Herzegovina,2025-04,45.0
+Bosnia and Herzegovina,2025-05,37.2
+Bosnia and Herzegovina,2025-06,55.75
+Bosnia and Herzegovina,2025-07,34.4
+Bosnia and Herzegovina,2025-08,39.75
+Bosnia and Herzegovina,2025-09,20.0
+Brazil,2022-07,92.6875
+Brazil,2022-08,75.6875
+Brazil,2022-09,82.78260869565217
+Brazil,2023-01,57.0
+Brazil,2023-03,58.0
+Brazil,2023-04,57.75
+Brazil,2023-05,78.75
+Brazil,2023-06,89.8
+Brazil,2023-07,96.75
+Brazil,2023-08,111.0
+Brazil,2024-06,130.4
+Brazil,2024-07,136.5
+Brazil,2024-08,188.2
+Brazil,2024-09,180.25
+Brazil,2024-10,92.6
+Brazil,2024-11,64.5
+Brazil,2024-12,43.75
+Brazil,2025-01,51.8
+Brazil,2025-02,61.75
+Brazil,2025-03,61.0
+Brazil,2025-04,69.5
+Brazil,2025-05,71.4
+Brazil,2025-06,96.75
+Brazil,2025-07,75.8
+Brazil,2025-08,95.0
+Brazil,2025-09,73.0
+Brunei,2022-07,11.9375
+Brunei,2022-08,11.3125
+Brunei,2022-09,10.434782608695652
+Brunei,2023-01,10.0
+Brunei,2023-03,10.0
+Brunei,2023-04,13.5
+Brunei,2023-05,13.0
+Brunei,2023-06,11.2
+Brunei,2023-07,16.25
+Brunei,2023-08,14.0
+Brunei,2024-06,12.0
+Brunei,2024-07,13.25
+Brunei,2024-08,11.8
+Brunei,2024-09,11.5
+Brunei,2024-10,13.4
+Brunei,2024-11,12.25
+Brunei,2024-12,13.75
+Brunei,2025-01,12.2
+Brunei,2025-02,12.75
+Brunei,2025-03,14.5
+Brunei,2025-04,10.5
+Brunei,2025-05,11.6
+Brunei,2025-06,10.5
+Brunei,2025-07,12.2
+Brunei,2025-08,9.75
+Brunei,2025-09,8.0
+Bulgaria,2022-07,34.875
+Bulgaria,2022-08,34.6875
+Bulgaria,2022-09,27.08695652173913
+Bulgaria,2023-01,21.0
+Bulgaria,2023-03,31.0
+Bulgaria,2023-04,22.5
+Bulgaria,2023-05,24.0
+Bulgaria,2023-06,22.2
+Bulgaria,2023-07,30.75
+Bulgaria,2023-08,62.333333333333336
+Bulgaria,2024-06,31.2
+Bulgaria,2024-07,43.75
+Bulgaria,2024-08,38.6
+Bulgaria,2024-09,49.5
+Bulgaria,2024-10,53.6
+Bulgaria,2024-11,65.5
+Bulgaria,2024-12,55.75
+Bulgaria,2025-01,105.4
+Bulgaria,2025-02,92.5
+Bulgaria,2025-03,53.25
+Bulgaria,2025-04,40.5
+Bulgaria,2025-05,30.6
+Bulgaria,2025-06,51.5
+Bulgaria,2025-07,34.6
+Bulgaria,2025-08,36.0
+Bulgaria,2025-09,43.0
+Burkina Faso,2022-07,96.375
+Burkina Faso,2022-08,74.75
+Burkina Faso,2022-09,38.26086956521739
+Burkina Faso,2023-01,326.0
+Burkina Faso,2023-03,327.0
+Burkina Faso,2023-04,310.5
+Burkina Faso,2023-05,259.5
+Burkina Faso,2023-06,115.4
+Burkina Faso,2023-07,119.25
+Burkina Faso,2023-08,54.0
+Burkina Faso,2024-06,1.75
+Burkina Faso,2024-07,70.0
+Burkina Faso,2024-08,74.6
+Burkina Faso,2024-09,22.0
+Burkina Faso,2025-01,84.0
+Burkina Faso,2025-02,130.66666666666666
+Burkina Faso,2025-03,153.0
+Cambodia,2022-07,15.0
+Cambodia,2022-08,15.0
+Cambodia,2022-09,15.0
+Cambodia,2023-01,15.0
+Cambodia,2023-03,87.0
+Cambodia,2023-04,82.0
+Cambodia,2023-05,46.25
+Cambodia,2023-06,23.2
+Cambodia,2023-07,16.75
+Cambodia,2023-08,7.666666666666667
+Cambodia,2024-06,20.8
+Cambodia,2024-07,22.333333333333332
+Cambodia,2024-08,17.6
+Cambodia,2024-09,27.25
+Cambodia,2024-10,30.6
+Cambodia,2024-11,40.333333333333336
+Cambodia,2024-12,84.75
+Cambodia,2025-01,164.2
+Cambodia,2025-02,69.66666666666667
+Cambodia,2025-03,167.75
+Cambodia,2025-04,88.0
+Cambodia,2025-08,17.75
+Cambodia,2025-09,27.0
+Canada,2022-07,62.6875
+Canada,2022-08,62.0
+Canada,2022-09,76.43478260869566
+Canada,2023-01,85.0
+Canada,2023-03,66.0
+Canada,2023-04,57.75
+Canada,2023-05,98.5
+Canada,2023-06,132.6
+Canada,2023-07,113.0
+Canada,2023-08,105.0
+Canada,2024-06,71.2
+Canada,2024-07,92.0
+Canada,2024-08,107.2
+Canada,2024-09,58.25
+Canada,2024-10,47.4
+Canada,2024-11,49.5
+Canada,2024-12,72.5
+Canada,2025-01,58.2
+Canada,2025-02,58.75
+Canada,2025-03,49.5
+Canada,2025-04,38.75
+Canada,2025-05,45.2
+Canada,2025-06,91.5
+Canada,2025-07,90.2
+Canada,2025-08,77.0
+Canada,2025-09,154.0
+Cape Verde,2022-07,49.5625
+Cape Verde,2022-08,37.84375
+Cape Verde,2022-09,30.434782608695652
+Cape Verde,2023-01,62.0
+Cape Verde,2023-03,53.0
+Cape Verde,2023-04,31.25
+Cape Verde,2023-05,33.0
+Cape Verde,2023-06,36.8
+Cape Verde,2023-07,51.25
+Cape Verde,2023-08,19.0
+Cape Verde,2024-06,181.4
+Cape Verde,2024-07,107.0
+Cape Verde,2024-08,39.6
+Cape Verde,2024-09,42.0
+Cape Verde,2024-10,38.0
+Cape Verde,2024-11,44.25
+Cape Verde,2024-12,80.25
+Cape Verde,2025-01,42.4
+Cape Verde,2025-02,59.0
+Cape Verde,2025-03,28.5
+Cape Verde,2025-04,40.0
+Cape Verde,2025-05,59.0
+Cape Verde,2025-06,51.666666666666664
+Cape Verde,2025-07,43.2
+Cape Verde,2025-08,49.75
+Cape Verde,2025-09,58.0
+Cayman Islands,2022-07,7.8125
+Cayman Islands,2022-08,7.806451612903226
+Cayman Islands,2022-09,8.173913043478262
+Cayman Islands,2023-03,10.0
+Cayman Islands,2023-04,35.0
+Cayman Islands,2023-05,20.75
+Cayman Islands,2023-06,10.6
+Cayman Islands,2023-07,21.5
+Cayman Islands,2023-08,12.0
+Cayman Islands,2024-06,8.8
+Cayman Islands,2024-07,3.0
+Central African Republic,2022-07,115.25
+Central African Republic,2022-08,126.09375
+Central African Republic,2022-09,85.56521739130434
+Central African Republic,2023-01,261.0
+Central African Republic,2023-03,156.0
+Central African Republic,2023-04,122.25
+Central African Republic,2023-05,57.75
+Central African Republic,2023-06,35.0
+Chad,2022-07,83.5625
+Chad,2022-08,73.09375
+Chad,2022-09,53.95652173913044
+Chad,2023-01,159.0
+Chad,2023-03,155.0
+Chad,2023-04,337.3333333333333
+Chad,2023-08,44.0
+Chad,2024-06,105.6
+Chad,2024-07,49.75
+Chad,2024-08,36.6
+Chad,2024-09,56.5
+Chad,2024-10,90.4
+Chad,2024-11,104.25
+Chad,2024-12,111.0
+Chad,2025-01,197.0
+Chad,2025-02,213.75
+Chad,2025-03,144.0
+Chile,2022-07,123.6875
+Chile,2022-08,105.21875
+Chile,2022-09,94.52173913043478
+Chile,2023-01,51.0
+Chile,2023-03,71.0
+Chile,2023-04,123.0
+Chile,2023-05,175.75
+Chile,2023-06,174.8
+Chile,2023-07,189.5
+Chile,2023-08,139.33333333333334
+Chile,2024-06,144.4
+Chile,2024-07,199.5
+Chile,2024-08,204.2
+Chile,2024-09,140.75
+Chile,2024-10,78.6
+Chile,2024-11,70.5
+Chile,2024-12,56.0
+Chile,2025-01,48.6
+Chile,2025-02,69.25
+Chile,2025-03,70.0
+Chile,2025-04,122.5
+Chile,2025-05,165.0
+Chile,2025-06,214.25
+Chile,2025-07,248.2
+Chile,2025-08,185.25
+Chile,2025-09,140.0
+China,2022-07,151.8125
+China,2022-08,147.46875
+China,2022-09,172.7826086956522
+China,2023-01,339.0
+China,2023-03,273.0
+China,2023-04,503.5
+China,2023-05,165.25
+China,2023-06,148.0
+China,2023-07,141.5
+China,2023-08,149.66666666666666
+China,2024-06,140.6
+China,2024-07,149.0
+China,2024-08,129.8
+China,2024-09,151.5
+China,2024-10,188.8
+China,2024-11,199.0
+China,2024-12,202.75
+China,2025-01,226.6
+China,2025-02,188.75
+China,2025-03,266.75
+China,2025-04,222.5
+China,2025-05,168.6
+China,2025-06,137.0
+China,2025-07,118.4
+China,2025-08,133.0
+China,2025-09,159.0
+Colombia,2022-07,65.4375
+Colombia,2022-08,67.46875
+Colombia,2022-09,78.82608695652173
+Colombia,2023-01,80.0
+Colombia,2023-03,86.0
+Colombia,2023-04,81.5
+Colombia,2023-05,73.75
+Colombia,2023-06,59.6
+Colombia,2023-07,65.5
+Colombia,2023-08,89.33333333333333
+Colombia,2024-06,62.6
+Colombia,2024-07,55.25
+Colombia,2024-08,69.2
+Colombia,2024-09,71.75
+Colombia,2024-10,59.2
+Colombia,2024-11,58.5
+Colombia,2024-12,68.0
+Colombia,2025-01,63.0
+Colombia,2025-02,71.25
+Colombia,2025-03,70.5
+Colombia,2025-04,64.0
+Colombia,2025-05,54.0
+Colombia,2025-06,48.75
+Colombia,2025-07,48.8
+Colombia,2025-08,49.75
+Colombia,2025-09,41.0
+Costa Rica,2022-07,27.9375
+Costa Rica,2022-08,29.3125
+Costa Rica,2022-09,39.391304347826086
+Costa Rica,2023-01,13.0
+Costa Rica,2023-03,14.0
+Costa Rica,2023-04,42.75
+Costa Rica,2023-05,38.75
+Costa Rica,2023-06,24.8
+Costa Rica,2023-07,11.5
+Costa Rica,2023-08,7.666666666666667
+Costa Rica,2024-06,25.0
+Costa Rica,2024-07,41.0
+Costa Rica,2024-08,24.6
+Costa Rica,2024-09,31.75
+Costa Rica,2024-10,47.5
+Costa Rica,2024-11,26.5
+Costa Rica,2024-12,21.5
+Costa Rica,2025-01,20.0
+Costa Rica,2025-02,25.5
+Costa Rica,2025-03,27.5
+Costa Rica,2025-04,28.25
+Costa Rica,2025-05,25.4
+Costa Rica,2025-06,25.333333333333332
+Costa Rica,2025-07,24.6
+Costa Rica,2025-08,28.75
+Costa Rica,2025-09,25.0
+Croatia,2022-07,39.0
+Croatia,2022-08,30.4375
+Croatia,2022-09,20.08695652173913
+Croatia,2023-01,28.0
+Croatia,2023-03,28.0
+Croatia,2023-04,48.25
+Croatia,2023-05,36.0
+Croatia,2023-06,41.8
+Croatia,2023-07,27.75
+Croatia,2023-08,30.333333333333332
+Croatia,2024-06,37.0
+Croatia,2024-07,40.0
+Croatia,2024-08,48.0
+Croatia,2024-09,40.5
+Croatia,2024-10,49.2
+Croatia,2024-11,91.75
+Croatia,2024-12,71.25
+Croatia,2025-01,88.0
+Croatia,2025-02,93.25
+Croatia,2025-03,71.75
+Croatia,2025-04,43.25
+Croatia,2025-05,40.4
+Croatia,2025-06,51.75
+Croatia,2025-07,34.8
+Croatia,2025-08,46.0
+Croatia,2025-09,32.0
+Cyprus,2022-07,52.125
+Cyprus,2022-08,59.21875
+Cyprus,2022-09,58.21739130434783
+Cyprus,2023-01,43.0
+Cyprus,2023-03,44.0
+Cyprus,2023-04,47.25
+Cyprus,2023-05,54.5
+Cyprus,2023-06,59.0
+Cyprus,2023-07,63.5
+Cyprus,2023-08,48.333333333333336
+Cyprus,2024-06,62.8
+Cyprus,2024-07,64.25
+Cyprus,2024-08,56.8
+Cyprus,2024-09,47.75
+Cyprus,2024-10,41.4
+Cyprus,2024-11,48.5
+Cyprus,2024-12,52.0
+Cyprus,2025-01,62.0
+Cyprus,2025-02,33.5
+Cyprus,2025-03,51.0
+Cyprus,2025-04,44.0
+Cyprus,2025-05,49.6
+Cyprus,2025-06,51.0
+Cyprus,2025-07,55.8
+Cyprus,2025-08,49.75
+Cyprus,2025-09,56.0
+Czech Republic,2022-07,79.0
+Czech Republic,2022-08,62.25
+Czech Republic,2022-09,51.65217391304348
+Czech Republic,2023-01,66.0
+Czech Republic,2023-03,82.0
+Czech Republic,2023-04,92.25
+Czech Republic,2023-05,70.5
+Czech Republic,2023-06,65.4
+Czech Republic,2023-07,53.75
+Czech Republic,2023-08,50.333333333333336
+Czech Republic,2024-06,60.0
+Czech Republic,2024-07,54.5
+Czech Republic,2024-08,68.8
+Czech Republic,2024-09,62.75
+Czech Republic,2024-10,66.8
+Czech Republic,2024-11,93.5
+Czech Republic,2024-12,107.25
+Czech Republic,2025-01,89.2
+Czech Republic,2025-02,132.5
+Czech Republic,2025-03,121.75
+Czech Republic,2025-04,73.75
+Czech Republic,2025-05,68.6
+Czech Republic,2025-06,62.25
+Czech Republic,2025-07,45.4
+Czech Republic,2025-08,63.0
+Czech Republic,2025-09,52.0
+Denmark,2022-07,17.4375
+Denmark,2022-08,21.96875
+Denmark,2022-09,18.565217391304348
+Denmark,2023-01,30.0
+Denmark,2023-03,33.0
+Denmark,2023-04,25.5
+Denmark,2023-05,26.75
+Denmark,2023-06,27.8
+Denmark,2023-07,17.5
+Denmark,2023-08,7.333333333333333
+Denmark,2024-06,23.0
+Denmark,2024-07,16.25
+Denmark,2024-08,28.2
+Denmark,2024-09,30.75
+Denmark,2024-10,17.8
+Denmark,2024-11,16.75
+Denmark,2024-12,21.75
+Denmark,2025-01,20.2
+Denmark,2025-02,18.25
+Denmark,2025-03,18.5
+Denmark,2025-04,21.75
+Denmark,2025-05,16.4
+Denmark,2025-06,17.5
+Denmark,2025-07,16.2
+Denmark,2025-08,16.25
+Denmark,2025-09,12.0
+Dominican Republic,2022-07,26.875
+Dominican Republic,2022-08,21.40625
+Dominican Republic,2022-09,27.434782608695652
+Dominican Republic,2023-01,21.0
+Dominican Republic,2023-03,19.0
+Dominican Republic,2023-04,34.75
+Dominican Republic,2023-05,39.0
+Dominican Republic,2023-06,22.6
+Dominican Republic,2023-07,35.25
+Dominican Republic,2023-08,14.666666666666666
+Dominican Republic,2024-06,26.6
+Dominican Republic,2024-07,24.0
+Dominican Republic,2024-08,23.8
+Dominican Republic,2024-09,26.75
+Dominican Republic,2024-10,25.8
+Dominican Republic,2024-11,19.5
+Dominican Republic,2024-12,33.25
+Dominican Republic,2025-01,26.0
+Dominican Republic,2025-02,25.25
+Dominican Republic,2025-03,20.0
+Dominican Republic,2025-04,36.75
+Dominican Republic,2025-05,28.2
+Dominican Republic,2025-06,49.0
+Dominican Republic,2025-07,42.0
+Dominican Republic,2025-08,42.75
+Dominican Republic,2025-09,30.0
+Ecuador,2022-07,56.0625
+Ecuador,2022-08,69.59375
+Ecuador,2022-09,83.43478260869566
+Ecuador,2023-01,29.0
+Ecuador,2023-03,78.0
+Ecuador,2023-04,48.0
+Ecuador,2023-05,49.5
+Ecuador,2023-06,59.8
+Ecuador,2023-07,41.75
+Ecuador,2023-08,60.333333333333336
+Ecuador,2024-06,34.6
+Ecuador,2024-07,35.0
+Ecuador,2024-08,45.6
+Ecuador,2024-09,64.25
+Ecuador,2024-10,50.6
+Ecuador,2024-11,76.25
+Ecuador,2024-12,45.25
+Ecuador,2025-01,47.0
+Ecuador,2025-02,55.25
+Ecuador,2025-03,54.75
+Ecuador,2025-04,50.0
+Ecuador,2025-05,46.4
+Ecuador,2025-06,51.0
+Ecuador,2025-07,49.0
+Ecuador,2025-08,52.25
+Ecuador,2025-09,40.0
+Egypt,2022-07,86.0
+Egypt,2022-08,86.0
+Egypt,2022-09,86.0
+Egypt,2023-01,86.0
+Egypt,2023-03,33.0
+Egypt,2023-04,46.5
+Egypt,2023-05,55.5
+Egypt,2023-06,218.0
+Egypt,2023-07,70.5
+Egypt,2023-08,60.5
+Egypt,2024-06,141.8
+Egypt,2024-07,123.5
+Egypt,2024-08,111.8
+Egypt,2024-09,74.5
+Egypt,2024-10,104.0
+Egypt,2024-11,125.5
+Egypt,2024-12,155.25
+Egypt,2025-01,162.2
+Egypt,2025-02,115.5
+Egypt,2025-03,57.0
+Egypt,2025-04,54.0
+Egypt,2025-05,26.2
+Egypt,2025-06,61.25
+Egypt,2025-07,52.2
+Egypt,2025-08,31.75
+El Salvador,2022-07,78.375
+El Salvador,2022-08,74.25
+El Salvador,2022-09,53.608695652173914
+El Salvador,2023-01,52.0
+El Salvador,2023-03,96.0
+El Salvador,2023-04,104.5
+El Salvador,2023-05,103.5
+El Salvador,2023-06,81.8
+El Salvador,2023-07,91.5
+El Salvador,2023-08,23.666666666666668
+El Salvador,2024-06,48.2
+El Salvador,2024-07,51.0
+El Salvador,2024-08,35.25
+El Salvador,2024-09,44.75
+El Salvador,2024-10,57.0
+El Salvador,2025-08,37.5
+El Salvador,2025-09,15.0
+Estonia,2022-07,20.875
+Estonia,2022-08,27.9375
+Estonia,2022-09,18.608695652173914
+Estonia,2023-01,22.0
+Estonia,2023-03,25.0
+Estonia,2023-04,27.75
+Estonia,2023-05,30.5
+Estonia,2023-06,34.0
+Estonia,2023-07,17.5
+Estonia,2023-08,20.333333333333332
+Estonia,2024-06,21.0
+Estonia,2024-07,18.0
+Estonia,2024-08,18.0
+Estonia,2024-09,29.75
+Estonia,2024-10,20.8
+Estonia,2024-11,17.25
+Estonia,2024-12,20.0
+Estonia,2025-01,25.0
+Estonia,2025-02,42.25
+Estonia,2025-03,31.0
+Estonia,2025-04,22.75
+Estonia,2025-05,26.2
+Estonia,2025-06,22.25
+Estonia,2025-07,27.2
+Estonia,2025-08,15.0
+Estonia,2025-09,20.0
+Ethiopia,2022-07,155.5625
+Ethiopia,2022-08,155.9375
+Ethiopia,2022-09,166.52173913043478
+Ethiopia,2023-01,150.0
+Ethiopia,2023-03,151.0
+Ethiopia,2023-04,107.25
+Ethiopia,2023-05,151.0
+Ethiopia,2023-06,158.0
+Ethiopia,2023-07,144.25
+Ethiopia,2023-08,151.66666666666666
+Ethiopia,2024-06,122.2
+Ethiopia,2024-07,108.5
+Ethiopia,2024-08,74.4
+Ethiopia,2024-09,61.25
+Ethiopia,2024-10,55.2
+Ethiopia,2024-11,68.5
+Ethiopia,2024-12,71.25
+Ethiopia,2025-01,62.0
+Ethiopia,2025-02,65.75
+Ethiopia,2025-03,132.0
+Ethiopia,2025-07,54.0
+Ethiopia,2025-08,51.25
+Ethiopia,2025-09,65.0
+Finland,2022-07,27.875
+Finland,2022-08,34.09375
+Finland,2022-09,18.869565217391305
+Finland,2023-01,16.0
+Finland,2023-03,69.0
+Finland,2023-04,65.0
+Finland,2023-05,36.5
+Finland,2023-06,44.8
+Finland,2023-07,30.75
+Finland,2023-08,27.333333333333332
+Finland,2024-06,30.0
+Finland,2024-07,33.75
+Finland,2024-08,34.0
+Finland,2024-09,39.0
+Finland,2024-10,17.4
+Finland,2024-11,19.5
+Finland,2024-12,17.0
+Finland,2025-01,22.6
+Finland,2025-02,40.5
+Finland,2025-03,33.25
+Finland,2025-04,26.75
+Finland,2025-05,25.6
+Finland,2025-06,31.5
+Finland,2025-07,45.0
+Finland,2025-08,16.5
+Finland,2025-09,24.0
+France,2022-07,63.1875
+France,2022-08,66.21875
+France,2022-09,54.04347826086956
+France,2023-01,67.0
+France,2023-03,62.0
+France,2023-04,61.5
+France,2023-05,53.75
+France,2023-06,85.6
+France,2023-07,53.0
+France,2023-08,66.0
+France,2024-06,80.4
+France,2024-07,49.0
+France,2024-08,57.6
+France,2024-09,67.0
+France,2024-10,62.0
+France,2024-11,94.75
+France,2024-12,102.25
+France,2025-01,107.2
+France,2025-02,106.75
+France,2025-03,113.25
+France,2025-04,74.0
+France,2025-05,68.6
+France,2025-06,77.25
+France,2025-07,53.0
+France,2025-08,60.75
+France,2025-09,38.0
+French Guiana,2022-07,13.0
+French Guiana,2022-08,16.625
+French Guiana,2022-09,25.73913043478261
+French Guiana,2023-01,29.0
+French Guiana,2023-03,33.0
+French Guiana,2023-04,39.5
+French Guiana,2023-05,21.0
+French Guiana,2023-06,11.0
+French Guiana,2023-07,16.0
+French Guiana,2023-08,19.666666666666668
+French Guiana,2024-06,10.2
+French Guiana,2024-07,13.25
+French Guiana,2024-08,25.0
+French Guiana,2024-09,33.75
+French Guiana,2024-10,19.8
+French Guiana,2024-11,20.5
+French Guiana,2024-12,29.75
+French Guiana,2025-01,31.2
+French Guiana,2025-02,37.25
+French Guiana,2025-03,30.5
+French Guiana,2025-04,26.0
+French Guiana,2025-05,13.8
+French Guiana,2025-06,17.75
+French Guiana,2025-07,14.4
+French Guiana,2025-08,17.5
+French Guiana,2025-09,11.0
+Gabon,2022-07,155.25
+Gabon,2022-08,143.78125
+Gabon,2022-09,96.78260869565217
+Gabon,2023-01,102.0
+Gabon,2023-03,69.0
+Gabon,2023-04,78.25
+Gabon,2023-05,66.0
+Gabon,2023-06,104.4
+Gabon,2023-07,105.25
+Gabon,2023-08,120.33333333333333
+Gambia,2022-07,25.4375
+Gambia,2022-08,24.71875
+Gambia,2022-09,22.08695652173913
+Gambia,2025-09,86.0
+Georgia,2022-07,47.0625
+Georgia,2022-08,65.0625
+Georgia,2022-09,56.0
+Georgia,2023-01,47.0
+Georgia,2023-03,34.0
+Georgia,2023-04,71.0
+Georgia,2023-05,60.0
+Georgia,2023-06,55.8
+Georgia,2023-07,41.5
+Georgia,2023-08,24.666666666666668
+Georgia,2024-06,46.2
+Georgia,2024-07,50.0
+Georgia,2024-08,43.4
+Georgia,2024-09,45.75
+Georgia,2024-10,41.2
+Georgia,2024-11,57.0
+Georgia,2024-12,69.75
+Georgia,2025-01,84.4
+Georgia,2025-02,66.0
+Georgia,2025-03,51.25
+Georgia,2025-04,43.5
+Georgia,2025-05,40.0
+Georgia,2025-06,40.25
+Georgia,2025-07,46.8
+Georgia,2025-08,41.0
+Georgia,2025-09,39.0
+Germany,2022-07,60.125
+Germany,2022-08,64.21875
+Germany,2022-09,49.78260869565217
+Germany,2023-01,30.0
+Germany,2023-03,50.0
+Germany,2023-04,60.5
+Germany,2023-05,55.25
+Germany,2023-06,69.4
+Germany,2023-07,45.25
+Germany,2023-08,248.66666666666666
+Germany,2024-06,237.6
+Germany,2024-07,131.75
+Germany,2024-08,88.0
+Germany,2024-09,105.0
+Germany,2024-10,141.6
+Germany,2024-11,182.5
+Germany,2024-12,102.75
+Germany,2025-01,114.8
+Germany,2025-02,163.75
+Germany,2025-03,108.5
+Germany,2025-04,102.5
+Germany,2025-05,85.4
+Germany,2025-06,63.25
+Germany,2025-07,89.6
+Germany,2025-08,80.0
+Germany,2025-09,46.0
+Ghana,2022-07,92.375
+Ghana,2022-08,81.375
+Ghana,2022-09,51.17391304347826
+Ghana,2023-01,83.0
+Ghana,2023-03,54.0
+Ghana,2023-04,74.5
+Ghana,2023-05,45.0
+Ghana,2023-06,59.6
+Ghana,2023-07,81.75
+Ghana,2023-08,27.666666666666668
+Ghana,2024-06,66.6
+Ghana,2024-07,83.75
+Ghana,2024-08,51.4
+Ghana,2024-09,43.75
+Ghana,2024-10,44.8
+Ghana,2024-11,82.0
+Ghana,2024-12,108.5
+Ghana,2025-01,87.8
+Ghana,2025-02,74.25
+Ghana,2025-03,65.0
+Ghana,2025-04,76.0
+Ghana,2025-05,56.0
+Ghana,2025-06,36.333333333333336
+Ghana,2025-07,62.8
+Ghana,2025-08,62.25
+Ghana,2025-09,55.0
+Gibraltar,2022-07,53.875
+Gibraltar,2022-08,32.46875
+Gibraltar,2022-09,27.782608695652176
+Gibraltar,2023-03,45.0
+Gibraltar,2023-04,36.5
+Gibraltar,2023-05,35.0
+Gibraltar,2023-06,32.6
+Gibraltar,2023-07,50.25
+Gibraltar,2023-08,47.666666666666664
+Gibraltar,2024-06,26.4
+Gibraltar,2024-07,36.0
+Gibraltar,2024-08,43.2
+Gibraltar,2024-09,36.75
+Gibraltar,2024-10,21.6
+Gibraltar,2024-11,51.75
+Gibraltar,2024-12,18.5
+Gibraltar,2025-01,33.4
+Gibraltar,2025-02,27.0
+Gibraltar,2025-03,33.75
+Gibraltar,2025-04,22.75
+Gibraltar,2025-05,22.0
+Gibraltar,2025-06,49.0
+Gibraltar,2025-07,39.0
+Gibraltar,2025-08,37.75
+Gibraltar,2025-09,22.0
+Greece,2022-07,50.4375
+Greece,2022-08,46.59375
+Greece,2022-09,41.78260869565217
+Greece,2023-01,48.0
+Greece,2023-03,39.0
+Greece,2023-04,47.25
+Greece,2023-05,50.5
+Greece,2023-06,53.4
+Greece,2023-07,57.75
+Greece,2023-08,64.66666666666667
+Greece,2024-06,61.0
+Greece,2024-07,69.75
+Greece,2024-08,70.2
+Greece,2024-09,69.75
+Greece,2024-10,46.4
+Greece,2024-11,59.5
+Greece,2024-12,57.25
+Greece,2025-01,88.2
+Greece,2025-02,68.0
+Greece,2025-03,59.25
+Greece,2025-04,48.25
+Greece,2025-05,44.0
+Greece,2025-06,55.25
+Greece,2025-07,44.4
+Greece,2025-08,42.0
+Greece,2025-09,52.0
+Grenada,2022-07,22.4375
+Grenada,2022-08,11.84375
+Grenada,2022-09,8.826086956521738
+Grenada,2023-01,22.0
+Grenada,2023-03,2.0
+Grenada,2023-04,18.5
+Grenada,2023-05,17.75
+Grenada,2023-06,14.4
+Grenada,2023-07,22.25
+Grenada,2023-08,13.333333333333334
+Grenada,2024-06,18.2
+Grenada,2024-07,14.0
+Grenada,2024-08,13.2
+Grenada,2024-09,23.75
+Grenada,2024-10,20.0
+Guadeloupe,2022-07,21.375
+Guadeloupe,2022-08,23.71875
+Guadeloupe,2022-09,16.391304347826086
+Guadeloupe,2023-01,14.0
+Guadeloupe,2023-03,14.0
+Guadeloupe,2023-04,14.75
+Guadeloupe,2023-05,14.75
+Guadeloupe,2023-06,21.6
+Guadeloupe,2023-07,29.5
+Guadeloupe,2023-08,15.333333333333334
+Guadeloupe,2024-06,22.8
+Guadeloupe,2024-07,34.5
+Guadeloupe,2024-08,18.2
+Guadeloupe,2024-09,18.5
+Guadeloupe,2024-10,23.4
+Guadeloupe,2024-11,27.25
+Guadeloupe,2024-12,37.75
+Guadeloupe,2025-01,26.6
+Guadeloupe,2025-02,25.75
+Guadeloupe,2025-03,33.5
+Guadeloupe,2025-04,22.75
+Guadeloupe,2025-05,26.2
+Guadeloupe,2025-06,39.5
+Guadeloupe,2025-07,32.2
+Guadeloupe,2025-08,30.25
+Guadeloupe,2025-09,14.0
+Guam,2022-07,1.125
+Guam,2022-08,2.6875
+Guam,2022-09,4.173913043478261
+Guam,2023-01,1.0
+Guam,2023-03,8.0
+Guam,2023-04,7.25
+Guam,2023-05,2.6666666666666665
+Guam,2023-06,4.4
+Guam,2023-07,2.25
+Guatemala,2022-07,39.3125
+Guatemala,2022-08,40.28125
+Guatemala,2022-09,54.869565217391305
+Guatemala,2023-01,47.0
+Guatemala,2023-03,53.0
+Guatemala,2023-04,124.0
+Guatemala,2023-05,135.25
+Guatemala,2023-06,80.8
+Guatemala,2023-07,50.75
+Guatemala,2023-08,52.333333333333336
+Guatemala,2024-06,86.8
+Guatemala,2024-07,53.75
+Guatemala,2024-08,54.4
+Guatemala,2024-09,77.5
+Guatemala,2024-10,54.0
+Guatemala,2024-11,46.5
+Guatemala,2024-12,46.75
+Guatemala,2025-01,31.8
+Guatemala,2025-02,78.5
+Guatemala,2025-03,59.333333333333336
+Guatemala,2025-04,95.0
+Guatemala,2025-05,115.4
+Guatemala,2025-06,40.0
+Guatemala,2025-07,27.8
+Guatemala,2025-08,53.75
+Guatemala,2025-09,65.0
+Honduras,2022-07,21.0625
+Honduras,2022-08,16.28125
+Honduras,2022-09,30.043478260869566
+Honduras,2023-01,32.0
+Honduras,2023-03,33.0
+Honduras,2023-04,164.5
+Honduras,2023-05,156.75
+Honduras,2023-06,33.4
+Honduras,2023-07,19.25
+Honduras,2023-08,16.666666666666668
+Honduras,2024-06,65.0
+Honduras,2024-07,27.5
+Honduras,2024-08,16.6
+Honduras,2024-09,43.5
+Honduras,2024-10,71.0
+Honduras,2025-08,60.5
+Honduras,2025-09,46.0
+Hong Kong,2022-07,48.3125
+Hong Kong,2022-08,35.03125
+Hong Kong,2022-09,87.82608695652173
+Hong Kong,2023-01,52.0
+Hong Kong,2023-03,58.0
+Hong Kong,2023-04,73.5
+Hong Kong,2023-05,71.25
+Hong Kong,2023-06,44.0
+Hong Kong,2023-07,45.25
+Hong Kong,2023-08,67.66666666666667
+Hong Kong,2024-06,42.4
+Hong Kong,2024-07,33.25
+Hong Kong,2024-08,49.6
+Hong Kong,2024-09,53.25
+Hong Kong,2024-10,62.0
+Hong Kong,2024-11,40.0
+Hong Kong,2024-12,74.75
+Hong Kong,2025-01,96.6
+Hong Kong,2025-02,79.5
+Hong Kong,2025-03,50.0
+Hong Kong,2025-04,60.75
+Hong Kong,2025-05,51.6
+Hong Kong,2025-06,31.75
+Hong Kong,2025-07,45.6
+Hong Kong,2025-08,33.25
+Hong Kong,2025-09,36.0
+Hungary,2022-07,55.125
+Hungary,2022-08,49.96875
+Hungary,2022-09,38.04347826086956
+Hungary,2023-08,32.666666666666664
+Hungary,2024-06,54.8
+Hungary,2024-07,51.5
+Hungary,2024-08,57.6
+Hungary,2024-09,55.25
+Hungary,2024-10,65.8
+Hungary,2024-11,128.75
+Hungary,2024-12,99.0
+Hungary,2025-01,101.6
+Hungary,2025-02,152.75
+Hungary,2025-03,102.5
+Hungary,2025-04,59.75
+Hungary,2025-05,54.0
+Hungary,2025-06,55.5
+Hungary,2025-07,41.8
+Hungary,2025-08,53.0
+Hungary,2025-09,49.0
+Iceland,2022-07,11.5
+Iceland,2022-08,19.8125
+Iceland,2022-09,12.826086956521738
+Iceland,2023-01,7.0
+Iceland,2023-03,24.0
+Iceland,2023-04,14.75
+Iceland,2023-05,28.75
+Iceland,2023-06,13.2
+Iceland,2023-07,10.0
+Iceland,2023-08,8.666666666666666
+Iceland,2024-06,19.8
+Iceland,2024-07,19.5
+Iceland,2024-08,13.6
+Iceland,2024-09,21.75
+Iceland,2024-10,22.0
+Iceland,2024-11,26.5
+Iceland,2024-12,31.5
+Iceland,2025-01,25.2
+Iceland,2025-02,34.25
+Iceland,2025-03,28.5
+Iceland,2025-04,24.0
+Iceland,2025-05,26.8
+Iceland,2025-06,26.75
+Iceland,2025-07,24.6
+Iceland,2025-08,21.75
+Iceland,2025-09,8.0
+India,2022-07,158.5
+India,2022-08,186.65625
+India,2022-09,170.2608695652174
+India,2023-01,332.0
+India,2023-03,172.0
+India,2023-04,224.0
+India,2023-05,243.5
+India,2023-06,252.8
+India,2023-07,155.0
+India,2023-08,159.33333333333334
+India,2024-06,399.0
+India,2024-07,217.0
+India,2024-08,164.2
+India,2024-09,180.25
+India,2024-10,251.2
+India,2024-11,450.0
+India,2024-12,353.5
+India,2025-01,301.6
+India,2025-02,206.75
+India,2025-03,290.5
+India,2025-04,227.75
+India,2025-05,373.4
+India,2025-06,185.5
+India,2025-07,149.0
+India,2025-08,155.25
+India,2025-09,146.0
+Indonesia,2022-07,93.0
+Indonesia,2022-08,93.0
+Indonesia,2022-09,93.0
+Indonesia,2023-01,93.0
+Indonesia,2023-03,66.0
+Indonesia,2023-04,72.5
+Indonesia,2023-05,76.75
+Indonesia,2023-06,99.8
+Indonesia,2023-07,99.0
+Indonesia,2023-08,142.66666666666666
+Indonesia,2024-06,131.4
+Indonesia,2024-07,143.0
+Indonesia,2024-08,153.0
+Indonesia,2024-09,130.5
+Indonesia,2024-10,131.0
+Indonesia,2024-11,127.0
+Indonesia,2024-12,82.25
+Indonesia,2025-01,86.6
+Indonesia,2025-02,112.25
+Indonesia,2025-03,109.0
+Indonesia,2025-04,117.0
+Indonesia,2025-05,132.6
+Indonesia,2025-06,137.25
+Indonesia,2025-07,136.2
+Indonesia,2025-08,131.0
+Indonesia,2025-09,133.0
+Iran,2022-07,190.625
+Iran,2022-08,161.6875
+Iran,2022-09,142.43478260869566
+Iran,2023-01,131.0
+Iran,2023-03,91.0
+Iran,2023-04,120.5
+Iran,2023-05,128.25
+Iran,2023-06,140.75
+Iran,2023-07,175.25
+Iran,2023-08,150.66666666666666
+Iran,2024-06,147.8
+Iran,2024-07,136.0
+Iran,2024-08,144.0
+Iran,2024-09,142.75
+Iran,2024-10,155.4
+Iran,2024-11,121.0
+Iran,2024-12,163.75
+Iran,2025-01,131.8
+Iran,2025-02,156.75
+Iran,2025-03,115.75
+Iran,2025-04,118.25
+Iran,2025-05,161.8
+Iran,2025-06,153.25
+Iran,2025-07,205.5
+Iraq,2022-07,169.625
+Iraq,2022-08,210.28125
+Iraq,2022-09,145.69565217391303
+Iraq,2023-01,307.0
+Iraq,2023-03,65.0
+Iraq,2023-04,126.5
+Iraq,2023-05,166.75
+Iraq,2023-06,107.33333333333333
+Iraq,2023-08,28.0
+Iraq,2024-06,110.6
+Iraq,2024-07,101.5
+Iraq,2024-08,106.6
+Iraq,2024-09,94.75
+Iraq,2024-10,176.0
+Iraq,2024-11,90.0
+Iraq,2024-12,165.25
+Iraq,2025-01,123.0
+Iraq,2025-02,138.33333333333334
+Ireland,2022-07,19.5
+Ireland,2022-08,26.21875
+Ireland,2022-09,27.956521739130434
+Ireland,2023-01,38.0
+Ireland,2023-03,52.0
+Ireland,2023-04,43.5
+Ireland,2023-05,39.75
+Ireland,2023-06,42.8
+Ireland,2023-07,20.5
+Ireland,2023-08,21.666666666666668
+Ireland,2024-06,29.4
+Ireland,2024-07,19.75
+Ireland,2024-08,25.6
+Ireland,2024-09,28.25
+Ireland,2024-10,32.2
+Ireland,2024-11,51.5
+Ireland,2024-12,34.25
+Ireland,2025-01,53.0
+Ireland,2025-02,49.75
+Ireland,2025-03,43.75
+Ireland,2025-04,44.0
+Ireland,2025-05,39.6
+Ireland,2025-06,23.25
+Ireland,2025-07,27.6
+Ireland,2025-08,34.0
+Ireland,2025-09,14.0
+Israel,2022-07,96.8125
+Israel,2022-08,77.53125
+Israel,2022-09,70.91304347826087
+Israel,2023-01,75.0
+Israel,2023-03,57.0
+Israel,2023-04,72.5
+Israel,2023-05,91.5
+Israel,2023-06,77.4
+Israel,2023-07,61.5
+Israel,2023-08,68.0
+Israel,2024-06,73.0
+Israel,2024-07,68.75
+Israel,2024-08,71.2
+Israel,2024-09,57.0
+Israel,2024-10,65.8
+Israel,2024-11,65.25
+Israel,2024-12,88.25
+Israel,2025-01,85.8
+Israel,2025-02,63.0
+Israel,2025-03,92.75
+Israel,2025-04,92.25
+Israel,2025-05,75.4
+Israel,2025-06,62.75
+Israel,2025-07,66.6
+Israel,2025-08,65.25
+Israel,2025-09,58.0
+Italy,2022-07,96.4375
+Italy,2022-08,67.25
+Italy,2022-09,55.30434782608695
+Italy,2023-01,72.0
+Italy,2023-03,52.0
+Italy,2023-04,57.75
+Italy,2023-05,55.25
+Italy,2023-06,55.2
+Italy,2023-07,62.0
+Italy,2023-08,65.33333333333333
+Italy,2024-06,69.0
+Italy,2024-07,76.25
+Italy,2024-08,72.2
+Italy,2024-09,62.5
+Italy,2024-10,88.6
+Italy,2024-11,123.75
+Italy,2024-12,118.0
+Italy,2025-01,116.6
+Italy,2025-02,129.0
+Italy,2025-03,77.75
+Italy,2025-04,63.5
+Italy,2025-05,57.0
+Italy,2025-06,75.0
+Italy,2025-07,53.8
+Italy,2025-08,65.5
+Italy,2025-09,38.0
+Ivory Coast,2022-07,54.1875
+Ivory Coast,2022-08,56.25
+Ivory Coast,2022-09,49.91304347826087
+Ivory Coast,2023-01,107.0
+Ivory Coast,2023-03,63.0
+Ivory Coast,2023-04,83.25
+Ivory Coast,2023-05,21.25
+Ivory Coast,2023-06,32.0
+Ivory Coast,2023-07,35.25
+Ivory Coast,2023-08,24.333333333333332
+Ivory Coast,2024-06,37.0
+Ivory Coast,2024-09,23.0
+Ivory Coast,2024-10,45.6
+Ivory Coast,2024-11,108.0
+Ivory Coast,2024-12,115.25
+Ivory Coast,2025-01,64.2
+Ivory Coast,2025-02,80.75
+Ivory Coast,2025-03,90.0
+Japan,2022-07,82.625
+Japan,2022-08,71.625
+Japan,2022-09,68.73913043478261
+Japan,2023-01,128.0
+Japan,2023-03,80.0
+Japan,2023-04,103.5
+Japan,2023-05,102.5
+Japan,2023-06,85.2
+Japan,2023-07,101.5
+Japan,2023-08,81.33333333333333
+Japan,2024-06,86.4
+Japan,2024-07,88.75
+Japan,2024-08,83.8
+Japan,2024-09,87.25
+Japan,2024-10,66.4
+Japan,2024-11,67.25
+Japan,2024-12,68.25
+Japan,2025-01,77.4
+Japan,2025-02,98.75
+Japan,2025-03,85.25
+Japan,2025-04,72.0
+Japan,2025-05,77.4
+Japan,2025-06,77.75
+Japan,2025-07,97.6
+Japan,2025-08,81.5
+Japan,2025-09,58.0
+Jersey,2022-07,26.6875
+Jersey,2022-08,22.375
+Jersey,2022-09,28.130434782608695
+Jersey,2023-01,62.0
+Jersey,2023-03,64.0
+Jersey,2023-04,83.25
+Jersey,2023-05,65.75
+Jersey,2023-06,89.8
+Jersey,2023-07,40.5
+Jersey,2023-08,26.333333333333332
+Jersey,2024-06,26.8
+Jersey,2024-10,22.0
+Jersey,2024-11,19.75
+Jersey,2024-12,18.5
+Jersey,2025-01,12.6
+Jersey,2025-02,29.5
+Jersey,2025-03,22.75
+Jersey,2025-04,30.0
+Jersey,2025-05,30.4
+Jersey,2025-06,15.0
+Jersey,2025-07,28.6
+Jersey,2025-08,30.75
+Jersey,2025-09,38.0
+Jordan,2022-07,27.125
+Jordan,2022-08,32.96875
+Jordan,2022-09,33.08695652173913
+Jordan,2023-01,21.0
+Jordan,2023-03,23.0
+Jordan,2023-04,27.25
+Jordan,2023-05,35.75
+Jordan,2023-06,30.4
+Jordan,2023-07,37.0
+Jordan,2023-08,33.0
+Jordan,2024-06,32.4
+Jordan,2024-07,24.0
+Jordan,2024-08,23.8
+Jordan,2024-09,21.75
+Jordan,2024-10,20.6
+Jordan,2024-11,24.0
+Jordan,2024-12,29.0
+Jordan,2025-01,31.0
+Jordan,2025-02,19.0
+Jordan,2025-03,21.25
+Jordan,2025-04,24.25
+Jordan,2025-05,23.6
+Jordan,2025-06,20.25
+Jordan,2025-07,19.0
+Jordan,2025-08,26.75
+Jordan,2025-09,18.0
+Kazakhstan,2022-07,75.0
+Kazakhstan,2022-08,89.25
+Kazakhstan,2022-09,111.6086956521739
+Kazakhstan,2023-01,105.0
+Kazakhstan,2023-03,104.0
+Kazakhstan,2023-04,84.5
+Kazakhstan,2023-05,81.25
+Kazakhstan,2023-06,143.4
+Kazakhstan,2023-07,173.75
+Kazakhstan,2023-08,117.33333333333333
+Kazakhstan,2024-06,49.8
+Kazakhstan,2024-07,48.75
+Kazakhstan,2024-08,50.6
+Kazakhstan,2024-09,49.25
+Kazakhstan,2024-10,61.8
+Kazakhstan,2024-11,58.0
+Kazakhstan,2024-12,102.0
+Kazakhstan,2025-01,98.8
+Kazakhstan,2025-02,121.5
+Kazakhstan,2025-03,88.25
+Kazakhstan,2025-04,69.75
+Kazakhstan,2025-05,43.8
+Kazakhstan,2025-06,61.25
+Kazakhstan,2025-07,59.6
+Kazakhstan,2025-08,51.75
+Kazakhstan,2025-09,48.0
+Kenya,2022-07,66.3125
+Kenya,2022-08,77.75
+Kenya,2022-09,86.17391304347827
+Kenya,2023-01,97.0
+Kenya,2023-03,77.0
+Kenya,2023-04,64.25
+Kenya,2023-05,81.5
+Kenya,2023-06,92.2
+Kenya,2023-07,92.75
+Kenya,2023-08,61.0
+Kenya,2024-06,114.0
+Kenya,2024-07,107.0
+Kenya,2024-08,85.0
+Kenya,2024-09,78.75
+Kenya,2024-10,48.4
+Kenya,2024-11,30.25
+Kenya,2024-12,41.0
+Kenya,2025-01,37.4
+Kenya,2025-02,116.0
+Kenya,2025-03,73.5
+Kenya,2025-04,30.5
+Kenya,2025-05,27.2
+Kenya,2025-06,36.0
+Kenya,2025-07,51.2
+Kenya,2025-08,50.5
+Kenya,2025-09,72.0
+Kosovo,2022-07,45.75
+Kosovo,2022-08,39.75
+Kosovo,2022-09,32.78260869565217
+Kosovo,2023-01,58.0
+Kosovo,2023-03,29.0
+Kosovo,2023-04,47.5
+Kosovo,2023-05,37.75
+Kosovo,2023-06,39.4
+Kosovo,2023-07,32.75
+Kosovo,2023-08,26.666666666666668
+Kosovo,2024-06,28.2
+Kosovo,2024-07,40.5
+Kosovo,2024-08,45.2
+Kosovo,2024-09,47.25
+Kosovo,2024-10,42.8
+Kosovo,2024-11,72.25
+Kosovo,2024-12,10.333333333333334
+Kosovo,2025-01,103.0
+Kosovo,2025-02,76.75
+Kosovo,2025-03,50.0
+Kosovo,2025-04,38.0
+Kosovo,2025-05,23.8
+Kosovo,2025-06,33.25
+Kosovo,2025-07,26.2
+Kosovo,2025-08,34.25
+Kosovo,2025-09,13.0
+Kuwait,2022-07,121.1875
+Kuwait,2022-08,163.5
+Kuwait,2022-09,124.91304347826087
+Kuwait,2023-01,54.0
+Kuwait,2023-03,65.0
+Kuwait,2023-04,101.25
+Kuwait,2023-05,103.0
+Kuwait,2023-06,99.6
+Kuwait,2023-07,100.25
+Kuwait,2023-08,68.66666666666667
+Kuwait,2024-06,103.4
+Kuwait,2024-07,84.0
+Kuwait,2024-08,106.0
+Kuwait,2024-09,94.25
+Kuwait,2024-10,78.8
+Kuwait,2024-11,72.5
+Kuwait,2024-12,89.0
+Kuwait,2025-01,80.2
+Kuwait,2025-02,74.25
+Kuwait,2025-03,77.75
+Kuwait,2025-04,73.0
+Kyrgyzstan,2022-07,40.625
+Kyrgyzstan,2022-08,67.9375
+Kyrgyzstan,2022-09,106.26086956521739
+Kyrgyzstan,2023-01,138.0
+Kyrgyzstan,2023-03,90.0
+Kyrgyzstan,2023-04,67.75
+Kyrgyzstan,2023-05,59.5
+Kyrgyzstan,2023-06,50.6
+Kyrgyzstan,2023-07,46.5
+Kyrgyzstan,2023-08,137.0
+Kyrgyzstan,2024-06,69.2
+Kyrgyzstan,2024-07,90.0
+Kyrgyzstan,2024-08,28.4
+Kyrgyzstan,2024-09,31.25
+Kyrgyzstan,2024-10,32.6
+Kyrgyzstan,2024-11,37.0
+Kyrgyzstan,2024-12,30.0
+Kyrgyzstan,2025-01,33.6
+Kyrgyzstan,2025-02,66.5
+Kyrgyzstan,2025-03,80.0
+Kyrgyzstan,2025-05,8.0
+Kyrgyzstan,2025-06,44.0
+Kyrgyzstan,2025-07,45.6
+Kyrgyzstan,2025-08,50.25
+Kyrgyzstan,2025-09,33.0
+Laos,2022-07,52.125
+Laos,2022-08,36.375
+Laos,2022-09,57.869565217391305
+Laos,2023-01,78.0
+Laos,2023-03,188.0
+Laos,2023-04,188.0
+Laos,2023-05,87.25
+Laos,2023-06,47.6
+Laos,2023-07,36.5
+Laos,2023-08,48.333333333333336
+Laos,2024-06,31.2
+Laos,2024-07,29.0
+Laos,2024-08,25.8
+Laos,2024-09,42.0
+Laos,2024-10,57.8
+Laos,2024-11,74.75
+Laos,2024-12,105.25
+Laos,2025-01,135.4
+Laos,2025-02,121.0
+Laos,2025-03,139.5
+Laos,2025-04,120.5
+Laos,2025-05,45.6
+Laos,2025-06,38.5
+Laos,2025-07,32.6
+Laos,2025-08,40.0
+Laos,2025-09,25.0
+Latvia,2022-07,22.9375
+Latvia,2022-08,31.5625
+Latvia,2022-09,25.82608695652174
+Latvia,2023-01,29.0
+Latvia,2023-03,50.0
+Latvia,2023-04,34.0
+Latvia,2023-05,10.75
+Latvia,2023-06,25.6
+Latvia,2023-07,13.0
+Latvia,2023-08,12.333333333333334
+Latvia,2024-06,24.6
+Latvia,2024-07,35.75
+Latvia,2024-08,47.8
+Latvia,2024-09,44.25
+Latvia,2024-10,11.4
+Latvia,2024-11,8.75
+Latvia,2024-12,10.0
+Latvia,2025-01,14.2
+Latvia,2025-02,11.5
+Latvia,2025-03,16.0
+Latvia,2025-04,8.25
+Latvia,2025-05,8.6
+Latvia,2025-06,19.75
+Latvia,2025-07,18.8
+Latvia,2025-08,6.0
+Latvia,2025-09,11.0
+Lebanon,2022-07,76.0
+Lebanon,2022-08,76.0
+Lebanon,2022-09,76.0
+Lebanon,2023-01,76.0
+Lebanon,2023-03,51.0
+Lebanon,2023-04,82.5
+Lebanon,2023-05,91.75
+Lebanon,2023-06,105.2
+Lebanon,2023-07,99.75
+Lebanon,2023-08,24.333333333333332
+Lebanon,2025-01,59.0
+Liberia,2022-07,47.9375
+Liberia,2022-08,30.40625
+Liberia,2022-09,27.869565217391305
+Liberia,2023-01,88.0
+Liberia,2023-04,68.5
+Liberia,2023-05,40.0
+Liberia,2023-06,25.4
+Liberia,2023-07,34.25
+Liberia,2023-08,17.0
+Liberia,2024-06,36.0
+Liberia,2024-07,48.75
+Liberia,2024-08,31.2
+Liberia,2024-09,34.25
+Liberia,2024-10,12.8
+Liberia,2024-11,99.5
+Liberia,2024-12,141.25
+Liberia,2025-01,101.75
+Liberia,2025-02,105.75
+Liberia,2025-04,51.0
+Liberia,2025-05,56.2
+Liberia,2025-06,29.25
+Liberia,2025-07,36.8
+Liberia,2025-08,48.0
+Liechtenstein,2022-07,24.0
+Liechtenstein,2022-08,33.46875
+Liechtenstein,2022-09,24.869565217391305
+Liechtenstein,2023-01,14.0
+Liechtenstein,2023-03,28.0
+Liechtenstein,2023-04,10.0
+Liechtenstein,2023-05,23.25
+Liechtenstein,2023-06,28.4
+Liechtenstein,2023-07,17.0
+Liechtenstein,2023-08,18.333333333333332
+Liechtenstein,2024-06,17.0
+Liechtenstein,2024-07,8.5
+Liechtenstein,2024-08,13.2
+Liechtenstein,2024-09,16.5
+Liechtenstein,2024-10,11.2
+Liechtenstein,2024-11,19.0
+Liechtenstein,2024-12,15.5
+Liechtenstein,2025-01,30.8
+Liechtenstein,2025-02,17.75
+Liechtenstein,2025-03,22.0
+Liechtenstein,2025-04,20.0
+Liechtenstein,2025-05,25.4
+Liechtenstein,2025-06,43.0
+Liechtenstein,2025-07,21.6
+Liechtenstein,2025-08,41.0
+Liechtenstein,2025-09,13.0
+Lithuania,2022-07,32.6875
+Lithuania,2022-08,38.5
+Lithuania,2022-09,20.782608695652176
+Lithuania,2023-01,27.0
+Lithuania,2023-03,23.0
+Lithuania,2023-04,26.25
+Lithuania,2023-05,24.0
+Lithuania,2023-06,44.8
+Lithuania,2023-07,36.75
+Lithuania,2023-08,33.666666666666664
+Lithuania,2024-06,39.2
+Lithuania,2024-07,29.25
+Lithuania,2024-08,43.2
+Lithuania,2024-09,61.0
+Lithuania,2024-10,20.6
+Lithuania,2024-11,20.0
+Lithuania,2024-12,18.5
+Lithuania,2025-01,16.6
+Lithuania,2025-02,20.75
+Lithuania,2025-03,32.25
+Lithuania,2025-04,18.0
+Lithuania,2025-05,21.4
+Lithuania,2025-06,23.75
+Lithuania,2025-07,14.2
+Lithuania,2025-08,13.75
+Lithuania,2025-09,26.0
+Luxembourg,2022-07,38.875
+Luxembourg,2022-08,39.28125
+Luxembourg,2022-09,29.391304347826086
+Luxembourg,2023-01,24.0
+Luxembourg,2023-03,27.0
+Luxembourg,2023-04,42.25
+Luxembourg,2023-05,41.75
+Luxembourg,2023-06,43.6
+Luxembourg,2023-07,35.0
+Luxembourg,2023-08,29.666666666666668
+Luxembourg,2024-06,32.2
+Luxembourg,2024-07,16.5
+Luxembourg,2024-08,21.0
+Luxembourg,2024-09,43.0
+Luxembourg,2024-10,32.2
+Luxembourg,2024-11,33.5
+Luxembourg,2024-12,30.0
+Luxembourg,2025-01,31.0
+Luxembourg,2025-02,50.25
+Luxembourg,2025-03,39.0
+Luxembourg,2025-04,27.25
+Luxembourg,2025-05,30.8
+Luxembourg,2025-06,30.75
+Luxembourg,2025-07,21.4
+Luxembourg,2025-08,33.0
+Luxembourg,2025-09,18.0
+Macao,2022-07,53.375
+Macao,2022-08,38.1875
+Macao,2022-09,100.34782608695652
+Macao,2023-01,63.0
+Macao,2023-03,55.0
+Macao,2023-04,94.5
+Macao,2023-05,83.0
+Macao,2023-06,51.4
+Macao,2023-07,51.75
+Macao,2023-08,52.0
+Macao,2024-06,53.6
+Macao,2024-07,31.0
+Macao,2024-08,51.6
+Macao,2024-09,49.25
+Macao,2024-10,70.4
+Macao,2024-11,55.0
+Macao,2024-12,91.0
+Macao,2025-01,112.6
+Macao,2025-02,90.25
+Macao,2025-03,50.75
+Macao,2025-04,64.5
+Macao,2025-05,47.2
+Macao,2025-06,26.25
+Macao,2025-07,47.2
+Macao,2025-08,29.5
+Macao,2025-09,25.0
+Macedonia,2022-07,59.75
+Macedonia,2022-08,48.5
+Macedonia,2022-09,37.95652173913044
+Macedonia,2023-01,65.0
+Macedonia,2023-03,105.0
+Macedonia,2023-04,59.25
+Macedonia,2023-05,43.5
+Macedonia,2023-06,42.8
+Macedonia,2023-07,44.25
+Macedonia,2023-08,41.666666666666664
+Macedonia,2024-06,43.2
+Macedonia,2024-07,53.75
+Macedonia,2024-08,56.6
+Macedonia,2024-09,55.25
+Macedonia,2024-10,75.8
+Macedonia,2024-11,137.5
+Macedonia,2024-12,108.75
+Macedonia,2025-01,148.0
+Macedonia,2025-02,128.0
+Macedonia,2025-03,104.25
+Macedonia,2025-04,69.0
+Macedonia,2025-05,48.8
+Macedonia,2025-06,65.0
+Macedonia,2025-07,49.8
+Macedonia,2025-08,55.5
+Macedonia,2025-09,19.0
+Madagascar,2022-07,47.0625
+Madagascar,2022-08,55.4375
+Madagascar,2022-09,71.82608695652173
+Madagascar,2023-01,62.0
+Madagascar,2023-03,37.0
+Madagascar,2023-04,86.25
+Madagascar,2023-05,79.25
+Madagascar,2023-06,82.6
+Madagascar,2023-07,68.5
+Madagascar,2023-08,37.333333333333336
+Madagascar,2024-06,91.4
+Madagascar,2024-07,64.5
+Madagascar,2024-08,83.6
+Madagascar,2024-09,63.25
+Madagascar,2024-10,81.2
+Madagascar,2024-11,123.0
+Madagascar,2024-12,87.75
+Madagascar,2025-01,47.2
+Madagascar,2025-02,40.0
+Madagascar,2025-03,34.0
+Malaysia,2022-07,62.125
+Malaysia,2022-08,63.40625
+Malaysia,2022-09,62.56521739130435
+Malaysia,2023-01,46.0
+Malaysia,2023-03,63.0
+Malaysia,2023-04,77.75
+Malaysia,2023-05,66.5
+Malaysia,2023-06,68.4
+Malaysia,2023-07,63.5
+Malaysia,2023-08,68.33333333333333
+Malaysia,2024-06,73.0
+Malaysia,2024-07,75.25
+Malaysia,2024-08,67.6
+Malaysia,2024-09,62.75
+Malaysia,2024-10,62.8
+Malaysia,2024-11,56.0
+Malaysia,2024-12,57.5
+Malaysia,2025-01,64.0
+Malaysia,2025-02,66.5
+Malaysia,2025-03,67.25
+Malaysia,2025-04,57.75
+Malaysia,2025-05,66.8
+Malaysia,2025-06,67.5
+Malaysia,2025-07,73.2
+Malaysia,2025-08,89.75
+Malaysia,2025-09,72.0
+Malta,2022-07,52.125
+Malta,2022-08,40.1875
+Malta,2022-09,35.608695652173914
+Malta,2023-01,34.0
+Malta,2023-03,30.0
+Malta,2023-04,41.25
+Malta,2023-05,40.5
+Malta,2023-06,45.6
+Malta,2023-07,61.75
+Malta,2023-08,32.666666666666664
+Malta,2024-06,45.0
+Malta,2024-07,58.0
+Malta,2024-08,41.0
+Malta,2024-09,26.25
+Malta,2024-10,34.4
+Malta,2024-11,27.5
+Malta,2024-12,21.0
+Malta,2025-01,26.8
+Malta,2025-02,41.25
+Malta,2025-03,42.5
+Malta,2025-04,30.5
+Malta,2025-05,35.6
+Malta,2025-06,40.5
+Malta,2025-07,35.0
+Malta,2025-08,42.75
+Malta,2025-09,29.0
+Martinique,2022-07,41.0625
+Martinique,2022-08,36.625
+Martinique,2022-09,31.347826086956523
+Martinique,2023-01,36.0
+Martinique,2023-03,18.0
+Martinique,2023-04,27.75
+Martinique,2023-05,29.25
+Martinique,2023-06,47.6
+Martinique,2023-07,60.75
+Martinique,2023-08,49.0
+Martinique,2024-06,40.4
+Martinique,2024-07,36.5
+Martinique,2024-08,21.0
+Martinique,2024-09,21.75
+Martinique,2024-10,26.4
+Martinique,2024-11,29.75
+Martinique,2024-12,50.5
+Martinique,2025-01,31.0
+Martinique,2025-02,36.5
+Martinique,2025-03,37.25
+Martinique,2025-04,35.5
+Martinique,2025-05,54.2
+Martinique,2025-06,44.0
+Martinique,2025-07,29.0
+Martinique,2025-08,28.5
+Martinique,2025-09,25.0
+Mexico,2022-07,88.3125
+Mexico,2022-08,88.8125
+Mexico,2022-09,75.34782608695652
+Mexico,2023-01,162.0
+Mexico,2023-03,156.0
+Mexico,2023-04,134.5
+Mexico,2023-05,133.75
+Mexico,2023-06,123.6
+Mexico,2023-07,91.75
+Mexico,2023-08,172.0
+Mexico,2024-06,123.6
+Mexico,2024-07,103.0
+Mexico,2024-08,100.0
+Mexico,2024-09,94.25
+Mexico,2024-10,98.4
+Mexico,2024-11,111.75
+Mexico,2024-12,111.0
+Mexico,2025-01,105.0
+Mexico,2025-02,114.0
+Mexico,2025-03,128.5
+Mexico,2025-04,130.0
+Mexico,2025-05,122.6
+Mexico,2025-06,100.0
+Mexico,2025-07,95.0
+Mexico,2025-08,80.5
+Mexico,2025-09,86.0
+Moldova,2022-07,14.5625
+Moldova,2022-08,22.46875
+Moldova,2022-09,20.91304347826087
+Moldova,2023-01,33.0
+Moldova,2023-03,43.0
+Moldova,2023-04,23.0
+Moldova,2023-05,18.25
+Moldova,2023-06,16.4
+Moldova,2023-07,19.0
+Moldova,2023-08,7.666666666666667
+Moldova,2024-06,1.8
+Moldova,2024-07,9.0
+Moldova,2024-08,19.8
+Moldova,2024-09,11.75
+Moldova,2024-10,15.2
+Moldova,2024-11,37.75
+Moldova,2024-12,13.5
+Moldova,2025-01,34.6
+Moldova,2025-02,40.0
+Moldova,2025-03,32.5
+Moldova,2025-04,12.0
+Moldova,2025-05,8.6
+Moldova,2025-06,8.0
+Moldova,2025-07,13.0
+Moldova,2025-08,14.75
+Moldova,2025-09,16.0
+Monaco,2022-07,37.5625
+Monaco,2022-08,26.8125
+Monaco,2022-09,25.0
+Monaco,2023-01,29.0
+Monaco,2023-03,23.0
+Monaco,2023-04,29.0
+Monaco,2023-05,29.25
+Monaco,2023-06,45.6
+Monaco,2023-07,49.0
+Monaco,2023-08,24.666666666666668
+Monaco,2024-06,37.2
+Monaco,2024-07,41.75
+Monaco,2024-08,49.8
+Monaco,2024-09,18.75
+Monaco,2024-10,38.6
+Monaco,2024-11,50.25
+Monaco,2024-12,43.5
+Monaco,2025-01,40.0
+Monaco,2025-02,37.0
+Monaco,2025-03,32.25
+Monaco,2025-04,20.25
+Monaco,2025-05,24.4
+Monaco,2025-06,60.75
+Monaco,2025-07,25.6
+Monaco,2025-08,47.0
+Mongolia,2022-07,45.875
+Mongolia,2022-08,46.59375
+Mongolia,2022-09,81.78260869565217
+Mongolia,2023-01,88.0
+Mongolia,2023-03,88.0
+Mongolia,2023-04,71.25
+Mongolia,2023-05,72.5
+Mongolia,2023-06,56.2
+Mongolia,2023-07,54.75
+Mongolia,2023-08,41.0
+Mongolia,2024-06,51.6
+Mongolia,2024-07,52.75
+Mongolia,2024-08,60.2
+Mongolia,2024-09,45.75
+Mongolia,2024-10,55.0
+Mongolia,2024-11,74.75
+Mongolia,2024-12,116.0
+Mongolia,2025-01,119.8
+Mongolia,2025-02,100.25
+Mongolia,2025-03,65.0
+Mongolia,2025-04,66.5
+Mongolia,2025-05,42.6
+Mongolia,2025-06,62.25
+Mongolia,2025-07,30.4
+Mongolia,2025-08,26.0
+Mongolia,2025-09,37.0
+Montenegro,2022-07,46.1875
+Montenegro,2022-08,41.53125
+Montenegro,2022-09,29.391304347826086
+Montenegro,2023-01,80.0
+Montenegro,2023-03,62.0
+Montenegro,2023-04,53.75
+Montenegro,2023-05,30.5
+Montenegro,2023-06,37.8
+Montenegro,2023-07,38.0
+Montenegro,2023-08,31.666666666666668
+Montenegro,2024-06,22.2
+Montenegro,2024-07,45.5
+Montenegro,2024-08,55.8
+Montenegro,2024-09,27.5
+Montenegro,2024-10,38.8
+Montenegro,2024-11,75.25
+Montenegro,2024-12,58.0
+Montenegro,2025-01,69.8
+Montenegro,2025-02,69.75
+Montenegro,2025-03,51.5
+Montenegro,2025-04,33.5
+Montenegro,2025-05,26.0
+Montenegro,2025-06,36.0
+Montenegro,2025-07,27.8
+Montenegro,2025-08,38.0
+Montenegro,2025-09,18.0
+Myanmar,2022-07,30.0
+Myanmar,2022-08,32.1875
+Myanmar,2022-09,41.34782608695652
+Myanmar,2023-01,138.0
+Myanmar,2023-03,298.0
+Myanmar,2023-04,236.0
+Myanmar,2023-05,82.25
+Myanmar,2023-06,60.2
+Myanmar,2023-07,36.5
+Myanmar,2023-08,54.0
+Myanmar,2024-06,37.8
+Myanmar,2024-07,42.75
+Myanmar,2024-08,24.0
+Myanmar,2024-09,32.5
+Myanmar,2024-10,54.0
+Myanmar,2024-11,66.5
+Myanmar,2024-12,101.0
+Myanmar,2025-01,132.6
+Myanmar,2025-02,141.75
+Myanmar,2025-03,142.5
+Myanmar,2025-04,146.0
+Myanmar,2025-05,65.8
+Myanmar,2025-06,57.5
+Myanmar,2025-07,50.4
+Myanmar,2025-08,45.0
+Myanmar,2025-09,61.0
+Nepal,2022-07,46.0625
+Nepal,2022-08,59.9375
+Nepal,2022-09,94.56521739130434
+Nepal,2023-01,114.0
+Nepal,2023-03,173.0
+Nepal,2023-04,153.5
+Nepal,2023-05,104.75
+Nepal,2023-06,70.8
+Nepal,2023-07,55.5
+Nepal,2023-08,61.666666666666664
+Nepal,2024-06,74.8
+Nepal,2024-07,41.25
+Nepal,2024-08,32.0
+Nepal,2024-09,50.5
+Nepal,2024-10,83.8
+Nepal,2024-11,109.25
+Nepal,2024-12,130.5
+Nepal,2025-01,137.6
+Nepal,2025-02,155.5
+Nepal,2025-03,153.75
+Nepal,2025-04,182.25
+Nepal,2025-05,83.0
+Nepal,2025-06,64.0
+Nepal,2025-07,44.8
+Nepal,2025-08,42.75
+Nepal,2025-09,46.0
+Netherlands,2022-07,43.0
+Netherlands,2022-08,48.375
+Netherlands,2022-09,41.30434782608695
+Netherlands,2023-01,29.0
+Netherlands,2023-03,50.0
+Netherlands,2023-04,49.0
+Netherlands,2023-05,48.0
+Netherlands,2023-06,57.6
+Netherlands,2023-07,30.0
+Netherlands,2023-08,299.6666666666667
+Netherlands,2024-06,135.0
+Netherlands,2024-07,53.25
+Netherlands,2024-08,72.8
+Netherlands,2024-09,86.75
+Netherlands,2024-10,110.4
+Netherlands,2024-11,120.75
+Netherlands,2024-12,85.25
+Netherlands,2025-01,81.4
+Netherlands,2025-02,113.5
+Netherlands,2025-03,86.5
+Netherlands,2025-04,82.25
+Netherlands,2025-05,48.6
+Netherlands,2025-06,53.75
+Netherlands,2025-07,46.6
+Netherlands,2025-08,62.75
+Netherlands,2025-09,28.0
+New Caledonia,2022-07,16.75
+New Caledonia,2022-08,23.1875
+New Caledonia,2022-09,28.347826086956523
+New Caledonia,2023-01,20.0
+New Caledonia,2023-03,27.0
+New Caledonia,2023-04,19.5
+New Caledonia,2023-05,32.25
+New Caledonia,2023-06,20.0
+New Caledonia,2023-07,37.333333333333336
+New Caledonia,2024-06,11.6
+New Caledonia,2024-07,15.25
+New Caledonia,2024-08,21.6
+New Caledonia,2024-09,21.0
+New Caledonia,2024-10,22.0
+New Caledonia,2024-11,16.25
+New Caledonia,2024-12,16.25
+New Caledonia,2025-01,13.8
+New Caledonia,2025-02,13.75
+New Caledonia,2025-03,11.0
+New Caledonia,2025-04,14.0
+New Caledonia,2025-05,15.4
+New Caledonia,2025-06,17.75
+New Caledonia,2025-07,20.2
+New Caledonia,2025-08,17.5
+New Caledonia,2025-09,12.0
+New Zealand,2022-07,40.3125
+New Zealand,2022-08,29.71875
+New Zealand,2022-09,35.0
+New Zealand,2023-01,20.0
+New Zealand,2023-03,24.0
+New Zealand,2023-04,26.5
+New Zealand,2023-05,33.25
+New Zealand,2023-06,37.0
+New Zealand,2023-07,39.25
+New Zealand,2023-08,44.666666666666664
+New Zealand,2024-06,52.2
+New Zealand,2024-07,24.75
+New Zealand,2024-08,23.6
+New Zealand,2024-09,21.0
+New Zealand,2024-10,18.0
+New Zealand,2024-11,24.75
+New Zealand,2024-12,20.75
+New Zealand,2025-01,25.0
+New Zealand,2025-02,22.5
+New Zealand,2025-03,18.0
+New Zealand,2025-04,27.0
+New Zealand,2025-05,24.8
+New Zealand,2025-06,25.5
+New Zealand,2025-07,31.0
+New Zealand,2025-08,22.5
+New Zealand,2025-09,19.0
+Nigeria,2022-07,105.0
+Nigeria,2022-08,105.0
+Nigeria,2022-09,105.0
+Nigeria,2023-01,105.0
+Nigeria,2023-03,74.0
+Nigeria,2023-04,101.25
+Nigeria,2023-05,75.25
+Nigeria,2023-06,82.4
+Nigeria,2023-07,111.0
+Nigeria,2023-08,36.0
+Nigeria,2024-06,59.8
+Nigeria,2024-07,72.25
+Nigeria,2024-08,60.4
+Nigeria,2024-09,58.5
+Nigeria,2024-10,53.4
+Nigeria,2024-11,106.75
+Nigeria,2024-12,121.75
+Nigeria,2025-01,124.0
+Nigeria,2025-02,117.0
+Nigeria,2025-03,78.75
+Nigeria,2025-04,34.5
+Nigeria,2025-05,43.333333333333336
+Nigeria,2025-06,71.5
+Nigeria,2025-07,67.5
+Nigeria,2025-08,55.25
+Nigeria,2025-09,52.0
+Norway,2022-07,33.3125
+Norway,2022-08,28.125
+Norway,2022-09,22.0
+Norway,2023-01,23.0
+Norway,2023-03,53.0
+Norway,2023-04,43.75
+Norway,2023-05,38.75
+Norway,2023-06,41.0
+Norway,2023-07,23.25
+Norway,2023-08,24.333333333333332
+Norway,2024-06,24.0
+Norway,2024-07,17.75
+Norway,2024-08,29.0
+Norway,2024-09,23.0
+Norway,2024-10,25.6
+Norway,2024-11,32.0
+Norway,2024-12,36.5
+Norway,2025-01,31.0
+Norway,2025-02,39.0
+Norway,2025-03,30.25
+Norway,2025-04,34.5
+Norway,2025-05,19.4
+Norway,2025-06,24.0
+Norway,2025-07,37.0
+Norway,2025-08,22.25
+Norway,2025-09,27.0
+Pakistan,2022-07,91.0
+Pakistan,2022-08,91.0
+Pakistan,2022-09,91.0
+Pakistan,2023-01,91.0
+Pakistan,2023-03,66.0
+Pakistan,2023-04,74.0
+Pakistan,2023-05,82.5
+Pakistan,2023-06,76.2
+Pakistan,2023-07,68.0
+Pakistan,2023-08,63.666666666666664
+Pakistan,2024-06,84.8
+Pakistan,2024-07,85.0
+Pakistan,2024-08,71.2
+Pakistan,2024-09,125.5
+Pakistan,2024-10,120.4
+Pakistan,2024-11,143.5
+Pakistan,2024-12,183.75
+Pakistan,2025-01,159.6
+Pakistan,2025-02,106.0
+Pakistan,2025-03,94.25
+Pakistan,2025-04,66.5
+Pakistan,2025-05,176.6
+Pakistan,2025-06,164.75
+Pakistan,2025-07,143.2
+Pakistan,2025-08,147.75
+Pakistan,2025-09,129.0
+Palestinian Territory,2022-07,65.5
+Palestinian Territory,2022-08,53.59375
+Palestinian Territory,2022-09,47.47826086956522
+Palestinian Territory,2023-01,26.0
+Palestinian Territory,2023-03,36.0
+Palestinian Territory,2023-04,41.75
+Palestinian Territory,2023-05,59.25
+Palestinian Territory,2023-06,66.2
+Palestinian Territory,2023-07,80.75
+Palestinian Territory,2023-08,32.0
+Palestinian Territory,2024-06,76.4
+Palestinian Territory,2024-07,72.5
+Palestinian Territory,2024-08,77.0
+Palestinian Territory,2024-09,65.75
+Palestinian Territory,2024-10,60.8
+Palestinian Territory,2024-11,56.5
+Palestinian Territory,2024-12,103.25
+Palestinian Territory,2025-01,81.4
+Palestinian Territory,2025-02,73.25
+Palestinian Territory,2025-03,105.0
+Palestinian Territory,2025-04,89.75
+Palestinian Territory,2025-05,104.6
+Palestinian Territory,2025-06,65.75
+Palestinian Territory,2025-07,72.8
+Palestinian Territory,2025-08,88.75
+Palestinian Territory,2025-09,89.0
+Peru,2022-07,91.125
+Peru,2022-08,100.59375
+Peru,2022-09,98.95652173913044
+Peru,2023-01,91.0
+Peru,2023-03,46.0
+Peru,2023-04,49.5
+Peru,2023-05,50.75
+Peru,2023-06,60.8
+Peru,2023-07,51.75
+Peru,2023-08,87.33333333333333
+Peru,2024-06,103.6
+Peru,2024-07,111.25
+Peru,2024-08,115.0
+Peru,2024-09,149.5
+Peru,2024-10,72.0
+Peru,2024-11,59.25
+Peru,2024-12,50.5
+Peru,2025-01,72.0
+Peru,2025-02,66.25
+Peru,2025-03,52.25
+Peru,2025-04,63.0
+Peru,2025-05,77.6
+Peru,2025-06,64.0
+Peru,2025-07,66.8
+Peru,2025-08,66.75
+Peru,2025-09,83.0
+Philippines,2022-07,83.0
+Philippines,2022-08,83.0
+Philippines,2022-09,83.0
+Philippines,2023-01,83.0
+Philippines,2023-03,52.0
+Philippines,2023-04,58.75
+Philippines,2023-05,60.5
+Philippines,2023-06,47.0
+Philippines,2023-07,39.5
+Philippines,2023-08,64.33333333333333
+Philippines,2024-06,69.6
+Philippines,2024-07,74.25
+Philippines,2024-08,57.0
+Philippines,2024-09,48.5
+Philippines,2024-10,60.6
+Philippines,2024-11,62.25
+Philippines,2024-12,42.5
+Philippines,2025-01,73.8
+Philippines,2025-02,75.75
+Philippines,2025-03,60.25
+Philippines,2025-04,66.25
+Philippines,2025-05,43.4
+Philippines,2025-06,58.333333333333336
+Philippines,2025-07,58.0
+Philippines,2025-08,70.75
+Philippines,2025-09,63.0
+Poland,2022-07,59.5
+Poland,2022-08,54.875
+Poland,2022-09,39.78260869565217
+Poland,2023-01,86.0
+Poland,2023-03,91.0
+Poland,2023-04,100.5
+Poland,2023-05,71.75
+Poland,2023-06,71.8
+Poland,2023-07,57.75
+Poland,2023-08,72.66666666666667
+Poland,2024-06,58.6
+Poland,2024-07,67.25
+Poland,2024-08,62.8
+Poland,2024-09,78.0
+Poland,2024-10,88.0
+Poland,2024-11,125.0
+Poland,2024-12,116.0
+Poland,2025-01,99.8
+Poland,2025-02,169.75
+Poland,2025-03,153.75
+Poland,2025-04,85.75
+Poland,2025-05,61.0
+Poland,2025-06,59.0
+Poland,2025-07,56.4
+Poland,2025-08,57.5
+Poland,2025-09,73.0
+Portugal,2022-07,26.5625
+Portugal,2022-08,29.375
+Portugal,2022-09,25.434782608695652
+Portugal,2023-01,20.0
+Portugal,2023-03,26.0
+Portugal,2023-04,29.0
+Portugal,2023-05,32.25
+Portugal,2023-06,27.2
+Portugal,2023-07,19.5
+Portugal,2023-08,27.0
+Portugal,2024-06,35.4
+Portugal,2024-07,29.25
+Portugal,2024-08,27.6
+Portugal,2024-09,46.0
+Portugal,2024-10,27.2
+Portugal,2024-11,27.75
+Portugal,2024-12,30.5
+Portugal,2025-01,37.6
+Portugal,2025-02,35.0
+Portugal,2025-03,33.0
+Portugal,2025-04,24.5
+Portugal,2025-05,27.6
+Portugal,2025-06,33.25
+Portugal,2025-07,37.8
+Portugal,2025-08,37.5
+Portugal,2025-09,25.0
+Puerto Rico,2022-07,18.25
+Puerto Rico,2022-08,10.3125
+Puerto Rico,2022-09,7.695652173913044
+Puerto Rico,2023-01,21.0
+Puerto Rico,2023-03,5.0
+Puerto Rico,2023-04,10.5
+Puerto Rico,2023-05,19.5
+Puerto Rico,2023-06,20.4
+Puerto Rico,2023-07,30.25
+Puerto Rico,2023-08,4.333333333333333
+Puerto Rico,2024-06,15.0
+Puerto Rico,2024-07,16.5
+Puerto Rico,2024-08,13.8
+Puerto Rico,2024-09,11.5
+Puerto Rico,2024-10,13.0
+Qatar,2022-07,183.0
+Qatar,2022-08,183.0
+Qatar,2022-09,183.0
+Qatar,2023-01,183.0
+Qatar,2023-03,82.0
+Qatar,2023-04,74.0
+Qatar,2023-05,65.5
+Qatar,2023-06,69.0
+Qatar,2023-07,74.0
+Qatar,2023-08,60.666666666666664
+Qatar,2025-05,85.66666666666667
+Qatar,2025-06,98.5
+Qatar,2025-07,92.4
+Qatar,2025-08,80.75
+Qatar,2025-09,86.0
+Reunion,2022-07,20.8125
+Reunion,2022-08,22.96875
+Reunion,2022-09,24.304347826086957
+Reunion,2023-01,18.0
+Reunion,2023-03,10.0
+Reunion,2023-04,14.0
+Reunion,2023-05,15.0
+Reunion,2023-06,17.0
+Reunion,2023-07,18.5
+Reunion,2023-08,15.333333333333334
+Reunion,2024-06,14.8
+Reunion,2024-07,15.25
+Reunion,2024-08,17.0
+Reunion,2024-09,14.75
+Reunion,2024-10,13.6
+Reunion,2024-11,12.75
+Reunion,2024-12,15.25
+Reunion,2025-01,18.6
+Reunion,2025-02,8.75
+Reunion,2025-03,11.25
+Reunion,2025-04,10.75
+Reunion,2025-05,16.4
+Reunion,2025-06,12.25
+Reunion,2025-07,14.8
+Reunion,2025-08,20.0
+Reunion,2025-09,25.0
+Romania,2022-07,65.75
+Romania,2022-08,71.875
+Romania,2022-09,61.08695652173913
+Romania,2023-01,129.0
+Romania,2023-03,134.0
+Romania,2023-04,89.25
+Romania,2023-05,67.25
+Romania,2023-06,68.8
+Romania,2023-07,75.0
+Romania,2023-08,74.66666666666667
+Romania,2024-06,37.8
+Romania,2024-07,51.75
+Romania,2024-08,41.4
+Romania,2024-09,54.5
+Romania,2024-10,75.4
+Romania,2024-11,97.5
+Romania,2024-12,81.5
+Romania,2025-01,127.4
+Romania,2025-02,127.0
+Romania,2025-03,82.0
+Romania,2025-04,54.75
+Romania,2025-05,46.8
+Romania,2025-06,57.75
+Romania,2025-07,31.2
+Romania,2025-08,41.75
+Romania,2025-09,57.0
+Russia,2022-07,92.1875
+Russia,2022-08,128.0625
+Russia,2022-09,123.56521739130434
+Russia,2023-01,103.0
+Russia,2023-03,60.0
+Russia,2023-04,79.75
+Russia,2023-05,80.5
+Russia,2023-06,69.0
+Russia,2023-07,79.25
+Russia,2023-08,84.33333333333333
+Russia,2024-06,65.6
+Russia,2024-07,69.0
+Russia,2024-08,58.0
+Russia,2024-09,80.0
+Russia,2024-10,65.8
+Russia,2024-11,83.0
+Russia,2024-12,70.5
+Russia,2025-01,73.0
+Russia,2025-02,89.75
+Russia,2025-03,103.0
+Russia,2025-04,70.5
+Russia,2025-05,66.2
+Russia,2025-06,67.25
+Russia,2025-07,76.0
+Russia,2025-08,59.5
+Russia,2025-09,49.0
+San Marino,2022-07,56.1875
+San Marino,2022-08,46.84375
+San Marino,2022-09,38.08695652173913
+San Marino,2023-01,24.0
+San Marino,2023-03,40.0
+San Marino,2023-04,39.5
+San Marino,2023-05,40.25
+San Marino,2023-06,45.4
+San Marino,2023-07,55.75
+San Marino,2023-08,47.0
+San Marino,2024-06,45.4
+San Marino,2024-07,55.5
+San Marino,2024-08,45.0
+San Marino,2024-09,43.0
+San Marino,2024-10,38.4
+San Marino,2024-11,68.5
+San Marino,2024-12,46.25
+San Marino,2025-01,51.6
+San Marino,2025-02,66.25
+San Marino,2025-03,59.75
+San Marino,2025-04,34.75
+San Marino,2025-05,44.4
+San Marino,2025-06,50.75
+San Marino,2025-07,42.4
+San Marino,2025-08,43.5
+San Marino,2025-09,32.0
+Saudi Arabia,2022-07,272.0
+Saudi Arabia,2023-01,102.0
+Saudi Arabia,2023-03,102.0
+Saudi Arabia,2023-04,73.25
+Saudi Arabia,2023-05,55.75
+Saudi Arabia,2023-06,55.2
+Saudi Arabia,2023-07,54.25
+Saudi Arabia,2024-11,34.0
+Saudi Arabia,2024-12,117.0
+Saudi Arabia,2025-01,105.0
+Saudi Arabia,2025-02,85.75
+Saudi Arabia,2025-03,82.0
+Senegal,2022-07,33.0
+Senegal,2022-08,33.0
+Senegal,2022-09,33.0
+Senegal,2023-01,33.0
+Senegal,2023-03,51.0
+Senegal,2023-04,54.25
+Senegal,2023-05,162.0
+Senegal,2023-06,43.2
+Senegal,2023-07,45.75
+Senegal,2024-06,87.0
+Senegal,2024-07,26.0
+Senegal,2024-08,39.25
+Senegal,2024-09,60.5
+Serbia,2022-07,67.75
+Serbia,2022-08,67.96875
+Serbia,2022-09,55.56521739130435
+Serbia,2023-01,165.0
+Serbia,2023-03,162.0
+Serbia,2023-04,111.25
+Serbia,2023-05,71.0
+Serbia,2023-06,72.0
+Serbia,2023-07,59.0
+Serbia,2023-08,53.666666666666664
+Serbia,2024-06,53.4
+Serbia,2024-07,62.25
+Serbia,2024-08,57.2
+Serbia,2024-09,71.75
+Serbia,2024-10,103.2
+Serbia,2024-11,156.75
+Serbia,2024-12,129.5
+Serbia,2025-01,190.0
+Serbia,2025-02,162.75
+Serbia,2025-03,132.25
+Serbia,2025-04,85.0
+Serbia,2025-05,70.4
+Serbia,2025-06,80.75
+Serbia,2025-07,49.2
+Serbia,2025-08,53.75
+Serbia,2025-09,44.0
+Singapore,2022-07,37.9375
+Singapore,2022-08,42.53125
+Singapore,2022-09,46.95652173913044
+Singapore,2023-01,29.0
+Singapore,2023-03,46.0
+Singapore,2023-04,54.0
+Singapore,2023-05,40.75
+Singapore,2023-06,31.0
+Singapore,2023-07,41.75
+Singapore,2023-08,66.66666666666667
+Singapore,2024-06,43.8
+Singapore,2024-07,55.5
+Singapore,2024-08,68.2
+Singapore,2024-09,57.25
+Singapore,2024-10,78.8
+Singapore,2024-11,60.0
+Singapore,2024-12,56.5
+Singapore,2025-01,48.2
+Singapore,2025-02,53.75
+Singapore,2025-03,42.25
+Singapore,2025-04,40.0
+Singapore,2025-05,55.6
+Singapore,2025-06,56.5
+Singapore,2025-07,54.2
+Singapore,2025-08,56.25
+Singapore,2025-09,45.0
+Slovakia,2022-07,58.0
+Slovakia,2022-08,53.40625
+Slovakia,2022-09,38.91304347826087
+Slovakia,2023-01,83.0
+Slovakia,2023-03,69.0
+Slovakia,2023-04,60.5
+Slovakia,2023-05,44.75
+Slovakia,2023-06,43.4
+Slovakia,2023-07,42.75
+Slovakia,2023-08,31.0
+Slovakia,2024-06,51.8
+Slovakia,2024-07,44.25
+Slovakia,2024-08,52.2
+Slovakia,2024-09,43.0
+Slovakia,2024-10,54.6
+Slovakia,2024-11,105.75
+Slovakia,2024-12,86.5
+Slovakia,2025-01,89.2
+Slovakia,2025-02,118.5
+Slovakia,2025-03,90.5
+Slovakia,2025-04,53.75
+Slovakia,2025-05,44.0
+Slovakia,2025-06,43.25
+Slovakia,2025-07,34.4
+Slovakia,2025-08,45.5
+Slovakia,2025-09,38.0
+Slovenia,2022-07,52.9375
+Slovenia,2022-08,35.90625
+Slovenia,2022-09,28.608695652173914
+Slovenia,2023-01,72.0
+Slovenia,2023-03,34.0
+Slovenia,2023-04,49.75
+Slovenia,2023-05,38.75
+Slovenia,2023-06,46.0
+Slovenia,2023-07,24.75
+Slovenia,2023-08,28.333333333333332
+Slovenia,2024-06,31.0
+Slovenia,2024-07,33.75
+Slovenia,2024-08,44.4
+Slovenia,2024-09,43.75
+Slovenia,2024-10,44.8
+Slovenia,2024-11,77.75
+Slovenia,2024-12,62.75
+Slovenia,2025-01,61.6
+Slovenia,2025-02,88.75
+Slovenia,2025-03,53.5
+Slovenia,2025-04,47.5
+Slovenia,2025-05,47.4
+Slovenia,2025-06,50.25
+Slovenia,2025-07,27.2
+Slovenia,2025-08,37.5
+Slovenia,2025-09,25.0
+South Africa,2022-07,83.0
+South Africa,2022-08,83.0
+South Africa,2022-09,83.0
+South Africa,2023-01,83.0
+South Africa,2023-03,117.0
+South Africa,2023-04,124.25
+South Africa,2023-05,109.25
+South Africa,2023-06,127.6
+South Africa,2023-07,165.0
+South Africa,2023-08,157.0
+South Africa,2024-06,131.0
+South Africa,2024-07,134.25
+South Africa,2024-08,100.4
+South Africa,2024-09,92.5
+South Africa,2024-10,77.2
+South Africa,2024-11,63.25
+South Africa,2024-12,56.75
+South Africa,2025-01,54.6
+South Africa,2025-02,46.75
+South Africa,2025-03,68.0
+South Africa,2025-04,54.25
+South Africa,2025-05,95.4
+South Africa,2025-06,98.25
+South Africa,2025-07,121.8
+South Africa,2025-08,112.0
+South Africa,2025-09,104.0
+South Korea,2022-07,86.1875
+South Korea,2022-08,75.3125
+South Korea,2022-09,75.6086956521739
+South Korea,2023-01,161.0
+South Korea,2023-03,163.0
+South Korea,2023-04,155.0
+South Korea,2023-05,96.25
+South Korea,2023-06,92.2
+South Korea,2023-07,108.75
+South Korea,2023-08,68.0
+South Korea,2024-06,105.4
+South Korea,2024-07,77.75
+South Korea,2024-08,60.8
+South Korea,2024-09,62.25
+South Korea,2024-10,76.8
+South Korea,2024-11,93.5
+South Korea,2024-12,128.75
+South Korea,2025-01,100.6
+South Korea,2025-02,77.5
+South Korea,2025-03,140.5
+South Korea,2025-04,98.25
+South Korea,2025-05,89.2
+South Korea,2025-06,68.5
+South Korea,2025-07,71.8
+South Korea,2025-08,64.25
+South Korea,2025-09,56.0
+Spain,2022-07,94.375
+Spain,2022-08,74.71875
+Spain,2022-09,71.1304347826087
+Spain,2023-01,96.0
+Spain,2023-03,72.0
+Spain,2023-04,76.5
+Spain,2023-05,63.75
+Spain,2023-06,86.6
+Spain,2023-07,86.5
+Spain,2023-08,86.66666666666667
+Spain,2024-06,75.4
+Spain,2024-07,71.0
+Spain,2024-08,75.0
+Spain,2024-09,62.75
+Spain,2024-10,73.8
+Spain,2024-11,78.75
+Spain,2024-12,94.75
+Spain,2025-01,92.4
+Spain,2025-02,95.25
+Spain,2025-03,71.25
+Spain,2025-04,55.0
+Spain,2025-05,59.2
+Spain,2025-06,88.0
+Spain,2025-07,70.6
+Spain,2025-08,89.5
+Spain,2025-09,69.0
+Sri Lanka,2022-07,48.5
+Sri Lanka,2022-08,38.875
+Sri Lanka,2022-09,56.34782608695652
+Sri Lanka,2023-01,92.0
+Sri Lanka,2023-03,55.0
+Sri Lanka,2023-04,70.0
+Sri Lanka,2023-05,48.75
+Sri Lanka,2023-06,61.2
+Sri Lanka,2023-07,37.25
+Sri Lanka,2023-08,45.0
+Sri Lanka,2024-06,42.8
+Sri Lanka,2024-07,45.5
+Sri Lanka,2024-08,54.2
+Sri Lanka,2024-09,42.5
+Sri Lanka,2024-10,60.4
+Sri Lanka,2024-11,106.25
+Sri Lanka,2024-12,99.25
+Sri Lanka,2025-01,110.6
+Sri Lanka,2025-02,130.25
+Sri Lanka,2025-03,104.0
+Sri Lanka,2025-04,99.75
+Sri Lanka,2025-05,55.4
+Sri Lanka,2025-06,50.5
+Sri Lanka,2025-07,48.4
+Sri Lanka,2025-08,70.75
+Sri Lanka,2025-09,49.0
+Sudan,2022-07,81.0
+Sudan,2022-08,81.125
+Sudan,2022-09,66.5
+Sudan,2023-01,107.0
+Sudan,2023-03,160.0
+Sudan,2023-04,151.5
+Sudan,2023-05,144.0
+Sweden,2022-07,24.875
+Sweden,2022-08,26.46875
+Sweden,2022-09,20.217391304347824
+Sweden,2023-01,24.0
+Sweden,2023-03,44.0
+Sweden,2023-04,66.25
+Sweden,2023-05,38.0
+Sweden,2023-06,41.2
+Sweden,2023-07,24.25
+Sweden,2023-08,23.333333333333332
+Sweden,2024-06,33.8
+Sweden,2024-07,33.75
+Sweden,2024-08,34.0
+Sweden,2024-09,36.0
+Sweden,2024-10,32.0
+Sweden,2024-11,31.25
+Sweden,2024-12,29.0
+Sweden,2025-01,28.8
+Sweden,2025-02,34.5
+Sweden,2025-03,39.5
+Sweden,2025-04,38.25
+Sweden,2025-05,27.8
+Sweden,2025-06,34.25
+Sweden,2025-07,41.4
+Sweden,2025-08,24.25
+Sweden,2025-09,31.0
+Switzerland,2022-07,36.0
+Switzerland,2022-08,43.71875
+Switzerland,2022-09,33.608695652173914
+Switzerland,2023-01,24.0
+Switzerland,2023-03,31.0
+Switzerland,2023-04,23.25
+Switzerland,2023-05,19.25
+Switzerland,2023-06,28.4
+Switzerland,2023-07,19.0
+Switzerland,2023-08,32.333333333333336
+Switzerland,2024-06,34.4
+Switzerland,2024-07,27.25
+Switzerland,2024-08,34.4
+Switzerland,2024-09,35.25
+Switzerland,2024-10,43.6
+Switzerland,2024-11,39.25
+Switzerland,2024-12,56.0
+Switzerland,2025-01,50.4
+Switzerland,2025-02,70.25
+Switzerland,2025-03,55.5
+Switzerland,2025-04,33.5
+Switzerland,2025-05,39.2
+Switzerland,2025-06,50.75
+Switzerland,2025-07,27.8
+Switzerland,2025-08,45.5
+Switzerland,2025-09,14.0
+Taiwan,2022-07,62.6875
+Taiwan,2022-08,59.71875
+Taiwan,2022-09,78.8695652173913
+Taiwan,2023-01,119.0
+Taiwan,2023-03,95.0
+Taiwan,2023-04,89.5
+Taiwan,2023-05,86.5
+Taiwan,2023-06,70.6
+Taiwan,2023-07,66.0
+Taiwan,2023-08,62.666666666666664
+Taiwan,2024-06,49.4
+Taiwan,2024-07,41.75
+Taiwan,2024-08,52.0
+Taiwan,2024-09,56.5
+Taiwan,2024-10,53.8
+Taiwan,2024-11,61.0
+Taiwan,2024-12,64.75
+Taiwan,2025-01,76.2
+Taiwan,2025-02,98.0
+Taiwan,2025-03,66.25
+Taiwan,2025-04,75.75
+Taiwan,2025-05,58.2
+Taiwan,2025-06,45.0
+Taiwan,2025-07,51.4
+Taiwan,2025-08,45.75
+Taiwan,2025-09,64.0
+Tajikistan,2022-07,70.375
+Tajikistan,2022-08,77.03125
+Tajikistan,2022-09,95.65217391304348
+Tajikistan,2023-01,151.0
+Tajikistan,2023-03,77.0
+Tajikistan,2023-04,67.25
+Tajikistan,2023-05,61.25
+Tajikistan,2023-06,69.0
+Tajikistan,2023-07,89.5
+Tajikistan,2023-08,43.0
+Tajikistan,2024-06,65.0
+Tajikistan,2024-07,82.5
+Tajikistan,2024-08,112.4
+Tajikistan,2024-09,155.0
+Tajikistan,2024-10,98.8
+Tajikistan,2024-11,61.75
+Tajikistan,2024-12,132.0
+Tajikistan,2025-01,120.2
+Tajikistan,2025-02,149.75
+Tajikistan,2025-03,103.75
+Tajikistan,2025-04,65.75
+Tajikistan,2025-05,63.0
+Tajikistan,2025-06,104.33333333333333
+Tajikistan,2025-07,84.0
+Tajikistan,2025-08,71.0
+Tajikistan,2025-09,103.0
+Thailand,2022-07,102.5
+Thailand,2022-08,97.40625
+Thailand,2022-09,118.08695652173913
+Thailand,2023-01,149.0
+Thailand,2023-03,380.0
+Thailand,2023-04,271.0
+Thailand,2023-05,128.25
+Thailand,2023-06,87.6
+Thailand,2023-07,81.75
+Thailand,2023-08,91.0
+Thailand,2024-06,78.2
+Thailand,2024-07,86.25
+Thailand,2024-08,74.8
+Thailand,2024-09,86.5
+Thailand,2024-10,111.8
+Thailand,2024-11,113.0
+Thailand,2024-12,147.0
+Thailand,2025-01,169.8
+Thailand,2025-02,151.5
+Thailand,2025-03,157.75
+Thailand,2025-04,126.5
+Thailand,2025-05,92.6
+Thailand,2025-06,88.75
+Thailand,2025-07,75.8
+Thailand,2025-08,86.75
+Thailand,2025-09,92.0
+Togo,2022-07,83.75
+Togo,2022-08,74.09375
+Togo,2022-09,45.30434782608695
+Togo,2023-03,92.0
+Togo,2023-04,98.75
+Togo,2023-05,96.5
+Togo,2023-06,58.2
+Togo,2023-07,87.5
+Togo,2023-08,165.66666666666666
+Togo,2024-06,61.25
+Togo,2024-07,88.33333333333333
+Togo,2024-08,71.75
+Togo,2024-09,49.0
+Togo,2024-10,2.0
+Togo,2024-12,128.0
+Togo,2025-01,109.8
+Togo,2025-02,88.5
+Togo,2025-03,80.0
+Trinidad and Tobago,2022-07,35.5
+Trinidad and Tobago,2022-08,36.0
+Trinidad and Tobago,2022-09,28.26086956521739
+Trinidad and Tobago,2023-01,44.0
+Trinidad and Tobago,2023-03,48.0
+Trinidad and Tobago,2023-04,43.0
+Trinidad and Tobago,2023-05,35.25
+Trinidad and Tobago,2023-06,29.4
+Trinidad and Tobago,2023-07,43.0
+Trinidad and Tobago,2023-08,15.333333333333334
+Trinidad and Tobago,2024-06,33.0
+Trinidad and Tobago,2024-07,27.75
+Trinidad and Tobago,2024-08,21.2
+Trinidad and Tobago,2024-09,31.25
+Trinidad and Tobago,2024-10,28.0
+Trinidad and Tobago,2024-11,30.0
+Trinidad and Tobago,2024-12,45.75
+Trinidad and Tobago,2025-01,35.0
+Trinidad and Tobago,2025-02,46.25
+Trinidad and Tobago,2025-03,38.5
+Trinidad and Tobago,2025-04,40.25
+Trinidad and Tobago,2025-05,22.8
+Trinidad and Tobago,2025-06,19.5
+Trinidad and Tobago,2025-07,40.0
+Trinidad and Tobago,2025-08,12.5
+Trinidad and Tobago,2025-09,15.0
+Turkey,2022-07,86.25
+Turkey,2022-08,93.09375
+Turkey,2022-09,112.17391304347827
+Turkey,2023-01,180.0
+Turkey,2023-03,89.0
+Turkey,2023-04,129.5
+Turkey,2023-05,117.75
+Turkey,2023-06,131.6
+Turkey,2023-07,124.25
+Turkey,2023-08,93.0
+Turkey,2024-06,93.2
+Turkey,2024-07,107.25
+Turkey,2024-08,78.0
+Turkey,2024-09,86.75
+Turkey,2024-10,95.8
+Turkey,2024-11,143.25
+Turkey,2024-12,194.0
+Turkey,2025-01,171.2
+Turkey,2025-02,121.5
+Turkey,2025-03,129.5
+Turkey,2025-04,91.0
+Turkey,2025-05,63.2
+Turkey,2025-06,17.75
+Turkey,2025-07,116.2
+Turkey,2025-08,91.5
+Turkey,2025-09,127.0
+Turkmenistan,2022-07,82.25
+Turkmenistan,2022-08,49.8125
+Turkmenistan,2022-09,64.6470588235294
+Turkmenistan,2023-01,68.0
+Turkmenistan,2023-03,46.0
+Turkmenistan,2023-04,82.5
+Turkmenistan,2023-05,53.5
+Turkmenistan,2023-06,100.8
+Turkmenistan,2023-07,68.0
+Turkmenistan,2023-08,77.0
+Turkmenistan,2024-06,51.2
+Turkmenistan,2024-07,61.0
+Turkmenistan,2024-08,71.4
+Turkmenistan,2024-09,74.0
+Turkmenistan,2024-10,78.8
+Turkmenistan,2024-11,65.0
+Turkmenistan,2024-12,75.0
+Turkmenistan,2025-01,56.6
+Turkmenistan,2025-02,92.25
+Turkmenistan,2025-03,57.0
+Turkmenistan,2025-08,47.5
+Turkmenistan,2025-09,68.0
+Uganda,2022-07,159.75
+Uganda,2022-08,130.625
+Uganda,2022-09,98.08695652173913
+Uganda,2023-01,143.0
+Uganda,2023-03,125.0
+Uganda,2023-04,81.0
+Uganda,2023-05,109.75
+Uganda,2023-06,123.2
+Uganda,2023-07,140.5
+Uganda,2023-08,49.0
+Uganda,2024-06,132.4
+Uganda,2024-07,141.0
+Uganda,2024-08,132.6
+Uganda,2024-09,107.0
+Uganda,2024-10,125.2
+Uganda,2024-11,107.25
+Uganda,2024-12,178.75
+Uganda,2025-01,256.4
+Uganda,2025-02,200.25
+Uganda,2025-03,177.0
+Ukraine,2022-07,48.0625
+Ukraine,2022-08,66.5
+Ukraine,2022-09,61.78260869565217
+Ukraine,2023-01,82.0
+Ukraine,2023-03,117.0
+Ukraine,2023-04,68.75
+Ukraine,2023-05,63.75
+Ukraine,2023-06,64.4
+Ukraine,2023-07,66.0
+Ukraine,2023-08,47.333333333333336
+Ukraine,2024-06,33.0
+Ukraine,2024-07,44.75
+Ukraine,2024-08,46.6
+Ukraine,2024-09,57.0
+Ukraine,2024-10,51.2
+Ukraine,2024-11,64.25
+Ukraine,2024-12,45.75
+Ukraine,2025-01,66.2
+Ukraine,2025-02,89.25
+Ukraine,2025-03,69.5
+Ukraine,2025-04,53.75
+Ukraine,2025-05,37.4
+Ukraine,2025-06,37.75
+Ukraine,2025-07,33.2
+Ukraine,2025-08,39.25
+Ukraine,2025-09,47.0
+United Arab Emirates,2022-07,127.3125
+United Arab Emirates,2022-08,169.59375
+United Arab Emirates,2022-09,95.65217391304348
+United Arab Emirates,2023-01,57.0
+United Arab Emirates,2023-03,55.0
+United Arab Emirates,2023-04,101.25
+United Arab Emirates,2023-05,74.75
+United Arab Emirates,2023-06,92.6
+United Arab Emirates,2023-07,93.75
+United Arab Emirates,2023-08,96.66666666666667
+United Arab Emirates,2024-06,126.4
+United Arab Emirates,2024-07,152.25
+United Arab Emirates,2024-08,121.8
+United Arab Emirates,2024-09,112.5
+United Arab Emirates,2024-10,86.4
+United Arab Emirates,2024-11,99.0
+United Arab Emirates,2024-12,77.5
+United Arab Emirates,2025-01,87.0
+United Arab Emirates,2025-02,68.0
+United Arab Emirates,2025-03,97.25
+United Arab Emirates,2025-04,96.5
+United Arab Emirates,2025-05,98.0
+United Arab Emirates,2025-06,112.25
+United Arab Emirates,2025-07,140.8
+United Arab Emirates,2025-08,227.5
+United Arab Emirates,2025-09,128.0
+United Kingdom of Great Britain and Northern Ireland,2022-07,43.125
+United Kingdom of Great Britain and Northern Ireland,2022-08,54.59375
+United Kingdom of Great Britain and Northern Ireland,2022-09,51.82608695652174
+United Kingdom of Great Britain and Northern Ireland,2023-01,46.0
+United Kingdom of Great Britain and Northern Ireland,2023-03,64.0
+United Kingdom of Great Britain and Northern Ireland,2023-04,61.5
+United Kingdom of Great Britain and Northern Ireland,2023-05,58.5
+United Kingdom of Great Britain and Northern Ireland,2023-06,52.4
+United Kingdom of Great Britain and Northern Ireland,2023-07,38.25
+United Kingdom of Great Britain and Northern Ireland,2023-08,184.0
+United Kingdom of Great Britain and Northern Ireland,2024-06,101.2
+United Kingdom of Great Britain and Northern Ireland,2024-07,57.75
+United Kingdom of Great Britain and Northern Ireland,2024-08,54.4
+United Kingdom of Great Britain and Northern Ireland,2024-09,79.25
+United Kingdom of Great Britain and Northern Ireland,2024-10,55.6
+United Kingdom of Great Britain and Northern Ireland,2024-11,102.5
+United Kingdom of Great Britain and Northern Ireland,2024-12,58.5
+United Kingdom of Great Britain and Northern Ireland,2025-01,85.0
+United Kingdom of Great Britain and Northern Ireland,2025-02,100.0
+United Kingdom of Great Britain and Northern Ireland,2025-03,122.5
+United Kingdom of Great Britain and Northern Ireland,2025-04,84.25
+United Kingdom of Great Britain and Northern Ireland,2025-05,74.8
+United Kingdom of Great Britain and Northern Ireland,2025-06,52.5
+United Kingdom of Great Britain and Northern Ireland,2025-07,49.2
+United Kingdom of Great Britain and Northern Ireland,2025-08,50.75
+United Kingdom of Great Britain and Northern Ireland,2025-09,33.0
+United States of America,2022-07,87.75
+United States of America,2022-08,86.40625
+United States of America,2022-09,137.7826086956522
+United States of America,2023-01,130.0
+United States of America,2023-03,87.0
+United States of America,2023-04,101.75
+United States of America,2023-05,106.25
+United States of America,2023-06,215.8
+United States of America,2023-07,92.25
+United States of America,2023-08,371.0
+United States of America,2024-06,198.6
+United States of America,2024-07,186.0
+United States of America,2024-08,133.4
+United States of America,2024-09,174.5
+United States of America,2024-10,117.4
+United States of America,2024-11,101.0
+United States of America,2024-12,109.0
+United States of America,2025-01,124.0
+United States of America,2025-02,95.0
+United States of America,2025-03,107.25
+United States of America,2025-04,134.25
+United States of America,2025-05,86.8
+United States of America,2025-06,114.0
+United States of America,2025-07,96.4
+United States of America,2025-08,103.25
+United States of America,2025-09,95.0
+Uzbekistan,2022-07,54.3125
+Uzbekistan,2022-08,66.1875
+Uzbekistan,2022-09,79.6
+Uzbekistan,2023-01,152.0
+Uzbekistan,2023-03,81.0
+Uzbekistan,2023-04,47.0
+Uzbekistan,2023-05,67.0
+Uzbekistan,2023-06,58.4
+Uzbekistan,2023-07,78.75
+Uzbekistan,2023-08,35.333333333333336
+Uzbekistan,2024-06,22.6
+Uzbekistan,2024-07,29.25
+Uzbekistan,2024-08,38.4
+Uzbekistan,2024-09,193.0
+Uzbekistan,2024-10,125.0
+Uzbekistan,2024-11,101.5
+Uzbekistan,2024-12,78.75
+Uzbekistan,2025-01,104.4
+Uzbekistan,2025-02,53.25
+Uzbekistan,2025-03,15.25
+Uzbekistan,2025-04,18.5
+Uzbekistan,2025-05,13.8
+Uzbekistan,2025-06,17.0
+Uzbekistan,2025-07,21.2
+Uzbekistan,2025-08,22.25
+Uzbekistan,2025-09,24.0
+Vatican,2022-07,57.1875
+Vatican,2022-08,43.28125
+Vatican,2022-09,38.17391304347826
+Vatican,2023-01,46.0
+Vatican,2023-03,50.0
+Vatican,2023-04,40.0
+Vatican,2023-05,40.0
+Vatican,2023-06,42.2
+Vatican,2023-07,57.25
+Vatican,2023-08,39.333333333333336
+Vatican,2024-06,33.2
+Vatican,2024-07,49.5
+Vatican,2024-08,50.0
+Vatican,2024-09,34.75
+Vatican,2024-10,44.0
+Vatican,2024-11,74.0
+Vatican,2024-12,62.75
+Vatican,2025-01,66.4
+Vatican,2025-02,64.25
+Vatican,2025-03,47.75
+Vatican,2025-04,38.0
+Vatican,2025-05,39.0
+Vatican,2025-06,50.75
+Vatican,2025-07,45.4
+Vatican,2025-08,49.0
+Vatican,2025-09,34.0
+Venezuela,2022-07,12.125
+Venezuela,2022-08,10.96875
+Venezuela,2022-09,20.35
+Venezuela,2023-01,24.0
+Venezuela,2023-03,8.0
+Venezuela,2023-04,28.25
+Venezuela,2023-05,19.25
+Venezuela,2023-06,4.8
+Venezuela,2023-07,14.5
+Venezuela,2023-08,12.666666666666666
+Venezuela,2024-06,13.4
+Venezuela,2024-07,17.0
+Venezuela,2024-08,13.2
+Venezuela,2024-09,20.75
+Venezuela,2024-10,29.6
+Venezuela,2024-11,22.5
+Venezuela,2024-12,26.666666666666668
+Venezuela,2025-01,3.0
+Venezuela,2025-02,20.0
+Venezuela,2025-03,16.0
+Venezuela,2025-04,7.0
+Venezuela,2025-05,16.0
+Venezuela,2025-06,7.0
+Venezuela,2025-07,5.75
+Venezuela,2025-08,11.666666666666666
+Venezuela,2025-09,26.0
+Vietnam,2022-07,84.5
+Vietnam,2022-08,78.4375
+Vietnam,2022-09,102.8695652173913
+Vietnam,2023-01,105.0
+Vietnam,2023-03,150.0
+Vietnam,2023-04,139.75
+Vietnam,2023-05,102.0
+Vietnam,2023-06,99.0
+Vietnam,2023-07,89.0
+Vietnam,2023-08,109.33333333333333
+Vietnam,2024-06,60.8
+Vietnam,2024-07,48.5
+Vietnam,2024-08,50.8
+Vietnam,2024-09,68.75
+Vietnam,2024-10,76.0
+Vietnam,2024-11,74.25
+Vietnam,2024-12,62.75
+Vietnam,2025-01,114.4
+Vietnam,2025-02,95.5
+Vietnam,2025-03,87.0
+Vietnam,2025-04,87.25
+Vietnam,2025-05,50.0
+Vietnam,2025-06,41.75
+Vietnam,2025-07,47.4
+Vietnam,2025-08,37.75
+Vietnam,2025-09,25.0
+Zambia,2022-07,79.6875
+Zambia,2022-08,152.5
+Zambia,2022-09,130.47826086956522
+Zambia,2023-01,59.0
+Zambia,2023-03,21.0
+Zambia,2023-04,41.5
+Zambia,2023-05,82.33333333333333
+Zambia,2023-06,100.6
+Zambia,2023-07,85.25
+Zambia,2023-08,64.66666666666667
+Zambia,2024-06,90.6
+Zambia,2024-07,141.0
+Zambia,2024-08,144.8
+Zambia,2024-09,170.0
+Zambia,2024-10,138.0
