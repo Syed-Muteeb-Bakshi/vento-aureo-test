@@ -3,14 +3,16 @@ import json
 import joblib
 import pandas as pd
 from flask import Blueprint, jsonify, request
-from difflib import get_close_matches
 from prophet import Prophet
 
 forecast_bp = Blueprint("forecast", __name__)
 
-# Proper path to models
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_DIR = os.path.join(BASE_DIR, "..", "models", "prophet_models")
+# ===============================
+# FIXED MODEL LOADING (UNIVERSAL)
+# ===============================
+MODEL_ROOT = os.environ.get("MODEL_DIR", "models")
+MODEL_DIR = os.path.join(MODEL_ROOT, "prophet_models")
+
 
 @forecast_bp.route("/get_forecast/<city>", methods=["GET"])
 def get_forecast(city):

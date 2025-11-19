@@ -5,6 +5,9 @@ from flask import Flask, send_from_directory, jsonify, request
 from flask_cors import CORS
 import json, requests
 
+# Default model directory for local development
+os.environ.setdefault("MODEL_DIR", os.path.join(os.path.dirname(__file__), "models"))
+
 # -----------------------------------------------------
 # Blueprint imports (correct for your file structure)
 # -----------------------------------------------------

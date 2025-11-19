@@ -6,14 +6,14 @@ from typing import List
 
 ml_bp = Blueprint("ml_bp", __name__)
 
-# -------------------------
-# Path configuration (adjust if needed)
-# -------------------------
-HERE = os.path.dirname(os.path.abspath(__file__))            # .../backend/routes
-BASE_DIR = os.path.abspath(os.path.join(HERE, "..", ".."))   # .../backend
-MODEL_DIR = os.path.join(BASE_DIR, "models", "other models") # adjust if your models are elsewhere
+# ===============================
+# FIXED MODEL LOADING (UNIVERSAL)
+# ===============================
+MODEL_ROOT = os.environ.get("MODEL_DIR", "models")
+MODEL_DIR = os.path.join(MODEL_ROOT, "other models")
 
-print(f"[DEBUG] Loading models from: {MODEL_DIR}")
+print(f"[DEBUG] Loading ML models from: {MODEL_DIR}")
+
 
 # -------------------------
 # Utilities: load models and feature list

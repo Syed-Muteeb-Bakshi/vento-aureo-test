@@ -3,8 +3,12 @@ import os, joblib, pandas as pd
 
 prophet_bp = Blueprint("prophet_bp", __name__)
 
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
-PROPHET_DIR = os.path.join(BASE_DIR, "models", "hybrid_models", "prophet_models")
+# ===============================
+# FIXED MODEL LOADING (UNIVERSAL)
+# ===============================
+MODEL_ROOT = os.environ.get("MODEL_DIR", "models")
+PROPHET_DIR = os.path.join(MODEL_ROOT, "hybrid_models", "prophet_models")
+
 
 @prophet_bp.route("/get_forecast/<city>", methods=["GET"])
 def get_forecast(city):

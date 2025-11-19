@@ -2,7 +2,6 @@
 # backend/backend/utils/hybrid_utils.py
 # (Final fixed version — forecasts forward from now)
 # ============================================================
-
 import os
 import re
 import unicodedata
@@ -10,21 +9,24 @@ import joblib
 import numpy as np
 import pandas as pd
 
-
-# Lazy import TensorFlow only when needed
+# Lazy import TensorFlow only when needed (saves memory on Render)
 def _lazy_load_keras():
     from tensorflow.keras import models
     return models
 
-
 # ============================================================
-# FIXED PATHS
+# FIXED PATHS (CLOUD SAFE, RENDER SAFE, LOCAL SAFE)
 # ============================================================
-# Your models live under: backend/models/hybrid_models/
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
-PROPHET_DIR = os.path.join(BASE_DIR, "models", "hybrid_models", "prophet_models")
-LSTM_DIR = os.path.join(BASE_DIR, "models", "hybrid_models", "lstm_models")
 
+# Universal model root passed via environment variable (MODEL_DIR=models)
+MODEL_ROOT = os.environ.get("MODEL_DIR", "models")
+
+# Subfolders under backend/backend/models/
+PROPHET_DIR = os.path.join(MODEL_ROOT, "hybrid_models", "prophet_models")
+LSTM_DIR = os.path.join(MODEL_ROOT, "hybrid_models", "lstm_models")
+
+# If hybrid output folder exists:
+HYBRID_OUTPUT_DIR = os.path.join(MODEL_ROOT, "hybrid_models", "outputs")
 
 # ============================================================
 # Normalization helper
