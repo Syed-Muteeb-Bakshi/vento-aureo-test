@@ -10,10 +10,9 @@ ml_bp = Blueprint("ml_bp", __name__)
 # FIXED MODEL LOADING (UNIVERSAL)
 # ===============================
 MODEL_ROOT = os.environ.get("MODEL_DIR", "models")
-MODEL_DIR = os.path.join(MODEL_ROOT, "other models")
+MODEL_DIR = os.path.join(MODEL_ROOT, "other_models")
 
 print(f"[DEBUG] Loading ML models from: {MODEL_DIR}")
-
 
 # -------------------------
 # Utilities: load models and feature list
