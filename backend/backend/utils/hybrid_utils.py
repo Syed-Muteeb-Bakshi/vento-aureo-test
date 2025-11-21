@@ -1,38 +1,22 @@
-# ============================================================
 # backend/backend/utils/hybrid_utils.py
-# (Final fixed version — forecasts forward from now)
-# ============================================================
 import os
 import re
 import unicodedata
-import joblib
 import numpy as np
 import pandas as pd
 
-# Lazy import TensorFlow only when needed (saves memory on Render)
-def _lazy_load_keras():
-    from tensorflow.keras import models
-    return models
+from model_fetcher import load_joblib, load_keras
+from model_paths import PATH_HYBRID_MODELS
 
-# ============================================================
-# FIXED PATHS (CLOUD SAFE, RENDER SAFE, LOCAL SAFE)
-# ============================================================
+# Build model root path (string)
+MODEL_ROOT = os.environ.get("MODEL_DIR", os.path.join(os.path.dirname(__file__), "..", "models"))
+HYBRID_ROOT = PATH_HYBRID_MODELS  # local path
+PROPHET_SUBFOLDER = "prophet_models"
+LSTM_SUBFOLDER = "lstm_models"
+HYBRID_OUTPUT_DIRNAME = "outputs"
 
-# Universal model root passed via environment variable (MODEL_DIR=models)
-MODEL_ROOT = os.environ.get("MODEL_DIR", "models")
 
-# Subfolders under backend/backend/models/
-PROPHET_DIR = os.path.join(MODEL_ROOT, "hybrid_models", "prophet_models")
-LSTM_DIR = os.path.join(MODEL_ROOT, "hybrid_models", "lstm_models")
-
-# If hybrid output folder exists:
-HYBRID_OUTPUT_DIR = os.path.join(MODEL_ROOT, "hybrid_models", "outputs")
-
-# ============================================================
-# Normalization helper
-# ============================================================
 def _normalize_name(s: str) -> str:
-    """Normalize names for fuzzy matching."""
     if not s:
         return ""
     s = unicodedata.normalize("NFKD", s)
@@ -41,133 +25,131 @@ def _normalize_name(s: str) -> str:
     return s
 
 
-# ============================================================
-# Prophet Loader (fuzzy matching)
-# ============================================================
+def _try_load_joblib_candidates(cands):
+    for candidate in cands:
+        try:
+            return load_joblib(candidate), candidate
+        except Exception:
+            continue
+    return None, None
+
+
 def load_prophet_model_for_city(city: str):
     """
-    Load the Prophet model matching a given city name.
-    Handles fuzzy matches, diacritics, punctuation, and extra country words.
+    Try to find the best prophet model for `city`.
+    Search order:
+      1) local hybrid_models/prophet_models/<file>
+      2) local prophet_models/<file> (if present outside hybrid)
+      3) remote (Supabase) same paths via load_joblib
     """
-
-    import difflib
-
-    # ---- Normalize city ----
     city_raw = city
-    city = re.sub(r"[,._]+", " ", city.strip())
-    city_tokens = city.split()
-    # Remove very common country / region words
-    drop_words = {
-        "india","united","states","usa","england","uk","spain","france","germany",
-        "italy","china","japan","korea","russia","canada","australia","brazil",
-        "mexico","indonesia","turkey","argentina","south","africa","saudi",
-        "arabia","emirates","uae"
-    }
-    city_tokens = [t for t in city_tokens if t.lower() not in drop_words]
-    city_core = " ".join(city_tokens[:3])  # keep up to 3 words
-    city_norm = _normalize_name(city_core)
+    city_norm = _normalize_name(re.sub(r"[,._]+", " ", city).strip())
 
-    if not os.path.isdir(PROPHET_DIR):
-        raise FileNotFoundError(f"Prophet directory not found: {PROPHET_DIR}")
+    # list candidate filenames from local hybrid folder if available
+    local_dir = os.path.join(HYBRID_ROOT, PROPHET_SUBFOLDER)
+    all_files = []
+    if os.path.isdir(local_dir):
+        all_files = [f for f in os.listdir(local_dir) if f.endswith(".joblib")]
 
-    all_files = [f for f in os.listdir(PROPHET_DIR) if f.endswith(".joblib")]
+    # if none found locally, try the top-level prophet_models folder
     if not all_files:
-        raise FileNotFoundError(f"No Prophet model files in {PROPHET_DIR}")
+        top_local = os.path.join(MODEL_ROOT, "prophet_models")
+        if os.path.isdir(top_local):
+            all_files = [f for f in os.listdir(top_local) if f.endswith(".joblib")]
 
-    # ---- Try direct / substring / token matches ----
-    candidates = []
-    for fname in all_files:
-        name_only = os.path.splitext(fname)[0]
-        norm = _normalize_name(name_only)
-        if city_norm in norm or norm in city_norm:
-            candidates.append(fname)
-        else:
-            # Token overlap check (e.g., 'losangeles' vs 'angeles')
-            if any(tok in norm for tok in city_norm.split()):
-                candidates.append(fname)
+    # Build fuzzy candidate list from available filenames or simply try to load by standard name
+    try_name = f"{city_raw.replace(' ', '_')}_prophet.joblib"
+    bucket_candidates = [
+        f"hybrid_models/prophet_models/{try_name}",
+        f"prophet_models/{try_name}"
+    ]
 
-    if candidates:
-        # Prefer closest string length difference
-        candidates.sort(key=lambda f: abs(len(_normalize_name(f)) - len(city_norm)))
-        best_match = candidates[0]
-        model_path = os.path.join(PROPHET_DIR, best_match)
-        print(f"[INFO] Prophet match → '{city_raw}' → '{best_match}'")
-        return joblib.load(model_path), best_match
+    # 1) Try exact candidates via model_fetcher/local
+    model, used = _try_load_joblib_candidates(bucket_candidates)
+    if model is not None:
+        return model, used
 
-    # ---- Fallback: similarity ratio ----
-    norm_list = [_normalize_name(os.path.splitext(f)[0]) for f in all_files]
-    closest = difflib.get_close_matches(city_norm, norm_list, n=1, cutoff=0.4)
-    if closest:
-        idx = norm_list.index(closest[0])
-        best_match = all_files[idx]
-        model_path = os.path.join(PROPHET_DIR, best_match)
-        print(f"[WARN] Fuzzy fallback → '{city_raw}' ≈ '{best_match}'")
-        return joblib.load(model_path), best_match
+    # 2) If we have a local listing, fuzzy-match
+    if all_files:
+        # Normalize file basenames
+        norm_list = [(_normalize_name(os.path.splitext(f)[0]), f) for f in all_files]
+        # try substring matches first
+        for norm, fname in norm_list:
+            if city_norm in norm or norm in city_norm:
+                # try loading via hybrid path or top-level
+                subpath = f"hybrid_models/prophet_models/{fname}"
+                try:
+                    return load_joblib(subpath), subpath
+                except Exception:
+                    # fallback to top-level
+                    subpath2 = f"prophet_models/{fname}"
+                    try:
+                        return load_joblib(subpath2), subpath2
+                    except Exception:
+                        continue
 
-    # ---- If nothing at all ----
-    raise FileNotFoundError(
-        f"No Prophet model found for '{city_raw}' in {PROPHET_DIR}. "
-        f"({len(all_files)} models checked)"
-    )
+    # 3) As last effort try remote fuzzy by attempting to download a list? (not possible)
+    # So return not found
+    raise FileNotFoundError(f"No Prophet model found for '{city_raw}'.")
 
-# ============================================================
-# LSTM Loader (optional)
-# ============================================================
+
 def load_lstm_model_for_city(city: str):
+    """
+    Try to load a keras .keras model and associated scaler from hybrid_models/lstm_models
+    Return (lstm_model, scaler_obj, filename)
+    """
     city_norm = _normalize_name(city)
-    if not os.path.isdir(LSTM_DIR):
+    # local listing
+    local_lstm_dir = os.path.join(HYBRID_ROOT, LSTM_SUBFOLDER)
+    if os.path.isdir(local_lstm_dir):
+        files = os.listdir(local_lstm_dir)
+    else:
+        files = []
+
+    # find candidate keras and scaler names by normalization match
+    keras_candidates = [f for f in files if f.endswith(".keras") and city_norm in _normalize_name(f)]
+    scaler_candidates = [f for f in files if f.endswith(".joblib") and "_scaler" in f and city_norm in _normalize_name(f)]
+
+    # try remote/local loading using candidate names
+    if keras_candidates:
+        keras_fname = keras_candidates[0]
+        keras_subpath = f"hybrid_models/lstm_models/{keras_fname}"
+        try:
+            lstm_model = load_keras(keras_subpath)
+        except Exception:
+            lstm_model = None
+        scaler = None
+        if scaler_candidates:
+            try:
+                scaler = load_joblib(f"hybrid_models/lstm_models/{scaler_candidates[0]}")
+            except Exception:
+                scaler = None
+        return lstm_model, scaler, keras_candidates[0]
+
+    # fallback: try to load a standard-named keras file for the city
+    standard_name = f"{city.replace(' ', '_')}_lstm.keras"
+    try:
+        lstm_model = load_keras(f"hybrid_models/lstm_models/{standard_name}")
+        return lstm_model, None, standard_name
+    except Exception:
         return None, None, None
 
-    all_files = os.listdir(LSTM_DIR)
-    lstm_candidates = [f for f in all_files if f.endswith(".keras") and city_norm in _normalize_name(f)]
-    scaler_candidates = [f for f in all_files if f.endswith("_scaler.joblib") and city_norm in _normalize_name(f)]
 
-    if not lstm_candidates:
-        return None, None, None
-
-    lstm_path = os.path.join(LSTM_DIR, lstm_candidates[0])
-    _models = _lazy_load_keras()
-    lstm_model = _models.load_model(lstm_path)
-
-    scaler = None
-    if scaler_candidates:
-        scaler_path = os.path.join(LSTM_DIR, scaler_candidates[0])
-        if os.path.exists(scaler_path):
-            scaler = joblib.load(scaler_path)
-
-    return lstm_model, scaler, lstm_candidates[0]
-
-
-# ============================================================
-# Main Function: Generate Hybrid Forecast (updated)
-# ============================================================
 def generate_hybrid_forecast(city: str, horizon_months: int = 24):
-    """
-    Generate AQI forecasts using Prophet + LSTM hybrid model.
-    Forecasts forward from the current date (not the training cutoff).
-    """
-
     from datetime import datetime
-    from dateutil.relativedelta import relativedelta
-
-    # --- Step 1: Load Prophet model ---
+    # Step 1: Load prophet model
     try:
         prophet_model, prophet_fname = load_prophet_model_for_city(city)
     except FileNotFoundError as e:
         return {"error": str(e)}
 
-    # --- Step 2: Load LSTM model (optional) ---
-    try:
-        lstm_model, scaler, lstm_fname = load_lstm_model_for_city(city)
-    except FileNotFoundError:
-        lstm_model, scaler, lstm_fname = None, None, None
+    # Step 2: try LSTM
+    lstm_model, scaler, lstm_fname = load_lstm_model_for_city(city)
 
-    # ✅ Forecast forward from *now* instead of training end
     start_date = datetime.now()
     future_dates = pd.date_range(start=start_date, periods=horizon_months, freq="M")
     future = pd.DataFrame({"ds": future_dates})
 
-    # Prophet forecast
     try:
         forecast_prophet = prophet_model.predict(future)
     except Exception as e:
@@ -178,7 +160,7 @@ def generate_hybrid_forecast(city: str, horizon_months: int = 24):
 
     yhat_values = forecast_prophet["yhat"].values
 
-    # --- Step 3: Prophet-only fallback ---
+    # if no lstm, return prophet-only
     if lstm_model is None or scaler is None:
         forecast = [
             {"date": str(row["ds"].date()), "predicted_aqi": float(row["yhat"])}
@@ -191,21 +173,23 @@ def generate_hybrid_forecast(city: str, horizon_months: int = 24):
             "forecast": forecast,
         }
 
-    # --- Step 4: LSTM continuation ---
+    # LSTM continuation simulation - ensure shapes are correct for model
     preds = []
+    # create a seed; ideally you'd use last known sequence from training, here we use small random seed
     last_seq = np.random.random((3, 1))
     for _ in range(horizon_months):
         next_pred = lstm_model.predict(last_seq.reshape(1, 3, 1), verbose=0)
         preds.append(next_pred[0][0])
         last_seq = np.append(last_seq[1:], next_pred).reshape(3, 1)
 
-    forecast_lstm = scaler.inverse_transform(np.array(preds).reshape(-1, 1)).flatten()
+    try:
+        forecast_lstm = scaler.inverse_transform(np.array(preds).reshape(-1, 1)).flatten()
+    except Exception:
+        forecast_lstm = np.array(preds)
 
-    # --- Step 5: Combine Hybrid ---
     hybrid_len = min(len(yhat_values), len(forecast_lstm))
     hybrid_forecast = 0.6 * yhat_values[-hybrid_len:] + 0.4 * forecast_lstm[-hybrid_len:]
 
-    # --- Step 6: Format JSON Output ---
     forecast = [
         {"date": str(forecast_prophet["ds"].iloc[i].date()), "predicted_aqi": float(hybrid_forecast[i])}
         for i in range(hybrid_len)

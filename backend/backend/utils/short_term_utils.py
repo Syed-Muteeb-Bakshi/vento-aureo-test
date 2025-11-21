@@ -1,3 +1,5 @@
+# backend/backend/utils/short_term_utils.py
+
 import numpy as np
 from datetime import datetime, timedelta
 
@@ -7,7 +9,6 @@ def generate_short_term_forecast(city, base_value):
     No ML, but a physically reasonable simulation.
     """
 
-    # Ensure base type
     base = float(base_value)
 
     # Seasonal small variation
@@ -19,7 +20,6 @@ def generate_short_term_forecast(city, base_value):
     noise_mid  = np.random.normal(0, 4, size=14)       # 2 weeks
     noise_long = np.random.normal(0, 8, size=30)       # 1 month
 
-    # Create time steps
     now = datetime.now()
 
     output = {

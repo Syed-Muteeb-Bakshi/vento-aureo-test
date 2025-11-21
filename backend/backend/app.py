@@ -1,16 +1,34 @@
 # backend/backend/app.py
 
 import os
-from flask import Flask, send_from_directory, jsonify, request
+from flask import Flask, send_from_directory, jsonify
 from flask_cors import CORS
-import json, requests
 
-# Default model directory for local development
-os.environ.setdefault("MODEL_DIR", os.path.join(os.path.dirname(__file__), "models"))
+# ----------------------------------------
+# IMPORTANT: model_paths sets MODEL_DIR 
+# (we do not override it here)
+# ----------------------------------------
+import model_paths
 
-# -----------------------------------------------------
-# Blueprint imports (correct for your file structure)
-# -----------------------------------------------------
+# ----------------------------------------
+# Flask App Setup
+# ----------------------------------------
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))       # backend/backend
+FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")           # dashboard fallback
+TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
+
+app = Flask(
+    __name__,
+    static_folder=FRONTEND_DIR,
+    template_folder=TEMPLATES_DIR
+)
+
+CORS(app)
+
+
+# ----------------------------------------
+# Load BLUEPRINTS (correct imports)
+# ----------------------------------------
 from routes.forecast_routes import forecast_bp
 from routes.iot_routes import iot_bp
 from routes.ml_routes import ml_bp
@@ -21,19 +39,7 @@ from routes.prophet_routes import prophet_bp
 from routes.short_term_routes import short_term_bp
 from routes.city_aqi_routes import city_bp
 
-# -----------------------------------------------------
-# Basic App Setup
-# -----------------------------------------------------
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))      # backend/backend
-FRONTEND_DIR = os.path.join(BASE_DIR, "..", "..", "frontend")
-TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
-
-app = Flask(__name__, static_folder=FRONTEND_DIR, template_folder=TEMPLATES_DIR)
-CORS(app)
-
-# -----------------------------------------------------
-# Register Blueprints
-# -----------------------------------------------------
+# Register them
 app.register_blueprint(forecast_bp, url_prefix="/api")
 app.register_blueprint(iot_bp, url_prefix="/api")
 app.register_blueprint(ml_bp, url_prefix="/api")
@@ -44,30 +50,41 @@ app.register_blueprint(prophet_bp, url_prefix="/api")
 app.register_blueprint(short_term_bp, url_prefix="/api")
 app.register_blueprint(city_bp, url_prefix="/api")
 
-# -----------------------------------------------------
-# Serve dashboard.html
-# -----------------------------------------------------
-@app.route("/")
-def serve_dashboard():
-    static_dashboard = os.path.join(app.static_folder, "dashboard.html")
-    template_dashboard = os.path.join(app.template_folder, "dashboard.html")
 
-    if os.path.exists(static_dashboard):
+# ----------------------------------------
+# DASHBOARD FALLBACK (Flask)
+# Vercel will be your main UI
+# Flask serves local fallback at "/"
+# ----------------------------------------
+@app.route("/")
+def serve_fallback_dashboard():
+    """
+    Serves dashboard.html from backend/backend/frontend/
+    Only for fallback if Vercel UI unavailable.
+    """
+    dashboard_path = os.path.join(app.static_folder, "dashboard.html")
+
+    if os.path.exists(dashboard_path):
         return send_from_directory(app.static_folder, "dashboard.html")
 
-    if os.path.exists(template_dashboard):
-        return send_from_directory(app.template_folder, "dashboard.html")
-
     return (
-        "<h3 style='color:red;text-align:center;margin-top:40px;'>Dashboard file not found.</h3>"
-        "<p style='text-align:center'>Put <code>dashboard.html</code> in frontend/ or backend/backend/templates/</p>",
+        "<h2>Dashboard not found</h2>"
+        "<p>Please deploy the frontend to Vercel.</p>",
         404,
     )
 
 
-# -----------------------------------------------------
-# GLOBAL AQI ENDPOINT
-# -----------------------------------------------------
+# ----------------------------------------
+# HEALTH CHECK (Render)
+# ----------------------------------------
+@app.route("/health")
+def health():
+    return jsonify({"status": "ok", "service": "vento-aureo-backend"})
+
+
+# ----------------------------------------
+# GLOBAL AQI (unchanged)
+# ----------------------------------------
 @app.route("/api/global_aqi")
 def global_aqi():
     coords_file = os.path.join(BASE_DIR, "data", "city_coordinates.json")
@@ -75,11 +92,11 @@ def global_aqi():
     if not os.path.exists(coords_file):
         return jsonify({"error": "Coordinates file not ready"}), 500
 
-    with open(coords_file, "r", encoding="utf-8") as f:
+    import json, requests
+    with open(coords_file, "r") as f:
         data = json.load(f)
 
     results = {}
-
     for city, info in list(data.items())[:300]:
         lat, lon = info["lat"], info["lon"]
 
@@ -104,13 +121,8 @@ def global_aqi():
     return jsonify(results)
 
 
-# -----------------------------------------------------
-# Short-Term Forecast API
-# -----------------------------------------------------
-
-# -----------------------------------------------------
-# RUN SERVER
-# -----------------------------------------------------
+# ----------------------------------------
+# MAIN ENTRY (local only)
+# ----------------------------------------
 if __name__ == "__main__":
-    os.chdir(BASE_DIR)
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(debug=True, port=5000)
