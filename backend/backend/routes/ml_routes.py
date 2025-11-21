@@ -1,76 +1,63 @@
 # backend/backend/routes/ml_routes.py
-
 from flask import Blueprint, jsonify, request
-import os
-import json
-import joblib
-from typing import List
-
+import os, json
 import numpy as np
 import pandas as pd
+from typing import List
 
-from model_fetcher import load_joblib
-from model_paths import PATH_OTHER_MODELS, local_path
+from model_loader import load_model  # NEW loader
 
 ml_bp = Blueprint("ml_bp", __name__)
 
-# Debugging path
-MODEL_ROOT = os.environ.get("MODEL_DIR", os.path.join(os.path.dirname(__file__), "..", "models"))
-MODEL_DIR = PATH_OTHER_MODELS  # local path string
+# ===============================
+# Model loading
+# ===============================
+print("[DEBUG] Using MODEL_DIR =", os.environ.get("MODEL_DIR"))
 
-print(f"[DEBUG] Loading ML models from: {MODEL_DIR}")
-
-
-def _local_exists(fname: str) -> bool:
-    return os.path.exists(os.path.join(MODEL_DIR, fname))
-
-
-def safe_load_model(fname: str):
-    """
-    Try load locally if present (fast), otherwise try model_fetcher (supabase).
-    Returns None on failure.
-    """
-    local_candidate = os.path.join(MODEL_DIR, fname)
-    if os.path.exists(local_candidate):
-        try:
-            return joblib.load(local_candidate)
-        except Exception as e:
-            print(f"[WARN] Local joblib load failed for {local_candidate}: {e}")
-
-    # remote attempt via model_fetcher (path relative to models root)
+def safe_load_model(filename: str, subfolder: str = "other_models"):
     try:
-        return load_joblib(f"other_models/{fname}")
+        model = load_model(filename, subfolder=subfolder)
+        print(f"[INFO] Loaded model: {subfolder}/{filename}")
+        return model
+    except FileNotFoundError:
+        print(f"[WARN] Missing model: {subfolder}/{filename}")
+        return None
     except Exception as e:
-        print(f"[WARN] Remote load failed for other_models/{fname}: {e}")
+        print(f"[ERROR] Failed to load {subfolder}/{filename}: {e}")
         return None
 
+# -------------------------
+# Load models (safely)
+# -------------------------
+xgb_model = safe_load_model("xgboost_aqi_model.joblib", "other_models")
+rf_model = safe_load_model("rf_tuned.joblib", "other_models") or safe_load_model("best_AQI_classifier_Random_Forest.joblib", "other_models")
+aqi_classifier = safe_load_model("xgboost_aqi_category_classifier.joblib", "other_models")
+scaler = safe_load_model("scaler.joblib", "other_models") or safe_load_model("scaler_regressor.joblib", "other_models")
+imputer = safe_load_model("imputer_regressor.joblib", "other_models") or safe_load_model("imputer.joblib", "other_models")
 
-def load_feature_list() -> List[str]:
-    """
-    Load the feature list used by the ML models.
-    Order of attempts:
-      1) local JSON (regressor_feature_list.json)
-      2) local/joblib
-      3) remote via load_joblib("other_models/...")
-      4) inspect loaded joblib models for feature_names_in_
-    """
-    candidates_local = [
-        os.path.join(MODEL_DIR, "regressor_feature_list.json"),
-        os.path.join(MODEL_DIR, "feature_list.joblib"),
-        os.path.join(MODEL_DIR, "regressor_feature_list.joblib"),
+# -------------------------
+# Utilities: load features
+# -------------------------
+def load_feature_list_from_local_or_models() -> List[str]:
+    # prefer JSON/joblib in local MODEL_DIR
+    model_root = os.environ.get("MODEL_DIR", "models")
+    candidates = [
+        os.path.join(model_root, "other_models", "regressor_feature_list.json"),
+        os.path.join(model_root, "other_models", "feature_list.joblib"),
+        os.path.join(model_root, "other_models", "regressor_feature_list.joblib"),
     ]
-
-    for c in candidates_local:
+    for c in candidates:
         if os.path.exists(c):
             try:
                 if c.endswith(".json"):
-                    with open(c, "r", encoding="utf-8") as fh:
-                        data = json.load(fh)
+                    with open(c, "r", encoding="utf-8") as f:
+                        data = json.load(f)
                     if isinstance(data, dict) and "features" in data:
                         return data["features"]
                     if isinstance(data, list):
                         return data
                 else:
+                    import joblib
                     data = joblib.load(c)
                     if isinstance(data, list):
                         return data
@@ -79,52 +66,30 @@ def load_feature_list() -> List[str]:
             except Exception as e:
                 print(f"[WARN] Could not load feature list from {c}: {e}")
 
-    # try remote joblib
-    remote_candidates = [
-        "other_models/feature_list.joblib",
-        "other_models/regressor_feature_list.joblib"
-    ]
-    for rc in remote_candidates:
-        try:
-            data = load_joblib(rc)
-            if isinstance(data, list):
-                return data
-            if isinstance(data, dict) and "features" in data:
-                return data["features"]
-        except Exception:
-            continue
-
-    # inspect model files in local folder (if exists) to find feature_names_in_
+    # Fallback: attempt to inspect a joblib model on-disk (local or render)
     try:
-        if os.path.isdir(MODEL_DIR):
-            fallback_files = [f for f in os.listdir(MODEL_DIR) if f.endswith(".joblib")]
-            for f in fallback_files:
-                try:
-                    obj = joblib.load(os.path.join(MODEL_DIR, f))
-                    feat = getattr(obj, "feature_names_in_", None)
-                    if feat is not None:
-                        return list(feat)
-                except Exception:
-                    continue
+        model_dir = os.path.join(model_root, "other_models")
+        if os.path.exists(model_dir):
+            for f in os.listdir(model_dir):
+                if f.endswith(".joblib"):
+                    try:
+                        obj = load_model(f, subfolder="other_models")
+                        feat = getattr(obj, "feature_names_in_", None)
+                        if feat is not None:
+                            return list(feat)
+                    except Exception:
+                        continue
     except Exception:
         pass
 
     return []
 
-
-# -------------------------
-# Load models (safely)
-# -------------------------
-xgb_model = safe_load_model("xgboost_aqi_model.joblib")
-rf_model = safe_load_model("rf_tuned.joblib") or safe_load_model("best_AQI_classifier_Random_Forest.joblib")
-aqi_classifier = safe_load_model("xgboost_aqi_category_classifier.joblib")
-scaler = safe_load_model("scaler.joblib") or safe_load_model("scaler_regressor.joblib")
-imputer = safe_load_model("imputer_regressor.joblib") or safe_load_model("imputer.joblib")
-
-FEATURES = load_feature_list()
+FEATURES = load_feature_list_from_local_or_models()
 print(f"[DEBUG] Loaded feature list with {len(FEATURES)} features.")
 
-
+# -------------------------
+# Helper: prepare input to match expected features
+# -------------------------
 def prepare_input(df: pd.DataFrame, expected_features: List[str]) -> np.ndarray:
     if not expected_features:
         return df.values
@@ -133,11 +98,12 @@ def prepare_input(df: pd.DataFrame, expected_features: List[str]) -> np.ndarray:
     for feat in expected_features:
         if feat not in df_copy.columns:
             df_copy[feat] = 0.0
-
     df_copy = df_copy[expected_features]
     return df_copy.values
 
-
+# -------------------------
+# AQI helpers
+# -------------------------
 def get_aqi_category(aqi_value):
     if aqi_value <= 50:
         return "Good"
@@ -152,7 +118,9 @@ def get_aqi_category(aqi_value):
     else:
         return "Hazardous"
 
-
+# -------------------------
+# Routes
+# -------------------------
 @ml_bp.route("/predict_aqi", methods=["POST"])
 def predict_aqi():
     try:
@@ -167,12 +135,12 @@ def predict_aqi():
 
         X = prepare_input(df, FEATURES)
 
+        # Apply imputer/scaler if available
         if imputer is not None:
             try:
                 X = imputer.transform(X)
             except Exception as e:
                 print("[WARN] Imputer transform failed:", e)
-
         if scaler is not None:
             try:
                 X = scaler.transform(X)
@@ -187,7 +155,6 @@ def predict_aqi():
                 model_used = "XGBoost"
             except Exception as e:
                 print("[WARN] xgb predict failed:", e)
-
         if aqi_pred is None and rf_model is not None:
             try:
                 aqi_pred = float(rf_model.predict(X)[0])
