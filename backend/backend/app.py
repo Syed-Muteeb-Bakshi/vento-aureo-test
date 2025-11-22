@@ -38,6 +38,7 @@ from routes.hybrid_routes import hybrid_bp
 from routes.prophet_routes import prophet_bp
 from routes.short_term_routes import short_term_bp
 from routes.city_aqi_routes import city_bp
+from routes.upload_routes import upload_bp
 
 # Register them
 app.register_blueprint(forecast_bp, url_prefix="/api")
@@ -49,7 +50,7 @@ app.register_blueprint(trivia_bp, url_prefix="/api")
 app.register_blueprint(prophet_bp, url_prefix="/api")
 app.register_blueprint(short_term_bp, url_prefix="/api")
 app.register_blueprint(city_bp, url_prefix="/api")
-
+app.register_blueprint(upload_bp, url_prefix="/api")
 
 # ----------------------------------------
 # DASHBOARD FALLBACK (Flask)

@@ -1,93 +1,104 @@
-# backend/backend/model_loader.py
 import os
 import joblib
-from pathlib import Path
+import requests
+from tensorflow import keras
 
-# model_fetcher has:
-#   load_joblib(model_path) -> loads joblib from supabase (cached)
-#   load_keras(model_path)  -> loads keras model from supabase (cached)
-from model_fetcher import load_joblib as _load_joblib_from_supabase
-from model_fetcher import load_keras as _load_keras_from_supabase
+# -------------------------------------------
+# DIRECTORIES
+# -------------------------------------------
 
-# Primary local disk (Render persistent disk recommended)
-RENDER_MODEL_ROOT = "/var/models"
+# Where uploaded RF/LSTM models are stored on Render free-tier
+LOCAL_MODEL_DIR = "/tmp/local_models"
+os.makedirs(LOCAL_MODEL_DIR, exist_ok=True)
 
-# Local repo model root fallback (relative)
-LOCAL_MODEL_ROOT = os.environ.get("MODEL_DIR", os.path.join(os.path.dirname(__file__), "models"))
+# Where joblib/keras files are cached after remote download
+MODEL_CACHE_DIR = os.environ.get("MODEL_CACHE_DIR", "/tmp/model_cache")
+os.makedirs(MODEL_CACHE_DIR, exist_ok=True)
 
-# Supabase availability
-SUPABASE_ENABLED = bool(os.environ.get("SUPABASE_PUBLIC_URL"))
+# Supabase public bucket base URL
+SUPABASE_PUBLIC_URL = os.environ.get("SUPABASE_PUBLIC_URL")
+if SUPABASE_PUBLIC_URL and SUPABASE_PUBLIC_URL.endswith("/"):
+    SUPABASE_PUBLIC_URL = SUPABASE_PUBLIC_URL[:-1]
 
-def _is_keras_filename(fname: str):
-    return any(fname.endswith(ext) for ext in (".keras", ".h5", ".hdf5"))
 
-def _safe_joblib_load(path):
-    try:
-        return joblib.load(path)
-    except Exception as e:
-        raise
+# -------------------------------------------
+# HELPERS
+# -------------------------------------------
 
-def _safe_keras_load(path):
-    # lazy import here so TF isn't imported at module import time
-    from tensorflow import keras
-    return keras.models.load_model(path)
+def _local_path_for(filename):
+    return os.path.join(LOCAL_MODEL_DIR, filename)
 
-def load_model(filename: str, subfolder: str | None = None):
+
+def _cache_path_for(filename):
+    safe = filename.replace("/", "_")
+    return os.path.join(MODEL_CACHE_DIR, safe)
+
+
+def _download_from_supabase(remote_path, cache_path):
     """
-    Universal loader:
-      - filename: either a simple filename (e.g. 'rf_tuned.joblib') OR a path-like 'prophet_models/City_prophet.joblib'
-      - subfolder: optional folder under model roots (e.g. 'other_models', 'prophet_models', 'hybrid_models/lstm_models')
-    Order:
-      1) Render persistent disk (/var/models/...)
-      2) Local MODEL_DIR (env)
-      3) Supabase public bucket via model_fetcher (if enabled)
-    Returns:
-      - loaded model object (joblib or keras)
-    Raises:
-      - FileNotFoundError if nothing found
-      - Exceptions raised by loader if file invalid
+    Downloads a model file from Supabase:
+    remote_path example: "prophet_models/Delhi_prophet.joblib"
     """
-    # Normalize input
-    filename = filename.replace("\\", "/")
-    if subfolder:
-        # if filename already contains a path, do not double join
-        if "/" in filename:
-            rel_path = filename
-        else:
-            rel_path = f"{subfolder.rstrip('/')}/{filename}"
-    else:
-        rel_path = filename
 
-    # 1) Render persistent disk
-    render_path = os.path.join(RENDER_MODEL_ROOT, rel_path)
-    if os.path.exists(render_path):
-        try:
-            if _is_keras_filename(render_path):
-                return _safe_keras_load(render_path)
-            return _safe_joblib_load(render_path)
-        except Exception as e:
-            # If loading fails on disk, continue to try other sources but log
-            print(f"[WARN] Render disk load failed for {render_path}: {e}")
+    if not SUPABASE_PUBLIC_URL:
+        raise FileNotFoundError("SUPABASE_PUBLIC_URL not set")
 
-    # 2) Local repo
-    local_path = os.path.join(LOCAL_MODEL_ROOT, rel_path)
+    url = f"{SUPABASE_PUBLIC_URL}/{remote_path}"
+    print(f"[REMOTE] downloading → {url}")
+
+    r = requests.get(url, timeout=60)
+    if r.status_code != 200:
+        raise FileNotFoundError(f"Supabase file not found: {url}")
+
+    with open(cache_path, "wb") as f:
+        f.write(r.content)
+
+    return cache_path
+
+
+# -------------------------------------------
+# MASTER LOAD FUNCTION
+# -------------------------------------------
+
+def load_model(filename, folder):
+    """
+    Load a model file with priority:
+    1. Local uploaded model  (/tmp/local_models)
+    2. Cached remote file    (/tmp/model_cache)
+    3. Download from Supabase bucket
+    """
+
+    # -------------------------------
+    # 1. LOCAL UPLOADED MODEL
+    # -------------------------------
+    local_path = _local_path_for(filename)
     if os.path.exists(local_path):
-        try:
-            if _is_keras_filename(local_path):
-                return _safe_keras_load(local_path)
-            return _safe_joblib_load(local_path)
-        except Exception as e:
-            print(f"[WARN] Local model load failed for {local_path}: {e}")
+        print(f"[LOCAL] Using uploaded model → {local_path}")
+        if filename.endswith(".joblib"):
+            return joblib.load(local_path)
+        else:
+            return keras.models.load_model(local_path)
 
-    # 3) Supabase fallback
-    if SUPABASE_ENABLED:
-        try:
-            # For Supabase we pass the bucket-style path "subfolder/filename"
-            if _is_keras_filename(rel_path):
-                return _load_keras_from_supabase(rel_path)
-            return _load_joblib_from_supabase(rel_path)
-        except Exception as e:
-            print(f"[WARN] Supabase load failed for {rel_path}: {e}")
+    # -------------------------------
+    # 2. CACHED REMOTE FILE
+    # -------------------------------
+    cache_path = _cache_path_for(filename)
+    if os.path.exists(cache_path):
+        print(f"[CACHE] Loading cached model → {cache_path}")
+        if filename.endswith(".joblib"):
+            return joblib.load(cache_path)
+        else:
+            return keras.models.load_model(cache_path)
 
-    # nothing worked
-    raise FileNotFoundError(f"Model not found at Render disk, LOCAL_MODEL_ROOT ({LOCAL_MODEL_ROOT}), or Supabase: {rel_path}")
+    # -------------------------------
+    # 3. SUPABASE: DOWNLOAD
+    # -------------------------------
+    remote_path = f"{folder}/{filename}"
+    downloaded = _download_from_supabase(remote_path, cache_path)
+
+    print(f"[REMOTE] Model downloaded & cached → {downloaded}")
+
+    if filename.endswith(".joblib"):
+        return joblib.load(downloaded)
+    else:
+        return keras.models.load_model(downloaded)

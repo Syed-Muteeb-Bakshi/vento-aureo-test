@@ -5,86 +5,115 @@ import numpy as np
 import pandas as pd
 from typing import List
 
-from model_loader import load_model  # NEW loader
+from model_loader import load_model, MODEL_CACHE_DIR  # load_model(filename, folder)
+import joblib
+import requests
 
 ml_bp = Blueprint("ml_bp", __name__)
 
-# ===============================
-# Model loading
-# ===============================
-print("[DEBUG] Using MODEL_DIR =", os.environ.get("MODEL_DIR"))
+# -------------------------
+# Helpers (feature-list loader)
+# -------------------------
+MODEL_CACHE_DIR = os.environ.get("MODEL_CACHE_DIR", "/tmp/model_cache")
+os.makedirs(MODEL_CACHE_DIR, exist_ok=True)
 
-def safe_load_model(filename: str, subfolder: str = "other_models"):
-    try:
-        model = load_model(filename, subfolder=subfolder)
-        print(f"[INFO] Loaded model: {subfolder}/{filename}")
-        return model
-    except FileNotFoundError:
-        print(f"[WARN] Missing model: {subfolder}/{filename}")
+SUPABASE_PUBLIC_URL = os.environ.get("SUPABASE_PUBLIC_URL")
+
+def _try_load_json_from_supabase(path_suffix: str):
+    """Try to fetch a JSON file directly from the public Supabase URL."""
+    if not SUPABASE_PUBLIC_URL:
         return None
-    except Exception as e:
-        print(f"[ERROR] Failed to load {subfolder}/{filename}: {e}")
-        return None
-
-# -------------------------
-# Load models (safely)
-# -------------------------
-xgb_model = safe_load_model("xgboost_aqi_model.joblib", "other_models")
-rf_model = safe_load_model("rf_tuned.joblib", "other_models") or safe_load_model("best_AQI_classifier_Random_Forest.joblib", "other_models")
-aqi_classifier = safe_load_model("xgboost_aqi_category_classifier.joblib", "other_models")
-scaler = safe_load_model("scaler.joblib", "other_models") or safe_load_model("scaler_regressor.joblib", "other_models")
-imputer = safe_load_model("imputer_regressor.joblib", "other_models") or safe_load_model("imputer.joblib", "other_models")
-
-# -------------------------
-# Utilities: load features
-# -------------------------
-def load_feature_list_from_local_or_models() -> List[str]:
-    # prefer JSON/joblib in local MODEL_DIR
-    model_root = os.environ.get("MODEL_DIR", "models")
-    candidates = [
-        os.path.join(model_root, "other_models", "regressor_feature_list.json"),
-        os.path.join(model_root, "other_models", "feature_list.joblib"),
-        os.path.join(model_root, "other_models", "regressor_feature_list.joblib"),
-    ]
-    for c in candidates:
-        if os.path.exists(c):
-            try:
-                if c.endswith(".json"):
-                    with open(c, "r", encoding="utf-8") as f:
-                        data = json.load(f)
-                    if isinstance(data, dict) and "features" in data:
-                        return data["features"]
-                    if isinstance(data, list):
-                        return data
-                else:
-                    import joblib
-                    data = joblib.load(c)
-                    if isinstance(data, list):
-                        return data
-                    if isinstance(data, dict) and "features" in data:
-                        return data["features"]
-            except Exception as e:
-                print(f"[WARN] Could not load feature list from {c}: {e}")
-
-    # Fallback: attempt to inspect a joblib model on-disk (local or render)
+    url = f"{SUPABASE_PUBLIC_URL}/other_models/{path_suffix}"
     try:
-        model_dir = os.path.join(model_root, "other_models")
-        if os.path.exists(model_dir):
-            for f in os.listdir(model_dir):
-                if f.endswith(".joblib"):
-                    try:
-                        obj = load_model(f, subfolder="other_models")
-                        feat = getattr(obj, "feature_names_in_", None)
-                        if feat is not None:
-                            return list(feat)
-                    except Exception:
-                        continue
+        r = requests.get(url, timeout=10)
+        if r.status_code == 200:
+            return r.json()
+    except Exception:
+        return None
+    return None
+
+def load_feature_list() -> List[str]:
+    """
+    Resolve the features used by regressors/classifiers.
+    Strategy:
+      1) Try local repo: backend/backend/models/other_models/regressor_feature_list.json
+      2) Try cached file in MODEL_CACHE_DIR
+      3) Try fetching from Supabase public URL
+      4) Try inspecting any cached joblib model for 'feature_names_in_'
+      5) Return []
+    """
+    # 1) Local file
+    base = os.path.dirname(os.path.dirname(__file__))  # backend/backend/routes -> backend/backend
+    local_cand = os.path.join(base, "models", "other_models", "regressor_feature_list.json")
+    if os.path.exists(local_cand):
+        try:
+            with open(local_cand, "r", encoding="utf-8") as fh:
+                data = json.load(fh)
+                if isinstance(data, dict) and "features" in data:
+                    return data["features"]
+                if isinstance(data, list):
+                    return data
+        except Exception:
+            pass
+
+    # 2) Cache file
+    cached_json = os.path.join(MODEL_CACHE_DIR, "regressor_feature_list.json")
+    if os.path.exists(cached_json):
+        try:
+            with open(cached_json, "r", encoding="utf-8") as fh:
+                data = json.load(fh)
+                if isinstance(data, list):
+                    return data
+        except Exception:
+            pass
+
+    # 3) Try Supabase public JSON
+    sup_data = _try_load_json_from_supabase("regressor_feature_list.json")
+    if sup_data:
+        if isinstance(sup_data, dict) and "features" in sup_data:
+            return sup_data["features"]
+        if isinstance(sup_data, list):
+            return sup_data
+
+    # 4) Inspect any cached joblib in MODEL_CACHE_DIR for feature_names_in_
+    try:
+        for f in os.listdir(MODEL_CACHE_DIR):
+            if f.endswith(".joblib"):
+                p = os.path.join(MODEL_CACHE_DIR, f)
+                try:
+                    obj = joblib.load(p)
+                    feat = getattr(obj, "feature_names_in_", None)
+                    if feat is not None:
+                        return list(feat)
+                except Exception:
+                    continue
     except Exception:
         pass
 
+    # 5) Last fallback: empty
     return []
 
-FEATURES = load_feature_list_from_local_or_models()
+# -------------------------
+# Load models (via model_loader)
+# -------------------------
+def _safe_load_model_filename(fname):
+    """Wrap load_model with graceful failure; returns object or None."""
+    try:
+        return load_model(fname, "other_models")
+    except FileNotFoundError:
+        print(f"[WARN] Missing model (remote/local): {fname}")
+        return None
+    except Exception as e:
+        print(f"[ERROR] Failed to load model {fname}: {e}")
+        return None
+
+xgb_model = _safe_load_model_filename("xgboost_aqi_model.joblib")
+rf_model = _safe_load_model_filename("rf_tuned.joblib") or _safe_load_model_filename("best_AQI_classifier_Random_Forest.joblib")
+aqi_classifier = _safe_load_model_filename("xgboost_aqi_category_classifier.joblib")
+scaler = _safe_load_model_filename("scaler.joblib") or _safe_load_model_filename("scaler_regressor.joblib")
+imputer = _safe_load_model_filename("imputer_regressor.joblib") or _safe_load_model_filename("imputer.joblib")
+
+FEATURES = load_feature_list()
 print(f"[DEBUG] Loaded feature list with {len(FEATURES)} features.")
 
 # -------------------------
@@ -174,7 +203,6 @@ def predict_aqi():
         })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
 
 @ml_bp.route("/predict_category", methods=["POST"])
 def predict_category():
