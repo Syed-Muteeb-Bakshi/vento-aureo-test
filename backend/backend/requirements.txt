@@ -14,5 +14,5 @@ google-cloud-storage==2.11.0
 cloud-sql-python-connector[pg8000]==1.3.0
 pg8000==1.29.8
 
-# Required for LSTM models
+# Required for LSTM/Keras models
 tensorflow==2.12.0
