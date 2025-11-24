@@ -1,34 +1,29 @@
-# ===========================
-# VENTO AUREO — FINAL DOCKERFILE
-# Cloud Run • Python 3.10 • TensorFlow • Prophet
-# ===========================
-
+# Use Python 3.10
 FROM python:3.10-slim
 
-# System dependencies for Prophet + Psycopg2 + TensorFlow
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
     libpq-dev \
-    libatlas-base-dev \
-    liblapack-dev \
-    gfortran \
     git \
     curl \
-    && rm -rf /var/lib/apt/lists/*
+ && rm -rf /var/lib/apt/lists/*
 
-# Working directory
+# Create working directory
 WORKDIR /app
 
-# Install Python dependencies
-COPY requirements.txt /app/requirements.txt
+# Copy requirements first (layer caching)
+COPY requirements.txt ./requirements.txt
+
+# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy backend source
-COPY . /app
+# Copy the full application
+COPY . .
 
-# Cloud Run environment
-ENV PYTHONUNBUFFERED=1
+# Port for Cloud Run
 ENV PORT=8080
+EXPOSE 8080
 
-# Start with Gunicorn
-CMD exec gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 300
+# Gunicorn command
+CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:8080", "--workers", "2", "--threads", "2"]
