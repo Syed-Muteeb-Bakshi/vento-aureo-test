@@ -1,41 +1,23 @@
+# backend/backend/upload_models.py
 import os
-import requests
-from concurrent.futures import ThreadPoolExecutor
+from flask import Blueprint, request, jsonify
 
-SUPABASE_URL = "https://<your>.supabase.co"
-BUCKET = "models"
-API_KEY = "<service_role_key>"
+upload_bp = Blueprint("upload_bp", __name__)
+LOCAL_UPLOAD_DIR = os.environ.get("LOCAL_UPLOAD_DIR", "/tmp/local_models")
+os.makedirs(LOCAL_UPLOAD_DIR, exist_ok=True)
 
-HEADERS = {
-    "apikey": API_KEY,
-    "Authorization": f"Bearer {API_KEY}",
-}
+@upload_bp.route("/api/upload_model", methods=["POST"])
+def upload_model():
+    """
+    POST multipart/form-data with 'file' -> uploads to LOCAL_UPLOAD_DIR
+    Use for large single model uploads when you don't have a persistent disk.
+    """
+    if "file" not in request.files:
+        return jsonify({"error": "Missing file field 'file'"}), 400
+    f = request.files["file"]
+    if f.filename == "":
+        return jsonify({"error": "Empty filename"}), 400
 
-ROOT = "backend/backend/models"
-
-def upload(local_path, remote_path):
-    url = f"{SUPABASE_URL}/storage/v1/object/{BUCKET}/{remote_path}"
-    with open(local_path, "rb") as f:
-        data = f.read()
-    r = requests.post(url, headers=HEADERS, data=data)
-    print(f"{remote_path}: {r.status_code}")
-    return r.status_code
-
-
-def gather_files():
-    out = []
-    for root, dirs, files in os.walk(ROOT):
-        for f in files:
-            if f.endswith((".joblib", ".keras", ".pkl")):
-                local = os.path.join(root, f)
-                rel = os.path.relpath(local, ROOT).replace("\\", "/")
-                out.append((local, rel))
-    return out
-
-
-pairs = gather_files()
-print("Files:", len(pairs))
-
-with ThreadPoolExecutor(max_workers=20) as ex:
-    for local, remote in pairs:
-        ex.submit(upload, local, remote)
+    dest = os.path.join(LOCAL_UPLOAD_DIR, f.filename)
+    f.save(dest)
+    return jsonify({"message": "Uploaded", "path": dest}), 200

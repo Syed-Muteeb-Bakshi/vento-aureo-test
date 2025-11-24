@@ -1,104 +1,122 @@
+# backend/backend/model_loader.py
 import os
+import io
+from typing import Optional
+from google.cloud import storage
 import joblib
-import requests
-from tensorflow import keras
 
-# -------------------------------------------
-# DIRECTORIES
-# -------------------------------------------
-
-# Where uploaded RF/LSTM models are stored on Render free-tier
-LOCAL_MODEL_DIR = "/tmp/local_models"
-os.makedirs(LOCAL_MODEL_DIR, exist_ok=True)
-
-# Where joblib/keras files are cached after remote download
+# Environment-driven config
+GCS_BUCKET = os.environ.get("GCS_BUCKET") or os.environ.get("BUCKET_NAME") or "vento_aureo_models"
+LOCAL_MODEL_ROOT = os.environ.get("MODEL_DIR", "/var/models")   # persistent disk if available
 MODEL_CACHE_DIR = os.environ.get("MODEL_CACHE_DIR", "/tmp/model_cache")
 os.makedirs(MODEL_CACHE_DIR, exist_ok=True)
 
-# Supabase public bucket base URL
-SUPABASE_PUBLIC_URL = os.environ.get("SUPABASE_PUBLIC_URL")
-if SUPABASE_PUBLIC_URL and SUPABASE_PUBLIC_URL.endswith("/"):
-    SUPABASE_PUBLIC_URL = SUPABASE_PUBLIC_URL[:-1]
+# lazy client (create when needed)
+_storage_client = None
 
+def _get_storage_client():
+    global _storage_client
+    if _storage_client is None:
+        _storage_client = storage.Client()
+    return _storage_client
 
-# -------------------------------------------
-# HELPERS
-# -------------------------------------------
-
-def _local_path_for(filename):
-    return os.path.join(LOCAL_MODEL_DIR, filename)
-
-
-def _cache_path_for(filename):
-    safe = filename.replace("/", "_")
+def _cache_path(prefix: str, filename: str) -> str:
+    safe = f"{prefix.replace('/', '__')}_{filename}"
     return os.path.join(MODEL_CACHE_DIR, safe)
 
+def _local_path(prefix: str, filename: str) -> str:
+    # Look inside MODEL_DIR folder structure first (fast local)
+    p = os.path.join(LOCAL_MODEL_ROOT, prefix, filename) if prefix else os.path.join(LOCAL_MODEL_ROOT, filename)
+    return p
 
-def _download_from_supabase(remote_path, cache_path):
+def _download_from_gcs(prefix: str, filename: str) -> str:
+    client = _get_storage_client()
+    bucket = client.bucket(GCS_BUCKET)
+    blob_name = f"{prefix.rstrip('/')}/{filename}" if prefix else filename
+    blob_name = blob_name.lstrip("/")
+    blob = bucket.blob(blob_name)
+    if not blob.exists():
+        raise FileNotFoundError(f"GCS object not found: gs://{GCS_BUCKET}/{blob_name}")
+    dest = _cache_path(prefix, filename)
+    # stream to file
+    blob.download_to_filename(dest)
+    return dest
+
+def load_joblib(filename: str, prefix: str = ""):
     """
-    Downloads a model file from Supabase:
-    remote_path example: "prophet_models/Delhi_prophet.joblib"
+    Load a joblib model with the following priority:
+      1) Local persistent path: MODEL_DIR/<prefix>/<filename>
+      2) /tmp cache (downloaded)
+      3) GCS bucket: <prefix>/<filename> (downloaded to cache)
+    Raise FileNotFoundError if not available.
     """
+    # 1. local persistent
+    local = _local_path(prefix, filename)
+    if os.path.exists(local):
+        try:
+            return joblib.load(local)
+        except Exception as e:
+            # fallthrough to cache/GCS
+            print(f"[WARN] Failed to load locally ({local}): {e}")
 
-    if not SUPABASE_PUBLIC_URL:
-        raise FileNotFoundError("SUPABASE_PUBLIC_URL not set")
+    # 2. cached path
+    cached = _cache_path(prefix, filename)
+    if os.path.exists(cached):
+        try:
+            return joblib.load(cached)
+        except Exception as e:
+            print(f"[WARN] Cached joblib load failed ({cached}): {e}")
+            # try remove corrupted cache then attempt re-download
+            try:
+                os.remove(cached)
+            except:
+                pass
 
-    url = f"{SUPABASE_PUBLIC_URL}/{remote_path}"
-    print(f"[REMOTE] downloading → {url}")
-
-    r = requests.get(url, timeout=60)
-    if r.status_code != 200:
-        raise FileNotFoundError(f"Supabase file not found: {url}")
-
-    with open(cache_path, "wb") as f:
-        f.write(r.content)
-
-    return cache_path
-
-
-# -------------------------------------------
-# MASTER LOAD FUNCTION
-# -------------------------------------------
-
-def load_model(filename, folder):
-    """
-    Load a model file with priority:
-    1. Local uploaded model  (/tmp/local_models)
-    2. Cached remote file    (/tmp/model_cache)
-    3. Download from Supabase bucket
-    """
-
-    # -------------------------------
-    # 1. LOCAL UPLOADED MODEL
-    # -------------------------------
-    local_path = _local_path_for(filename)
-    if os.path.exists(local_path):
-        print(f"[LOCAL] Using uploaded model → {local_path}")
-        if filename.endswith(".joblib"):
-            return joblib.load(local_path)
-        else:
-            return keras.models.load_model(local_path)
-
-    # -------------------------------
-    # 2. CACHED REMOTE FILE
-    # -------------------------------
-    cache_path = _cache_path_for(filename)
-    if os.path.exists(cache_path):
-        print(f"[CACHE] Loading cached model → {cache_path}")
-        if filename.endswith(".joblib"):
-            return joblib.load(cache_path)
-        else:
-            return keras.models.load_model(cache_path)
-
-    # -------------------------------
-    # 3. SUPABASE: DOWNLOAD
-    # -------------------------------
-    remote_path = f"{folder}/{filename}"
-    downloaded = _download_from_supabase(remote_path, cache_path)
-
-    print(f"[REMOTE] Model downloaded & cached → {downloaded}")
-
-    if filename.endswith(".joblib"):
+    # 3. download from GCS
+    if not prefix:
+        prefix = ""
+    try:
+        downloaded = _download_from_gcs(prefix, filename)
         return joblib.load(downloaded)
-    else:
+    except Exception as e:
+        raise FileNotFoundError(f"Could not load joblib model '{filename}' from local or GCS: {e}")
+
+def _lazy_load_tf():
+    # import in helper to avoid heavy import on startup if not needed
+    from tensorflow import keras
+    return keras
+
+def load_keras(filename: str, prefix: str = ""):
+    """
+    Load a Keras model. Priority:
+      1) Local persistent MODEL_DIR/<prefix>/<filename>
+      2) /tmp cache
+      3) GCS download to cache then keras.models.load_model
+    """
+    local = _local_path(prefix, filename)
+    if os.path.exists(local):
+        try:
+            keras = _lazy_load_tf()
+            return keras.models.load_model(local)
+        except Exception as e:
+            print(f"[WARN] Failed to load local keras model {local}: {e}")
+
+    cached = _cache_path(prefix, filename)
+    if os.path.exists(cached):
+        try:
+            keras = _lazy_load_tf()
+            return keras.models.load_model(cached)
+        except Exception as e:
+            print(f"[WARN] Cached keras load failed ({cached}): {e}")
+            try:
+                os.remove(cached)
+            except:
+                pass
+
+    # download from GCS
+    try:
+        downloaded = _download_from_gcs(prefix, filename)
+        keras = _lazy_load_tf()
         return keras.models.load_model(downloaded)
+    except Exception as e:
+        raise FileNotFoundError(f"Could not load keras model '{filename}' from local or GCS: {e}")

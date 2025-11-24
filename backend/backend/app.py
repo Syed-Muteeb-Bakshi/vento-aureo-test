@@ -1,34 +1,51 @@
 # backend/backend/app.py
 
 import os
-from flask import Flask, send_from_directory, jsonify
+from flask import Flask, jsonify, send_from_directory
 from flask_cors import CORS
+from google.cloud.sql.connector import Connector, IPTypes
+import pg8000.native
+import model_paths  # sets MODEL_DIR, bucket paths
 
-# ----------------------------------------
-# IMPORTANT: model_paths sets MODEL_DIR 
-# (we do not override it here)
-# ----------------------------------------
-import model_paths
+# ==========================
+# Cloud SQL Connector Setup
+# ==========================
+PROJECT_ID = "just-smithy-479012-a1"
+REGION = "us-east1"
+INSTANCE = "vento-postgres"
+INSTANCE_CONNECTION_NAME = f"{PROJECT_ID}:{REGION}:{INSTANCE}"
 
-# ----------------------------------------
+DB_USER = os.environ.get("DB_USER", "giorno_geovanna")
+DB_PASS = os.environ.get("DB_PASS", "")
+DB_NAME = os.environ.get("DB_NAME", "gold_experience")
+
+connector = Connector(ip_type=IPTypes.PUBLIC)
+
+def get_connection():
+    conn = connector.connect(
+        INSTANCE_CONNECTION_NAME,
+        "pg8000",
+        user=DB_USER,
+        password=DB_PASS,
+        db=DB_NAME
+    )
+    return conn
+
+
+# ==========================
 # Flask App Setup
-# ----------------------------------------
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))       # backend/backend
-FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")           # dashboard fallback
+# ==========================
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")
 TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
 
-app = Flask(
-    __name__,
-    static_folder=FRONTEND_DIR,
-    template_folder=TEMPLATES_DIR
-)
-
+app = Flask(__name__, static_folder=FRONTEND_DIR, template_folder=TEMPLATES_DIR)
 CORS(app)
 
 
-# ----------------------------------------
-# Load BLUEPRINTS (correct imports)
-# ----------------------------------------
+# ==========================
+# BLUEPRINTS
+# ==========================
 from routes.forecast_routes import forecast_bp
 from routes.iot_routes import iot_bp
 from routes.ml_routes import ml_bp
@@ -40,7 +57,6 @@ from routes.short_term_routes import short_term_bp
 from routes.city_aqi_routes import city_bp
 from routes.upload_routes import upload_bp
 
-# Register them
 app.register_blueprint(forecast_bp, url_prefix="/api")
 app.register_blueprint(iot_bp, url_prefix="/api")
 app.register_blueprint(ml_bp, url_prefix="/api")
@@ -52,78 +68,63 @@ app.register_blueprint(short_term_bp, url_prefix="/api")
 app.register_blueprint(city_bp, url_prefix="/api")
 app.register_blueprint(upload_bp, url_prefix="/api")
 
-# ----------------------------------------
-# DASHBOARD FALLBACK (Flask)
-# Vercel will be your main UI
-# Flask serves local fallback at "/"
-# ----------------------------------------
+
+# ==========================
+# HEALTH CHECK
+# ==========================
+@app.route("/health")
+def health():
+    return jsonify({"status": "ok"})
+
+
+# ==========================
+# DASHBOARD FALLBACK
+# ==========================
 @app.route("/")
-def serve_fallback_dashboard():
-    """
-    Serves dashboard.html from backend/backend/frontend/
-    Only for fallback if Vercel UI unavailable.
-    """
+def serve_dashboard():
     dashboard_path = os.path.join(app.static_folder, "dashboard.html")
 
     if os.path.exists(dashboard_path):
         return send_from_directory(app.static_folder, "dashboard.html")
 
-    return (
-        "<h2>Dashboard not found</h2>"
-        "<p>Please deploy the frontend to Vercel.</p>",
-        404,
-    )
+    return "<h3>Frontend deployed on Vercel. Backend active.</h3>"
 
 
-# ----------------------------------------
-# HEALTH CHECK (Render)
-# ----------------------------------------
-@app.route("/health")
-def health():
-    return jsonify({"status": "ok", "service": "vento-aureo-backend"})
-
-
-# ----------------------------------------
-# GLOBAL AQI (unchanged)
-# ----------------------------------------
+# ==========================
+# GLOBAL AQI ENDPOINT (unchanged)
+# ==========================
 @app.route("/api/global_aqi")
 def global_aqi():
-    coords_file = os.path.join(BASE_DIR, "data", "city_coordinates.json")
-
-    if not os.path.exists(coords_file):
-        return jsonify({"error": "Coordinates file not ready"}), 500
-
     import json, requests
-    with open(coords_file, "r") as f:
+
+    coords_file = os.path.join(BASE_DIR, "data", "city_coordinates.json")
+    if not os.path.exists(coords_file):
+        return jsonify({"error": "city_coordinates.json missing"}), 500
+
+    with open(coords_file) as f:
         data = json.load(f)
 
     results = {}
     for city, info in list(data.items())[:300]:
-        lat, lon = info["lat"], info["lon"]
-
         try:
             url = (
-                f"https://air-quality-api.open-meteo.com/v1/air-quality?"
-                f"latitude={lat}&longitude={lon}&hourly=us_aqi,pm10,pm2_5"
+                "https://air-quality-api.open-meteo.com/v1/air-quality?"
+                f"latitude={info['lat']}&longitude={info['lon']}&hourly=us_aqi,pm10,pm2_5"
             )
             j = requests.get(url, timeout=5).json()
-
             results[city] = {
                 "aqi": j["hourly"]["us_aqi"][-1],
                 "pm25": j["hourly"]["pm2_5"][-1],
                 "pm10": j["hourly"]["pm10"][-1],
-                "lat": lat,
-                "lon": lon
             }
-
         except:
             results[city] = {"aqi": None, "pm25": None, "pm10": None}
 
     return jsonify(results)
 
 
-# ----------------------------------------
-# MAIN ENTRY (local only)
-# ----------------------------------------
+# ==========================
+# LOCAL MODE
+# ==========================
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

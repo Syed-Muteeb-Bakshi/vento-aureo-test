@@ -4,125 +4,52 @@ import os, json
 import numpy as np
 import pandas as pd
 from typing import List
-
-from model_loader import load_model, MODEL_CACHE_DIR  # load_model(filename, folder)
-import joblib
-import requests
+from model_loader import load_joblib
 
 ml_bp = Blueprint("ml_bp", __name__)
 
-# -------------------------
-# Helpers (feature-list loader)
-# -------------------------
-MODEL_CACHE_DIR = os.environ.get("MODEL_CACHE_DIR", "/tmp/model_cache")
-os.makedirs(MODEL_CACHE_DIR, exist_ok=True)
+# Local path root is still useful for listings
+MODEL_ROOT = os.environ.get("MODEL_DIR", "/var/models")
+OTHER_PREFIX = "other_models"
 
-SUPABASE_PUBLIC_URL = os.environ.get("SUPABASE_PUBLIC_URL")
-
-def _try_load_json_from_supabase(path_suffix: str):
-    """Try to fetch a JSON file directly from the public Supabase URL."""
-    if not SUPABASE_PUBLIC_URL:
-        return None
-    url = f"{SUPABASE_PUBLIC_URL}/other_models/{path_suffix}"
+def safe_load(fname):
     try:
-        r = requests.get(url, timeout=10)
-        if r.status_code == 200:
-            return r.json()
+        return load_joblib(fname, OTHER_PREFIX)
     except Exception:
+        print(f"[WARN] Missing model: {fname}")
         return None
-    return None
+
+print(f"[DEBUG] Loading ML models from GCS bucket (prefix={OTHER_PREFIX})")
+xgb_model = safe_load("xgboost_aqi_model.joblib")
+rf_model = safe_load("rf_tuned.joblib") or safe_load("best_AQI_classifier_Random_Forest.joblib")
+aqi_classifier = safe_load("xgboost_aqi_category_classifier.joblib")
+scaler = safe_load("scaler.joblib") or safe_load("scaler_regressor.joblib")
+imputer = safe_load("imputer_regressor.joblib") or safe_load("imputer.joblib")
 
 def load_feature_list() -> List[str]:
-    """
-    Resolve the features used by regressors/classifiers.
-    Strategy:
-      1) Try local repo: backend/backend/models/other_models/regressor_feature_list.json
-      2) Try cached file in MODEL_CACHE_DIR
-      3) Try fetching from Supabase public URL
-      4) Try inspecting any cached joblib model for 'feature_names_in_'
-      5) Return []
-    """
-    # 1) Local file
-    base = os.path.dirname(os.path.dirname(__file__))  # backend/backend/routes -> backend/backend
-    local_cand = os.path.join(base, "models", "other_models", "regressor_feature_list.json")
-    if os.path.exists(local_cand):
+    # Try JSON or joblib in other_models prefix
+    candidates = ["regressor_feature_list.json", "feature_list.joblib", "regressor_feature_list.joblib"]
+    for c in candidates:
         try:
-            with open(local_cand, "r", encoding="utf-8") as fh:
-                data = json.load(fh)
-                if isinstance(data, dict) and "features" in data:
-                    return data["features"]
-                if isinstance(data, list):
-                    return data
+            # try joblib first then json
+            if c.endswith(".json"):
+                data = load_joblib(c, OTHER_PREFIX)  # load_joblib will raise for missing
+            else:
+                data = load_joblib(c, OTHER_PREFIX)
+            if isinstance(data, list):
+                return data
+            if isinstance(data, dict) and "features" in data:
+                return data["features"]
         except Exception:
-            pass
-
-    # 2) Cache file
-    cached_json = os.path.join(MODEL_CACHE_DIR, "regressor_feature_list.json")
-    if os.path.exists(cached_json):
-        try:
-            with open(cached_json, "r", encoding="utf-8") as fh:
-                data = json.load(fh)
-                if isinstance(data, list):
-                    return data
-        except Exception:
-            pass
-
-    # 3) Try Supabase public JSON
-    sup_data = _try_load_json_from_supabase("regressor_feature_list.json")
-    if sup_data:
-        if isinstance(sup_data, dict) and "features" in sup_data:
-            return sup_data["features"]
-        if isinstance(sup_data, list):
-            return sup_data
-
-    # 4) Inspect any cached joblib in MODEL_CACHE_DIR for feature_names_in_
-    try:
-        for f in os.listdir(MODEL_CACHE_DIR):
-            if f.endswith(".joblib"):
-                p = os.path.join(MODEL_CACHE_DIR, f)
-                try:
-                    obj = joblib.load(p)
-                    feat = getattr(obj, "feature_names_in_", None)
-                    if feat is not None:
-                        return list(feat)
-                except Exception:
-                    continue
-    except Exception:
-        pass
-
-    # 5) Last fallback: empty
+            continue
     return []
-
-# -------------------------
-# Load models (via model_loader)
-# -------------------------
-def _safe_load_model_filename(fname):
-    """Wrap load_model with graceful failure; returns object or None."""
-    try:
-        return load_model(fname, "other_models")
-    except FileNotFoundError:
-        print(f"[WARN] Missing model (remote/local): {fname}")
-        return None
-    except Exception as e:
-        print(f"[ERROR] Failed to load model {fname}: {e}")
-        return None
-
-xgb_model = _safe_load_model_filename("xgboost_aqi_model.joblib")
-rf_model = _safe_load_model_filename("rf_tuned.joblib") or _safe_load_model_filename("best_AQI_classifier_Random_Forest.joblib")
-aqi_classifier = _safe_load_model_filename("xgboost_aqi_category_classifier.joblib")
-scaler = _safe_load_model_filename("scaler.joblib") or _safe_load_model_filename("scaler_regressor.joblib")
-imputer = _safe_load_model_filename("imputer_regressor.joblib") or _safe_load_model_filename("imputer.joblib")
 
 FEATURES = load_feature_list()
 print(f"[DEBUG] Loaded feature list with {len(FEATURES)} features.")
 
-# -------------------------
-# Helper: prepare input to match expected features
-# -------------------------
 def prepare_input(df: pd.DataFrame, expected_features: List[str]) -> np.ndarray:
     if not expected_features:
         return df.values
-
     df_copy = df.copy()
     for feat in expected_features:
         if feat not in df_copy.columns:
@@ -130,9 +57,6 @@ def prepare_input(df: pd.DataFrame, expected_features: List[str]) -> np.ndarray:
     df_copy = df_copy[expected_features]
     return df_copy.values
 
-# -------------------------
-# AQI helpers
-# -------------------------
 def get_aqi_category(aqi_value):
     if aqi_value <= 50:
         return "Good"
@@ -147,24 +71,14 @@ def get_aqi_category(aqi_value):
     else:
         return "Hazardous"
 
-# -------------------------
-# Routes
-# -------------------------
 @ml_bp.route("/predict_aqi", methods=["POST"])
 def predict_aqi():
     try:
         data = request.get_json()
         if not data:
             return jsonify({"error": "No input data provided."}), 400
-
-        if isinstance(data, dict):
-            df = pd.DataFrame([data])
-        else:
-            df = pd.DataFrame(data)
-
+        df = pd.DataFrame([data]) if isinstance(data, dict) else pd.DataFrame(data)
         X = prepare_input(df, FEATURES)
-
-        # Apply imputer/scaler if available
         if imputer is not None:
             try:
                 X = imputer.transform(X)
@@ -175,7 +89,6 @@ def predict_aqi():
                 X = scaler.transform(X)
             except Exception as e:
                 print("[WARN] Scaler transform failed:", e)
-
         model_used = None
         aqi_pred = None
         if xgb_model is not None:
@@ -190,10 +103,8 @@ def predict_aqi():
                 model_used = "RandomForest (fallback)"
             except Exception as e:
                 print("[WARN] rf predict failed:", e)
-
         if aqi_pred is None:
             return jsonify({"error": "No model available or prediction failed."}), 500
-
         category = get_aqi_category(aqi_pred)
         return jsonify({
             "aqi_predicted": round(aqi_pred, 2),
@@ -210,14 +121,8 @@ def predict_category():
         data = request.get_json()
         if not data:
             return jsonify({"error": "No input data provided."}), 400
-
-        if isinstance(data, dict):
-            df = pd.DataFrame([data])
-        else:
-            df = pd.DataFrame(data)
-
+        df = pd.DataFrame([data]) if isinstance(data, dict) else pd.DataFrame(data)
         X = prepare_input(df, FEATURES)
-
         if imputer is not None:
             try:
                 X = imputer.transform(X)
@@ -228,10 +133,8 @@ def predict_category():
                 X = scaler.transform(X)
             except Exception as e:
                 print("[WARN] Scaler transform failed:", e)
-
         if aqi_classifier is None:
             return jsonify({"error": "Classification model missing."}), 500
-
         cls_idx = int(aqi_classifier.predict(X)[0])
         categories = ["Good", "Moderate", "Unhealthy for Sensitive Groups", "Unhealthy", "Very Unhealthy", "Hazardous"]
         return jsonify({
