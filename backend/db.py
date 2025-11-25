@@ -1,30 +1,42 @@
 # backend/db.py
+
 import os
 from google.cloud.sql.connector import Connector, IPTypes
 from sqlalchemy import text, create_engine
 from sqlalchemy.pool import NullPool
 
-# Config from env (set in Cloud Run)
+# Read from Cloud Run environment variables
 INSTANCE_CONNECTION_NAME = os.environ.get(
-    "INSTANCE_CONNECTION_NAME", "just-smithy-479012-a1:us-east1:vento-postgres"
+    "INSTANCE_CONNECTION_NAME",
+    "just-smithy-479012-a1:us-east1:vento-postgres"
 )
+
 DB_USER = os.environ.get("DB_USER", "giorno_geovanna")
 DB_PASS = os.environ.get("DB_PASS", "")
 DB_NAME = os.environ.get("DB_NAME", "gold_experience")
 
+# Internal singletons
 _connector = None
 _engine = None
 
+
+# ------------------------------
+# Connector Init
+# ------------------------------
 def _init_connector():
     global _connector
     if _connector is None:
-        # Use PUBLIC IP for simplicity (IPTypes.PUBLIC) — fine for Cloud Run + Cloud SQL
+        # PUBLIC IP is correct for Cloud Run + Cloud SQL
         _connector = Connector(ip_type=IPTypes.PUBLIC)
     return _connector
 
+
+# ------------------------------
+# Raw pg8000 connection
+# ------------------------------
 def get_raw_connection():
     """
-    Return a raw DB connection object (pg8000) for legacy code that expects a cursor.
+    Legacy-style raw DB connection (pg8000) for code expecting .cursor().
     """
     conn = _init_connector().connect(
         INSTANCE_CONNECTION_NAME,
@@ -35,14 +47,18 @@ def get_raw_connection():
     )
     return conn
 
+
+# ------------------------------
+# SQLAlchemy Engine (recommended)
+# ------------------------------
 def get_engine():
     """
-    Return a SQLAlchemy Engine that uses the Cloud SQL Connector to create the
-    underlying DB connection. Uses NullPool to avoid pooled sockets in Cloud Run.
+    SQLAlchemy Engine using the Cloud SQL Connector creator.
+    NullPool is important for Cloud Run to avoid persistent sockets.
     """
     global _engine
     if _engine is None:
-        # create_engine with a creator that uses the connector
+
         def creator():
             return _init_connector().connect(
                 INSTANCE_CONNECTION_NAME,
@@ -51,18 +67,33 @@ def get_engine():
                 password=DB_PASS,
                 db=DB_NAME,
             )
-        # dialect 'postgresql+pg8000' with a creator function
-        _engine = create_engine("postgresql+pg8000://", creator=creator, poolclass=NullPool)
+
+        _engine = create_engine(
+            "postgresql+pg8000://",
+            creator=creator,
+            poolclass=NullPool,
+        )
+
     return _engine
 
+
+# ------------------------------
+# SQLAlchemy connection helper
+# ------------------------------
 def get_db_connection():
     """
-    Return a SQLAlchemy Connection object (use .execute/text for queries).
-    Caller should close() when done.
+    Returns an SQLAlchemy Connection.
+    Caller must close() (or use with-statement).
     """
     return get_engine().connect()
 
-# convenience helper used by routes
+
+# ------------------------------
+# Execute helper
+# ------------------------------
 def execute_text(sql, params=None):
+    """
+    Convenience wrapper for quickly executing SQL text.
+    """
     with get_db_connection() as conn:
         return conn.execute(text(sql), params or {})
