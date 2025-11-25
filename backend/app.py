@@ -123,6 +123,19 @@ def global_aqi():
     return jsonify(results)
 
 
+@app.route("/api/db_test")
+def db_test():
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT NOW();")
+        row = cur.fetchone()
+        cur.close()
+        conn.close()
+        return {"db_status": "connected", "now": str(row[0])}
+    except Exception as e:
+        return {"db_status": "error", "message": str(e)}, 500
+
 # ==========================
 # LOCAL MODE
 # ==========================
