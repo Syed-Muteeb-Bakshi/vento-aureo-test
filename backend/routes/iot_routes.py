@@ -8,13 +8,11 @@ from db import get_db_connection, execute_text
 
 iot_bp = Blueprint("iot_bp", __name__)
 
-# ------------------------------------------------------------
-# POST /upload_sensor
-# Ingest sensor payload → log ingestion → store measurements
-# ------------------------------------------------------------
 @iot_bp.route("/upload_sensor", methods=["POST"])
 def upload_sensor():
-    # Parse payload
+    # ---------------------------
+    # Parse JSON safely
+    # ---------------------------
     try:
         payload = request.get_json(force=True)
     except Exception:
@@ -25,13 +23,13 @@ def upload_sensor():
 
     # Basic fields
     device_id = payload.get("device_id")
-    city = payload.get("city")
+    city = payload.get("city", None)
     timestamp = payload.get("timestamp") or datetime.utcnow().isoformat()
 
     sensors = payload.get("sensors", {}) or {}
     meta = payload.get("meta", {}) or {}
 
-    # Extract individual sensor fields
+    # Sensor fields
     pm25 = sensors.get("pm25")
     pm10 = sensors.get("pm10")
     co2 = sensors.get("co2")
@@ -43,10 +41,11 @@ def upload_sensor():
     latitude = sensors.get("latitude") or sensors.get("lat")
     longitude = sensors.get("longitude") or sensors.get("lon")
 
-    # ------------------------------------
-    # 1️⃣ Log ingestion into ingestion_logs
-    # ------------------------------------
+    # ---------------------------
+    # 1️⃣ INSERT INTO ingestion_logs
+    # ---------------------------
     ingestion_id = None
+
     try:
         conn = get_db_connection()
         try:
@@ -59,7 +58,7 @@ def upload_sensor():
                 """),
                 {
                     "device_id": device_id,
-                    "raw_payload": json.dumps(payload),
+                    "raw_payload": json.dumps(payload)
                 }
             )
             ingestion_id = result.scalar()
@@ -68,18 +67,19 @@ def upload_sensor():
 
     except Exception as e:
         current_app.logger.exception("Failed to write ingestion log: %s", e)
-        ingestion_id = None   # Continue but note failure
+        ingestion_id = None  # still insert readings
 
-    # ------------------------------------
-    # 2️⃣ Insert into sensor_readings table
-    # ------------------------------------
+
+    # ---------------------------
+    # 2️⃣ INSERT INTO sensor_readings (FULLY FIXED SQL)
+    # ---------------------------
     try:
         conn = get_db_connection()
         try:
             insert_result = conn.execute(
                 text("""
                     INSERT INTO sensor_readings
-                    (device_id, device_type, city, timestamp, pm25, pm10, co2, 
+                    (device_id, device_type, city, timestamp, pm25, pm10, co2,
                      temperature, humidity, voc_ppm, latitude, longitude,
                      measurements, meta, created_at)
                     VALUES
@@ -102,16 +102,18 @@ def upload_sensor():
                     "latitude": latitude,
                     "longitude": longitude,
                     "measurements": json.dumps(sensors),
-                    "meta": json.dumps(meta),
+                    "meta": json.dumps(meta)
                 }
             )
+
             reading_id = insert_result.scalar()
+
         finally:
             conn.close()
 
-        # ------------------------------------
-        # 3️⃣ Mark ingestion as "stored"
-        # ------------------------------------
+        # ---------------------------
+        # 3️⃣ Update ingestion_logs stored_in_readings
+        # ---------------------------
         if ingestion_id:
             try:
                 execute_text(
@@ -137,4 +139,7 @@ def upload_sensor():
 
     except Exception as e:
         current_app.logger.exception("Failed to insert sensor reading: %s", e)
-        return jsonify({"error": "Database insert failed", "details": str(e)}), 500
+        return jsonify({
+            "error": "Database insert failed",
+            "details": str(e)
+        }), 500
