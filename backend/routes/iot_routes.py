@@ -8,6 +8,7 @@ from db import get_db_connection, execute_text
 
 iot_bp = Blueprint("iot_bp", __name__)
 
+
 @iot_bp.route("/upload_sensor", methods=["POST"])
 def upload_sensor():
     # ---------------------------
@@ -69,23 +70,30 @@ def upload_sensor():
         current_app.logger.exception("Failed to write ingestion log: %s", e)
         ingestion_id = None  # still insert readings
 
-
     # ---------------------------
-    # 2️⃣ INSERT INTO sensor_readings (FULLY FIXED SQL)
+    # 2️⃣ INSERT INTO sensor_readings (SQL FIXED)
     # ---------------------------
     try:
         conn = get_db_connection()
         try:
             insert_result = conn.execute(
                 text("""
-                    INSERT INTO sensor_readings
-                    (device_id, device_type, city, timestamp, pm25, pm10, co2,
-                     temperature, humidity, voc_ppm, latitude, longitude,
-                     measurements, meta, created_at)
-                    VALUES
-                    (:device_id, :device_type, :city, :timestamp, :pm25, :pm10, :co2,
-                     :temperature, :humidity, :voc_ppm, :latitude, :longitude,
-                     :measurements::jsonb, :meta::jsonb, NOW())
+                    INSERT INTO sensor_readings (
+                        device_id, device_type, city, timestamp,
+                        pm25, pm10, co2,
+                        temperature, humidity, voc_ppm,
+                        latitude, longitude,
+                        measurements, meta, created_at
+                    )
+                    VALUES (
+                        :device_id, :device_type, :city, :timestamp,
+                        :pm25, :pm10, :co2,
+                        :temperature, :humidity, :voc_ppm,
+                        :latitude, :longitude,
+                        CAST(:measurements AS JSONB),
+                        CAST(:meta AS JSONB),
+                        NOW()
+                    )
                     RETURNING id;
                 """),
                 {
@@ -102,7 +110,7 @@ def upload_sensor():
                     "latitude": latitude,
                     "longitude": longitude,
                     "measurements": json.dumps(sensors),
-                    "meta": json.dumps(meta)
+                    "meta": json.dumps(meta),
                 }
             )
 
@@ -112,7 +120,7 @@ def upload_sensor():
             conn.close()
 
         # ---------------------------
-        # 3️⃣ Update ingestion_logs stored_in_readings
+        # 3️⃣ Update ingestion_logs
         # ---------------------------
         if ingestion_id:
             try:
