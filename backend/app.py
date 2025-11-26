@@ -7,6 +7,8 @@ from google.cloud.sql.connector import Connector, IPTypes
 import pg8000.native
 import model_paths  # sets MODEL_DIR, bucket paths
 
+CORS(app, resources={r"/*": {"origins": "*"}})
+
 # ==========================
 # Cloud SQL Connector Setup
 # ==========================
@@ -56,6 +58,7 @@ from routes.prophet_routes import prophet_bp
 from routes.short_term_routes import short_term_bp
 from routes.city_aqi_routes import city_bp
 from routes.upload_routes import upload_bp
+from routes.visual_report import visual_bp
 
 app.register_blueprint(forecast_bp, url_prefix="/api")
 app.register_blueprint(iot_bp, url_prefix="/api")
@@ -67,7 +70,7 @@ app.register_blueprint(prophet_bp, url_prefix="/api")
 app.register_blueprint(short_term_bp, url_prefix="/api")
 app.register_blueprint(city_bp, url_prefix="/api")
 app.register_blueprint(upload_bp, url_prefix="/api")
-
+app.register_blueprint(visual_bp, url_prefix="/api")
 
 # ==========================
 # HEALTH CHECK
@@ -135,6 +138,13 @@ def db_test():
         return {"db_status": "connected", "now": str(row[0])}
     except Exception as e:
         return {"db_status": "error", "message": str(e)}, 500
+
+@app.after_request
+def add_cors_headers(response):
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Headers"] = "*"
+    response.headers["Access-Control-Allow-Methods"] = "GET,POST,OPTIONS"
+    return response
 
 # ==========================
 # LOCAL MODE
