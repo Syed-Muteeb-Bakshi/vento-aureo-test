@@ -7,8 +7,6 @@ from google.cloud.sql.connector import Connector, IPTypes
 import pg8000.native
 import model_paths  # sets MODEL_DIR, bucket paths
 
-CORS(app, resources={r"/*": {"origins": "*"}})
-
 # ==========================
 # Cloud SQL Connector Setup
 # ==========================
@@ -44,6 +42,7 @@ TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
 app = Flask(__name__, static_folder=FRONTEND_DIR, template_folder=TEMPLATES_DIR)
 CORS(app)
 
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # ==========================
 # BLUEPRINTS
@@ -58,7 +57,8 @@ from routes.prophet_routes import prophet_bp
 from routes.short_term_routes import short_term_bp
 from routes.city_aqi_routes import city_bp
 from routes.upload_routes import upload_bp
-from routes.visual_report import visual_bp
+from routes.visual_report_routes import visual_bp
+
 
 app.register_blueprint(forecast_bp, url_prefix="/api")
 app.register_blueprint(iot_bp, url_prefix="/api")
