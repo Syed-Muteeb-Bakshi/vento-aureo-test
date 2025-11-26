@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Vento Aureo — Live Dashboard</title>
+
+  <!-- Tailwind CDN (for quick demo) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-slate-50 text-slate-900">
+
+  <div class="max-w-6xl mx-auto p-4">
+    <header class="flex items-center justify-between mb-4">
+      <div>
+        <h1 class="text-2xl font-semibold">Vento Aureo — Air Quality Dashboard</h1>
+        <p class="text-sm text-slate-600">Real-time telemetry from your devices</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <select id="deviceSelector" class="border rounded p-2"></select>
+        <button id="refreshBtn" class="px-3 py-2 bg-indigo-600 text-white rounded">Refresh</button>
+        <div id="status" class="text-sm text-slate-600">—</div>
+      </div>
+    </header>
+
+    <main class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <section class="lg:col-span-2 space-y-4">
+        <div id="cards" class="grid grid-cols-2 md:grid-cols-4 gap-3"></div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="card">
+            <h3 class="card-title">Temperature</h3>
+            <canvas id="tempChart" height="160"></canvas>
+          </div>
+          <div class="card">
+            <h3 class="card-title">PM2.5 / PM10</h3>
+            <canvas id="pmChart" height="160"></canvas>
+          </div>
+          <div class="card">
+            <h3 class="card-title">Gas / CO₂</h3>
+            <canvas id="gasChart" height="160"></canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">Payload (latest)</h3>
+          <pre id="jsonDump" class="text-xs max-h-48 overflow-auto bg-slate-100 p-3 rounded"></pre>
+        </div>
+      </section>
+
+      <aside class="space-y-4">
+        <div class="card" style="height:300px;">
+          <h3 class="card-title">Device Location</h3>
+          <div id="map" class="w-full h-72 rounded"></div>
+          <div id="mapFallback" class="text-sm text-slate-500 mt-2"></div>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">Last activity</h3>
+          <div id="lastSeen" class="text-sm text-slate-700">—</div>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">Notes</h3>
+          <ul class="text-sm text-slate-600">
+            <li>- Auto-refresh every 5s</li>
+            <li>- Handles missing fields gracefully</li>
+            <li>- Replace endpoint in app.js with your prod URL if needed</li>
+          </ul>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
