@@ -6,21 +6,7 @@ from flask import current_app
 
 short_term_bp = Blueprint("short_term_bp", __name__)
 
-@short_term_bp.route("/short_term/<city>")
-def short_term(city):
-    base = request.args.get("base", None)
-    try:
-        base = float(base) if base else 150.0
-    except:
-        base = 150.0
-
-    data = generate_short_term_forecast(city, base)
-    return jsonify({
-        "city": city,
-        "base_aqi": base,
-        "forecast": data
-    })
-
+# POST route defined first to ensure proper registration
 @short_term_bp.route("/short_term_forecast", methods=["POST"])
 def short_term_forecast_post():
     """
@@ -42,3 +28,18 @@ def short_term_forecast_post():
     except Exception as e:
         current_app.logger.exception("Short-term forecast POST failed")
         return jsonify({"error": "Internal error generating short-term forecast", "details": str(e)}), 500
+
+@short_term_bp.route("/short_term/<city>", methods=["GET"])
+def short_term(city):
+    base = request.args.get("base", None)
+    try:
+        base = float(base) if base else 150.0
+    except:
+        base = 150.0
+
+    data = generate_short_term_forecast(city, base)
+    return jsonify({
+        "city": city,
+        "base_aqi": base,
+        "forecast": data
+    })
