@@ -5,7 +5,8 @@
   "main": "demo-server.js",
   "scripts": {
     "start": "node demo-server.js 8000",
-    "dev": "node demo-server.js 8080"
+    "dev": "node demo-server.js 8080",
+    "build": "node -e \"console.log('Static frontend – nothing to compile');\""
   },
   "engines": {
     "node": ">=16.0.0"

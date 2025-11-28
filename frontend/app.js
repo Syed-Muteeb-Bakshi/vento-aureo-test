@@ -6,7 +6,15 @@
 const API_BASE = "https://vento-backend-678919375946.us-east1.run.app";
 const API_KEY = "YOUR_API_KEY_HERE";
 const REFRESH_INTERVAL = 5000;
-const CHART_BUFFER_SIZE = 20;
+const CHART_BUFFER_SIZE = 30;
+const TRIVIA_REFRESH_INTERVAL = 20000;
+const FORECAST_MAX_POINTS = 60;
+const DEFAULT_CITY = "Delhi";
+const FORECAST_SERIES_META = {
+    shortTerm: { label: 'Short-Term ML', color: '#38bdf8' },
+    prophet: { label: 'Prophet', color: '#a855f7' },
+    hybrid: { label: 'Hybrid Ensemble', color: '#f97316' }
+};
 
 // Debug: Log API base
 console.log('API Base URL:', API_BASE);
@@ -15,8 +23,9 @@ console.log('API Base URL:', API_BASE);
 let currentSection = 'dashboard';
 let currentDevice = 'portable';
 let cities = [];
-let triviaPool = [];
 let refreshIntervalId = null;
+let triviaIntervalId = null;
+let lastTriviaFact = '';
 
 // Device metadata for status tracking
 let deviceMetadata = {
@@ -29,7 +38,8 @@ let charts = {
     portable: { temp: null, pm: null },
     static: { temp: null, gas: null },
     predict: null,
-    historic: null
+    historic: null,
+    forecastComparison: null
 };
 
 // Chart data buffers
@@ -41,6 +51,15 @@ const chartData = {
 // Map instances
 let maps = { portable: null, static: null };
 let mapMarkers = { portable: null, static: null };
+let forecastState = {
+    shortTerm: [],
+    prophet: [],
+    hybrid: []
+};
+const DEVICE_IDS = {
+    portable: 'PORTABLE-01',
+    static: 'Vento-Station-01'
+};
 
 // ==========================
 // INITIALIZATION
@@ -57,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(loadCities, 2000);
         }
     });
-    loadTrivia();
+    startTriviaAutoRefresh();
     loadCurrentLocationAQI();
 });
 
@@ -106,8 +125,9 @@ function initializeApp() {
     initializeCharts();
     initializeMaps();
     startAutoRefresh();
-    fetchDeviceData('PORTABLE-01', 'portable');
-    fetchDeviceData('Vento-Station-01', 'static');
+    fetchDeviceData(DEVICE_IDS.portable, 'portable');
+    fetchDeviceData(DEVICE_IDS.static, 'static');
+    generateDeviceForecasts();
 }
 
 // ==========================
@@ -271,6 +291,10 @@ function switchSection(section) {
             'historic': 'Historic AQI Charts'
         };
         document.getElementById('page-title').textContent = titles[section] || 'Dashboard';
+
+        if (section === 'predictive' && (!forecastState.shortTerm.length && !forecastState.prophet.length && !forecastState.hybrid.length)) {
+            generateDeviceForecasts();
+        }
     }
 }
 
@@ -325,6 +349,11 @@ function setupEventListeners() {
 
     // Quick AQI Prediction
     document.getElementById('predict-current-device')?.addEventListener('click', predictCurrentDeviceAQI);
+
+    // Forecast + manual prediction controls
+    document.getElementById('forecast-refresh')?.addEventListener('click', generateDeviceForecasts);
+    document.getElementById('manual-predict-aqi')?.addEventListener('click', () => predictFromManualInputs('aqi'));
+    document.getElementById('manual-predict-category')?.addEventListener('click', () => predictFromManualInputs('category'));
 }
 
 function switchDevice(device) {
@@ -346,7 +375,7 @@ function switchDevice(device) {
     document.getElementById('device-static').classList.toggle('hidden', device !== 'static');
 
     // Fetch data for selected device
-    const deviceId = device === 'portable' ? 'PORTABLE-01' : 'Vento-Station-01';
+    const deviceId = device === 'portable' ? DEVICE_IDS.portable : DEVICE_IDS.static;
     fetchDeviceData(deviceId, device);
 }
 
@@ -415,60 +444,17 @@ async function fetchDeviceData(deviceId, deviceType) {
         }
         throw new Error('Invalid response');
     } catch (error) {
-        console.warn(`Device ${deviceId} fetch failed, using Bangalore simulation:`, error);
-
-        // Bangalore-like simulation data
-        const now = new Date();
-        const isPortable = deviceType === 'portable';
-
-        // Base values for Bangalore (Moderate/Unhealthy)
-        const temp = 26 + Math.random() * 2;
-        const humidity = 55 + Math.random() * 10;
-        const pm25 = 45 + Math.random() * 15; // Moderate
-        const pm10 = pm25 * 1.6;
-
-        const simulatedLatest = {
-            timestamp: now.toISOString(),
-            temperature: temp.toFixed(1),
-            humidity: humidity.toFixed(1),
-            pm25: pm25.toFixed(1), // Matches updateDeviceView expectation
-            pm2_5: pm25.toFixed(1),
-            pm10: pm10.toFixed(1),
-            pressure: (1010 + Math.random() * 5).toFixed(0),
-            mq135: (180 + Math.random() * 20).toFixed(0),
-            mq135_raw: (180 + Math.random() * 20).toFixed(0),
-            voc: (0.8 + Math.random() * 0.2).toFixed(2),
-            voc_index: (80 + Math.random() * 20).toFixed(0),
-            co2: (450 + Math.random() * 50).toFixed(0)
-        };
-
-        const simulatedData = {
-            device_id: deviceId,
-            status: 'ok',
-            latest: simulatedLatest,
-            chart: [] // Chart will auto-fill from latest if empty
-        };
-
+        console.error(`Device ${deviceId} fetch failed`, error);
+        const wasOnline = deviceMetadata[deviceType]?.status === 'online';
         deviceMetadata[deviceType] = {
-            lastUpdate: now.toISOString(),
-            status: 'online'
+            lastUpdate: null,
+            status: 'offline'
         };
-
-        updateDeviceView(simulatedData, deviceType);
-        updateDeviceStatusUI(deviceType, 'online', now.toISOString());
-        updateConnectionStatus(true);
-    }
-}
-
-async function loadMockData(deviceId) {
-    const filename = deviceId === 'PORTABLE-01' ? 'portable.json' : 'static.json';
-    try {
-        const response = await fetch(`example_payloads/${filename}`);
-        if (!response.ok) throw new Error('Mock file not found');
-        return await response.json();
-    } catch (error) {
-        console.error(`Failed to load mock data:`, error);
-        return null;
+        updateDeviceStatusUI(deviceType, 'offline', null);
+        updateConnectionStatus(false);
+        if (wasOnline) {
+            showToast(`${deviceId} disconnected from backend`, 'warning');
+        }
     }
 }
 
@@ -490,13 +476,9 @@ async function loadCities() {
         if (cities.length === 0) throw new Error('No cities found');
 
     } catch (e) {
-        console.warn('Backend unavailable, using mock cities:', e);
-        // Fallback to mock cities
-        if (window.MOCK_DATA && window.MOCK_DATA.cities) {
-            cities = window.MOCK_DATA.cities;
-        } else {
-            cities = ['Delhi', 'Mumbai', 'Bangalore', 'Chennai', 'Hyderabad', 'Kolkata', 'London', 'New York', 'Tokyo'];
-        }
+        console.error('Failed to load cities from backend:', e);
+        cities = [];
+        showToast('City list unavailable. Please retry.', 'warning');
     }
 
     // Populate selects
@@ -572,31 +554,46 @@ function setupCitySearch(inputId, suggestId, setterCallback) {
     });
 }
 
-async function loadTrivia() {
-    try {
-        const res = await fetch(`${API_BASE}/api/trivia`);
-        if (!res.ok) throw new Error('API failed');
-        const data = await res.json();
-        triviaPool = Array.isArray(data) ? data : (typeof data === 'object' ? Object.values(data).flat() : []);
-    } catch (e) {
-        // Fallback to mock trivia
-        if (window.MOCK_DATA) {
-            triviaPool = [window.MOCK_DATA.getRandomTrivia(), window.MOCK_DATA.getRandomTrivia(), window.MOCK_DATA.getRandomTrivia()];
-        } else {
-            triviaPool = ["Did you know? Indoor plants can improve air quality.", "Air pollution affects millions worldwide."];
-        }
-    }
-
-    if (triviaPool.length) {
-        showRandomFact();
-        setInterval(showRandomFact, 60000);
-    }
+function startTriviaAutoRefresh() {
+    if (triviaIntervalId) clearInterval(triviaIntervalId);
+    refreshTriviaFact();
+    triviaIntervalId = setInterval(refreshTriviaFact, TRIVIA_REFRESH_INTERVAL);
 }
 
-function showRandomFact() {
-    if (triviaPool.length) {
-        const fact = triviaPool[Math.floor(Math.random() * triviaPool.length)];
-        document.getElementById('aqi-fact').textContent = fact;
+async function refreshTriviaFact() {
+    const factEl = document.getElementById('aqi-fact');
+    if (!factEl) return;
+
+    try {
+        const res = await fetch(`${API_BASE}/api/trivia`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const payload = await res.json();
+
+        let fact = '';
+        if (Array.isArray(payload) && payload.length) {
+            const randomEntry = payload[Math.floor(Math.random() * payload.length)];
+            fact = typeof randomEntry === 'string' ? randomEntry : (randomEntry.fact || randomEntry.text || '');
+        } else if (typeof payload === 'object' && payload !== null) {
+            fact = payload.fact || payload.message || payload.text || '';
+        } else if (typeof payload === 'string') {
+            fact = payload;
+        }
+
+        if (!fact) throw new Error('Trivia response empty');
+
+        factEl.classList.add('fade-out');
+        setTimeout(() => {
+            factEl.textContent = fact;
+            factEl.classList.remove('fade-out');
+            factEl.classList.add('fade-in');
+            setTimeout(() => factEl.classList.remove('fade-in'), 300);
+        }, 200);
+        lastTriviaFact = fact;
+    } catch (error) {
+        console.error('Failed to refresh trivia:', error);
+        if (!lastTriviaFact) {
+            factEl.textContent = 'Trivia temporarily unavailable.';
+        }
     }
 }
 
@@ -607,86 +604,91 @@ async function loadCurrentLocationAQI() {
     const currentPm25 = document.getElementById('current-pm25');
     const currentPm10 = document.getElementById('current-pm10');
 
-    // Show loading state
     aqiValue.textContent = '...';
-    aqiCategory.textContent = 'Locating...';
+    aqiCategory.textContent = 'Fetching live data...';
+    currentLocation.textContent = 'Detecting...';
+    currentPm25.textContent = '—';
+    currentPm10.textContent = '—';
 
-    // Helper to force update UI
-    const forceUpdate = (city) => {
-        if (window.MOCK_DATA) {
-            console.log('Forcing dashboard update with mock data for:', city);
-            const mock = window.MOCK_DATA.getCurrentCityAQI(city);
-            updateDashboardUI(mock.latest_aqi, mock.city_matched, mock.pollutants);
+    const applyCityFallback = async (cityName) => {
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 4000);
+            const res = await fetch(`${API_BASE}/api/city_aqi/${encodeURIComponent(cityName)}`, { signal: controller.signal });
+            clearTimeout(timeoutId);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const payload = await res.json();
+            if (payload.error) throw new Error(payload.error);
+            updateDashboardUI(payload.latest_aqi, payload.city_matched || cityName, payload.pollutants);
+        } catch (error) {
+            console.error('City AQI fallback failed:', error);
+            aqiValue.textContent = '—';
+            aqiCategory.textContent = 'Unavailable';
+            currentLocation.textContent = cityName;
+            showToast('Unable to load current location AQI.', 'error');
         }
     };
 
-    try {
-        // 1. Try Geolocation with short timeout
-        let lat, lon, cityName;
+    const tryGeolocation = async () => {
+        if (!navigator.geolocation) return null;
         try {
-            if (!navigator.geolocation) throw new Error('No geo');
-
-            const pos = await new Promise((resolve, reject) => {
-                const timeout = setTimeout(() => reject(new Error('Geo timeout')), 3000);
+            const position = await new Promise((resolve, reject) => {
+                const timeout = setTimeout(() => reject(new Error('Geolocation timeout')), 3000);
                 navigator.geolocation.getCurrentPosition(
-                    (p) => { clearTimeout(timeout); resolve(p); },
-                    (e) => { clearTimeout(timeout); reject(e); },
-                    { timeout: 3000 }
+                    (pos) => { clearTimeout(timeout); resolve(pos); },
+                    (err) => { clearTimeout(timeout); reject(err); },
+                    { timeout: 3000, enableHighAccuracy: false }
                 );
             });
 
-            lat = pos.coords.latitude;
-            lon = pos.coords.longitude;
+            const coords = {
+                lat: position.coords.latitude,
+                lon: position.coords.longitude,
+                city: null
+            };
 
-            // Reverse geocode (fast timeout)
+            // Attempt quick reverse geocode (best effort)
             try {
                 const controller = new AbortController();
                 const id = setTimeout(() => controller.abort(), 2000);
-                const r = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`, { signal: controller.signal });
+                const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${coords.lat}&lon=${coords.lon}&format=json`, { signal: controller.signal });
                 clearTimeout(id);
-                const j = await r.json();
-                cityName = j?.address?.city || j?.address?.town || j?.address?.village;
+                const info = await response.json();
+                coords.city = info?.address?.city || info?.address?.town || info?.address?.state;
             } catch (e) {
-                console.warn('Reverse geocode failed');
+                console.warn('Reverse geocode failed', e);
             }
-        } catch (e) {
-            console.warn('Geolocation skipped/failed:', e);
-            // Fallback to default city immediately if geo fails
-            forceUpdate("Delhi");
-            return;
-        }
 
-        // 2. Try API with coordinates or city
+            return coords;
+        } catch (error) {
+            console.warn('Geolocation not available:', error);
+            return null;
+        }
+    };
+
+    const coords = await tryGeolocation();
+    if (coords) {
         try {
             const controller = new AbortController();
-            const id = setTimeout(() => controller.abort(), 3000);
+            const timeoutId = setTimeout(() => controller.abort(), 4000);
+            const res = await fetch(`${API_BASE}/api/live_aqi_coords?lat=${coords.lat}&lon=${coords.lon}`, { signal: controller.signal });
+            clearTimeout(timeoutId);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const payload = await res.json();
+            if (payload.error) throw new Error(payload.error);
 
-            let url = cityName
-                ? `${API_BASE}/api/city_aqi/${encodeURIComponent(cityName)}`
-                : `${API_BASE}/api/live_aqi_coords?lat=${lat}&lon=${lon}`;
-
-            const res = await fetch(url, { signal: controller.signal });
-            clearTimeout(id);
-
-            if (!res.ok) throw new Error('API error');
-            const data = await res.json();
-            if (data.error) throw new Error(data.error);
-
-            updateDashboardUI(data.latest_aqi, data.city_matched || cityName, data.pollutants);
-
-        } catch (apiError) {
-            console.warn('API failed, using mock data for dashboard');
-            // Use mock data
-            if (window.MOCK_DATA) {
-                const mock = window.MOCK_DATA.getCurrentCityAQI(cityName || "Delhi");
-                updateDashboardUI(mock.latest_aqi, mock.city_matched, mock.pollutants);
+            updateDashboardUI(payload.latest_aqi, payload.city_matched || coords.city || 'Current Location', payload.pollutants);
+            return;
+        } catch (error) {
+            console.warn('Coordinate AQI fetch failed, falling back to city:', error);
+            if (coords.city) {
+                await applyCityFallback(coords.city);
+                return;
             }
         }
-    } catch (e) {
-        console.error('Dashboard update failed:', e);
-        aqiValue.textContent = '—';
-        aqiCategory.textContent = 'Unavailable';
     }
+
+    await applyCityFallback(DEFAULT_CITY);
 }
 
 function updateDashboardUI(aqi, city, pollutants) {
@@ -695,31 +697,21 @@ function updateDashboardUI(aqi, city, pollutants) {
     const currentLocation = document.getElementById('current-location');
     const currentPm25 = document.getElementById('current-pm25');
     const currentPm10 = document.getElementById('current-pm10');
+    const safeAqi = typeof aqi === 'number' && !Number.isNaN(aqi) ? Math.round(aqi) : null;
 
-    // NUCLEAR FALLBACK: If no AQI, generate a random one
-    if (aqi === undefined || aqi === null || aqi === '—') {
-        console.warn('Nuclear fallback triggered for AQI');
-        aqi = Math.floor(Math.random() * (150 - 50 + 1)) + 50;
-        if (!city || city === 'Unknown') city = "Delhi";
-        if (!pollutants) {
-            pollutants = { pm2_5: Math.round(aqi * 0.4), pm10: Math.round(aqi * 0.6) };
-        }
-    }
-
-    aqiValue.textContent = aqi;
-    aqiCategory.textContent = getAQICategory(aqi);
-    currentLocation.textContent = city || 'Delhi';
-    currentPm25.textContent = pollutants?.pm2_5 ?? Math.round(aqi * 0.4);
-    currentPm10.textContent = pollutants?.pm10 ?? Math.round(aqi * 0.6);
-    updateAQIColor(aqiValue, aqi);
+    aqiValue.textContent = safeAqi ?? '—';
+    aqiCategory.textContent = safeAqi ? getAQICategory(safeAqi) : 'Unavailable';
+    currentLocation.textContent = city || DEFAULT_CITY;
+    currentPm25.textContent = pollutants?.pm2_5 ?? pollutants?.pm25 ?? '—';
+    currentPm10.textContent = pollutants?.pm10 ?? pollutants?.pm_10 ?? '—';
+    updateAQIColor(aqiValue, safeAqi);
 }
 
 // Global safety check
 setTimeout(() => {
     const val = document.getElementById('aqi-value').textContent;
     if (val === '—' || val === '...' || val === 'undefined') {
-        console.warn('Global safety timeout: Forcing dashboard update');
-        updateDashboardUI(null, "Delhi", null);
+        console.warn('Current AQI still unavailable after initial load.');
     }
 }, 4000);
 
@@ -750,37 +742,9 @@ async function searchCityAQI() {
 
         renderSearchResult(data);
     } catch (e) {
-        console.warn('Search API failed, using mock:', e);
-
-        // Guaranteed fallback
-        let aqi = 75; // Default
-        let pm25 = 20;
-        let pm10 = 35;
-
-        if (window.MOCK_DATA) {
-            const mock = window.MOCK_DATA.getCurrentCityAQI(city);
-            if (mock && mock.latest_aqi) {
-                aqi = mock.latest_aqi;
-                pm25 = mock.pollutants.pm2_5;
-                pm10 = mock.pollutants.pm10;
-            }
-        } else {
-            // Fallback if MOCK_DATA missing
-            aqi = Math.floor(Math.random() * 100) + 50;
-            pm25 = Math.round(aqi * 0.3);
-            pm10 = Math.round(aqi * 0.5);
-        }
-
-        const fallbackData = {
-            city_matched: city,
-            city_requested: city,
-            latest_aqi: aqi,
-            pollutants: {
-                pm2_5: pm25,
-                pm10: pm10
-            }
-        };
-        renderSearchResult(fallbackData);
+        console.error('Search API failed:', e);
+        result.innerHTML = `<span class="text-red-600 dark:text-red-400">Unable to load AQI for ${city}. Please try again.</span>`;
+        showToast(`City AQI lookup failed: ${e.message}`, 'error');
     }
 }
 
@@ -817,7 +781,15 @@ async function generatePrediction() {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 4000);
 
-        const res = await fetch(`${API_BASE}/api/hybrid_forecast/${encodeURIComponent(city)}?horizon=${horizon}`, { signal: controller.signal });
+        const res = await fetch(`${API_BASE}/api/hybrid_forecast`, {
+            method: 'POST',
+            signal: controller.signal,
+            headers: {
+                'Content-Type': 'application/json',
+                ...(API_KEY && API_KEY !== 'YOUR_API_KEY_HERE' ? { 'x-api-key': API_KEY } : {})
+            },
+            body: JSON.stringify({ city, horizon_months: horizon })
+        });
         clearTimeout(timeoutId);
 
         if (!res.ok) throw new Error('API failed');
@@ -831,16 +803,10 @@ async function generatePrediction() {
         stats.textContent = `${city} · Horizon: ${data.forecast_horizon_months || horizon} months · Avg: ${avg}`;
 
     } catch (e) {
-        console.warn('Prediction API failed, using mock:', e);
-        if (window.MOCK_DATA) {
-            const forecast = window.MOCK_DATA.generatePredictionData(city, horizon);
-            renderPredictChart(forecast, city);
-            const avg = forecast.length ? (forecast.reduce((a, b) => a + (Number(b.predicted_aqi || 0)), 0) / forecast.length).toFixed(2) : 'N/A';
-            stats.textContent = `${city} · Horizon: ${horizon} months · Avg: ${avg} (Simulated)`;
-        } else {
-            stats.textContent = 'Failed to generate prediction';
-            stats.className = 'mt-4 text-sm text-red-600 dark:text-red-400';
-        }
+        console.error('Prediction API failed:', e);
+        stats.textContent = 'Failed to generate forecast';
+        stats.className = 'mt-4 text-sm text-red-600 dark:text-red-400';
+        showToast(`Hybrid forecast failed: ${e.message}`, 'error');
     }
 }
 
@@ -883,16 +849,303 @@ async function loadHistoric() {
         stats.textContent = `${city} · points: ${forecast.length} · Avg: ${avg}`;
 
     } catch (e) {
-        console.warn('Historic API failed, using mock:', e);
-        if (window.MOCK_DATA) {
-            const forecast = window.MOCK_DATA.generateHistoricData(city, from ? from + '-01' : null, to ? to + '-01' : null);
-            renderHistoricChart(forecast, city);
-            const avg = forecast.length ? (forecast.reduce((a, b) => a + (Number(b.yhat || 0)), 0) / forecast.length).toFixed(2) : 'N/A';
-            stats.textContent = `${city} · points: ${forecast.length} · Avg: ${avg} (Simulated)`;
+        console.error('Historic API failed:', e);
+        stats.textContent = 'Failed to load historic data';
+        stats.className = 'mt-4 text-sm text-red-600 dark:text-red-400';
+        showToast(`Historic data failed: ${e.message}`, 'error');
+    }
+}
+
+async function generateDeviceForecasts() {
+    const deviceSelect = document.getElementById('forecast-device');
+    const horizonSelect = document.getElementById('forecast-horizon');
+    const statusEl = document.getElementById('forecast-status');
+    if (!deviceSelect || !horizonSelect || !statusEl) return;
+
+    const deviceId = deviceSelect.value;
+    const horizonDays = parseInt(horizonSelect.value, 10) || 7;
+
+    statusEl.textContent = 'Fetching forecasts...';
+    statusEl.className = 'mt-4 text-sm text-slate-600 dark:text-slate-400';
+
+    const basePayload = {
+        device_id: deviceId,
+        horizon_days: horizonDays,
+        forecast_days: horizonDays,
+        request_source: 'frontend'
+    };
+
+    const endpoints = [
+        { key: 'shortTerm', name: 'Short-term ML', url: `${API_BASE}/api/short_term_forecast`, payload: { ...basePayload } },
+        { key: 'prophet', name: 'Prophet', url: `${API_BASE}/api/prophet_forecast`, payload: { ...basePayload } },
+        { key: 'hybrid', name: 'Hybrid Ensemble', url: `${API_BASE}/api/hybrid_forecast`, payload: { ...basePayload, horizon_months: Math.max(1, Math.ceil(horizonDays / 30)) } }
+    ];
+
+    const results = await Promise.allSettled(endpoints.map(ep => postJSON(ep.url, ep.payload, 15000)));
+    const summaryParts = [];
+    let hasSuccess = false;
+
+    results.forEach((result, index) => {
+        const ep = endpoints[index];
+        if (result.status === 'fulfilled') {
+            const series = normalizeForecastSeries(result.value);
+            forecastState[ep.key] = series;
+            summaryParts.push(`${ep.name} ✓ ${series.length ? `(${series.length})` : ''}`);
+            hasSuccess = hasSuccess || series.length > 0;
+            if (ep.key === 'shortTerm') {
+                updateForecastSummaries(series);
+            }
         } else {
-            stats.textContent = 'Failed to load historic data';
-            stats.className = 'mt-4 text-sm text-red-600 dark:text-red-400';
+            forecastState[ep.key] = [];
+            summaryParts.push(`${ep.name} ✗`);
+            console.error(`${ep.name} forecast failed:`, result.reason);
+            if (ep.key === 'shortTerm') {
+                updateForecastSummaries([]);
+            }
         }
+    });
+
+    renderForecastComparisonChart();
+
+    if (!hasSuccess) {
+        statusEl.textContent = summaryParts.join(' · ');
+        statusEl.className = 'mt-4 text-sm text-red-600 dark:text-red-400';
+        showToast('All forecast endpoints failed. Please retry.', 'error');
+    } else {
+        statusEl.textContent = summaryParts.join(' · ');
+        statusEl.className = 'mt-4 text-sm text-slate-600 dark:text-slate-400';
+    }
+}
+
+function normalizeForecastSeries(payload) {
+    const series = extractForecastArray(payload);
+    return series
+        .map(point => {
+            const isoLabel = resolveForecastIsoLabel(point);
+            if (!isoLabel) return null;
+            const displayLabel = formatForecastDisplayLabel(isoLabel);
+            const rawValue = point.predicted_aqi ?? point.aqi ?? point.value ?? point.yhat ?? point.aqi_pred ?? point.forecast ?? null;
+            const value = Number(rawValue);
+            if (!Number.isFinite(value)) return null;
+            return { isoLabel, displayLabel, value: Number(value.toFixed(2)) };
+        })
+        .filter(Boolean)
+        .slice(-FORECAST_MAX_POINTS);
+}
+
+function extractForecastArray(payload) {
+    if (!payload) return [];
+    if (Array.isArray(payload)) return payload;
+    if (Array.isArray(payload.forecast)) return payload.forecast;
+    if (Array.isArray(payload.predictions)) return payload.predictions;
+    if (Array.isArray(payload.results)) return payload.results;
+    if (Array.isArray(payload.data)) return payload.data;
+    return [];
+}
+
+function resolveForecastIsoLabel(point) {
+    const raw = point.timestamp || point.ts || point.date || point.ds || point.time || point.period || null;
+    if (!raw) return null;
+    const asDate = new Date(raw);
+    if (!Number.isNaN(asDate.getTime())) {
+        return asDate.toISOString();
+    }
+    return typeof raw === 'string' ? raw : null;
+}
+
+function formatForecastDisplayLabel(label) {
+    const asDate = new Date(label);
+    if (!Number.isNaN(asDate.getTime())) {
+        return asDate.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    }
+    return label;
+}
+
+function renderForecastComparisonChart() {
+    const canvas = document.getElementById('forecast-comparison-chart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const { labels, datasets } = buildForecastChartData();
+
+    if (!labels.length || !datasets.length) {
+        if (charts.forecastComparison) {
+            charts.forecastComparison.destroy();
+            charts.forecastComparison = null;
+        }
+        return;
+    }
+
+    if (charts.forecastComparison) charts.forecastComparison.destroy();
+
+    const isDark = document.documentElement.classList.contains('dark');
+    const textColor = isDark ? '#e2e8f0' : '#475569';
+    const gridColor = isDark ? '#334155' : '#cbd5f5';
+
+    charts.forecastComparison = new Chart(ctx, {
+        type: 'line',
+        data: { labels, datasets },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: {
+                    labels: { color: textColor }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.y ?? '—'} AQI`
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: { color: textColor, maxRotation: 45, minRotation: 0 },
+                    grid: { color: gridColor }
+                },
+                y: {
+                    ticks: { color: textColor },
+                    grid: { color: gridColor }
+                }
+            }
+        }
+    });
+}
+
+function buildForecastChartData() {
+    const labelMap = new Map();
+    Object.values(forecastState).forEach(series => {
+        series.forEach(point => {
+            if (!labelMap.has(point.isoLabel)) {
+                labelMap.set(point.isoLabel, point.displayLabel);
+            }
+        });
+    });
+
+    let isoLabels = Array.from(labelMap.keys()).sort((a, b) => {
+        const aTime = new Date(a).getTime();
+        const bTime = new Date(b).getTime();
+        if (Number.isNaN(aTime) || Number.isNaN(bTime)) {
+            return a.localeCompare(b);
+        }
+        return aTime - bTime;
+    });
+
+    if (isoLabels.length > FORECAST_MAX_POINTS) {
+        isoLabels = isoLabels.slice(-FORECAST_MAX_POINTS);
+    }
+
+    const labels = isoLabels.map(iso => labelMap.get(iso));
+
+    const datasets = Object.keys(FORECAST_SERIES_META).map(key => {
+        const series = forecastState[key] || [];
+        const meta = FORECAST_SERIES_META[key];
+        const data = isoLabels.map(iso => {
+            const found = series.find(point => point.isoLabel === iso);
+            return found ? found.value : null;
+        });
+        return {
+            label: meta.label,
+            data,
+            borderColor: meta.color,
+            backgroundColor: meta.color + '22',
+            borderWidth: 2,
+            tension: 0.3,
+            fill: false,
+            spanGaps: true
+        };
+    }).filter(dataset => dataset.data.some(value => value !== null));
+
+    return { labels, datasets };
+}
+
+function updateForecastSummaries(series) {
+    const tomorrowEl = document.getElementById('forecast-tomorrow');
+    const weekEl = document.getElementById('forecast-week');
+    const threeWeekEl = document.getElementById('forecast-three-weeks');
+    if (!tomorrowEl || !weekEl || !threeWeekEl) return;
+
+    if (!series.length) {
+        tomorrowEl.textContent = '—';
+        weekEl.textContent = '—';
+        threeWeekEl.textContent = '—';
+        return;
+    }
+
+    const values = series.map(point => point.value);
+    const avg = (arr) => (arr.length ? Math.round(arr.reduce((a, b) => a + b, 0) / arr.length) : '—');
+
+    tomorrowEl.textContent = values[0] != null ? Math.round(values[0]) : '—';
+    weekEl.textContent = avg(values.slice(0, 7));
+    threeWeekEl.textContent = avg(values.slice(0, 21));
+}
+
+function collectManualPredictionPayload() {
+    const getVal = (id) => {
+        const value = parseFloat(document.getElementById(id)?.value);
+        return Number.isFinite(value) ? value : undefined;
+    };
+
+    const payload = {
+        pm25: getVal('predict-input-pm25'),
+        pm10: getVal('predict-input-pm10'),
+        co2: getVal('predict-input-co2'),
+        voc: getVal('predict-input-voc'),
+        temperature: getVal('predict-input-temp'),
+        humidity: getVal('predict-input-humidity')
+    };
+
+    // Remove undefined keys
+    Object.keys(payload).forEach(key => {
+        if (payload[key] === undefined) {
+            delete payload[key];
+        }
+    });
+    return payload;
+}
+
+async function predictFromManualInputs(type) {
+    const output = document.getElementById('manual-prediction-output');
+    const valueEl = document.getElementById('manual-prediction-aqi');
+    const categoryEl = document.getElementById('manual-prediction-category');
+    const modelEl = document.getElementById('manual-prediction-model');
+    const statusEl = document.getElementById('manual-prediction-status');
+    if (!output || !valueEl || !categoryEl || !modelEl || !statusEl) return;
+
+    const payload = collectManualPredictionPayload();
+    if (!Object.keys(payload).length) {
+        showToast('Provide at least one input value for prediction.', 'warning');
+        return;
+    }
+
+    output.classList.remove('hidden');
+    modelEl.textContent = 'Processing...';
+    statusEl.textContent = 'Sending payload to backend...';
+
+    try {
+        const endpoint = type === 'aqi' ? `${API_BASE}/api/predict_aqi` : `${API_BASE}/api/predict_category`;
+        const result = await postJSON(endpoint, payload, 10000);
+
+        if (type === 'aqi') {
+            const predicted = result.aqi_predicted ?? result.predicted_aqi ?? result.aqi ?? null;
+            valueEl.textContent = predicted != null ? Math.round(predicted) : '—';
+            categoryEl.textContent = result.aqi_category || getAQICategory(predicted);
+            updateAQIColor(valueEl, predicted);
+        } else {
+            valueEl.textContent = '—';
+            categoryEl.textContent = result.predicted_category || 'Unknown';
+        }
+
+        modelEl.textContent = result.model_used || 'ML Model';
+        statusEl.textContent = result.message || 'Prediction successful';
+        showToast('Prediction completed successfully.', 'success');
+    } catch (error) {
+        console.error('Manual prediction failed:', error);
+        statusEl.textContent = error.message;
+        modelEl.textContent = 'Error';
+        valueEl.textContent = '—';
+        categoryEl.textContent = '—';
+        showToast('Manual prediction failed. Please retry.', 'error');
     }
 }
 
@@ -1368,16 +1621,43 @@ function updateConnectionStatus(connected) {
     }
 }
 
+async function postJSON(url, body, timeout = 6000) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeout);
+    const response = await fetch(url, {
+        method: 'POST',
+        signal: controller.signal,
+        headers: {
+            'Content-Type': 'application/json',
+            ...(API_KEY && API_KEY !== 'YOUR_API_KEY_HERE' ? { 'x-api-key': API_KEY } : {})
+        },
+        body: JSON.stringify(body)
+    });
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+        let message = response.statusText;
+        try {
+            const text = await response.text();
+            if (text) {
+                message = text;
+            }
+        } catch (_) {
+            // ignore text parse failure
+        }
+        throw new Error(message || `HTTP ${response.status}`);
+    }
+
+    return response.json();
+}
+
 function startAutoRefresh() {
     if (refreshIntervalId) clearInterval(refreshIntervalId);
 
-    // Fixed: Refresh every 5-10 seconds as specified
     refreshIntervalId = setInterval(() => {
-        if (currentSection === 'sensor-kit') {
-            const deviceId = currentDevice === 'portable' ? 'PORTABLE-01' : 'Vento-Station-01';
-            fetchDeviceData(deviceId, currentDevice);
-        }
-    }, REFRESH_INTERVAL); // REFRESH_INTERVAL is 5000ms (5 seconds)
+        fetchDeviceData(DEVICE_IDS.portable, 'portable');
+        fetchDeviceData(DEVICE_IDS.static, 'static');
+    }, REFRESH_INTERVAL);
 }
 
 function showToast(message, type = 'info') {

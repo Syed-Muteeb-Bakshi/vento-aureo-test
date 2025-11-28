@@ -493,6 +493,20 @@ body.dark .shadow-md {
     transition: all 0.3s ease;
 }
 
+/* Trivia text fade animation */
+#aqi-fact,
+.trivia-text {
+    transition: opacity 0.4s ease;
+}
+
+.trivia-text.fade-out {
+    opacity: 0;
+}
+
+.trivia-text.fade-in {
+    opacity: 1;
+}
+
 /* Print Styles */
 @media print {
     .sidebar,

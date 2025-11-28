@@ -1,14 +1,17 @@
 // New function to update charts from historical data
-function updateDeviceChartsFromHistory(chartData, deviceType) {
+function updateDeviceChartsFromHistory(historyPoints, deviceType) {
+    if (!Array.isArray(historyPoints)) return;
+    const recentPoints = historyPoints.slice(-CHART_BUFFER_SIZE);
+
     // Parse chart array from API: [{ timestamp, temperature, pm25, pm10, co2, humidity, voc_ppm }]
-    const timestamps = chartData.map(d => {
+    const timestamps = recentPoints.map(d => {
         const ts = new Date(d.timestamp);
         return ts.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
     });
 
-    const temps = chartData.map(d => d.temperature || null);
-    const pm25s = chartData.map(d => d.pm25 || null);
-    const pm10s = chartData.map(d => d.pm10 || null);
+    const temps = recentPoints.map(d => d.temperature || null);
+    const pm25s = recentPoints.map(d => d.pm25 || null);
+    const pm10s = recentPoints.map(d => d.pm10 || null);
 
     // Update portable charts
     if (deviceType === 'portable') {
@@ -27,8 +30,8 @@ function updateDeviceChartsFromHistory(chartData, deviceType) {
 
     // Update static charts
     if (deviceType === 'static') {
-        const co2s = chartData.map(d => d.co2 || null);
-        const vocs = chartData.map(d => d.voc_ppm || null);
+        const co2s = recentPoints.map(d => d.co2 || null);
+        const vocs = recentPoints.map(d => d.voc_ppm || null);
 
         if (charts.static.temp) {
             charts.static.temp.data.labels = timestamps;
@@ -162,20 +165,7 @@ async function predictCurrentDeviceAQI() {
         console.log('Predicting AQI with payload:', payload);
 
         // Call prediction API
-        const response = await fetch(`${API_BASE}/api/predict_aqi`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                ...(API_KEY && API_KEY !== 'YOUR_API_KEY_HERE' ? { 'x-api-key': API_KEY } : {})
-            },
-            body: JSON.stringify(payload)
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-
-        const result = await response.json();
+        const result = await postJSON(`${API_BASE}/api/predict_aqi`, payload, 10000);
         console.log('Prediction result:', result);
 
         if (result.error) {
