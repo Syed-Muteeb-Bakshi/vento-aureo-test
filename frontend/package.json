@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node demo-server.js 8000",
     "dev": "node demo-server.js 8080",
-    "build": "node -e \"console.log('Static frontend – nothing to compile');\""
+    "build": "node scripts/build.js"
   },
   "engines": {
     "node": ">=16.0.0"
