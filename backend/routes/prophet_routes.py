@@ -42,24 +42,56 @@ def get_forecast(city):
     except Exception as e:
         return jsonify({"error": f"Forecast generation failed: {e}"}), 500
 
-@short_term_bp.route("/short_term_forecast", methods=["POST"])
-def short_term_forecast_post():
+@prophet_bp.route("/prophet_forecast", methods=["POST"])
+def prophet_forecast_post():
     """
-    POST /api/short_term_forecast
-    Body: { "city": "<city>", "base": 150.0 }
+    POST /api/prophet_forecast
+    Body: { "city": "<city>", "periods": 12 }
+    Wrapper that calls get_forecast logic.
     """
     payload = request.get_json(silent=True) or {}
     city = payload.get("city") or ""
     if not city:
         return jsonify({"error": "Missing 'city' in body"}), 400
+    
     try:
-        base = float(payload.get("base", payload.get("base_aqi", 150.0)))
+        periods = int(payload.get("periods", 12))
     except Exception:
-        base = 150.0
+        periods = 12
+
+    # Reuse existing get_forecast logic
+    safe_city = city.strip().replace(" ", "_")
+    filename = f"{safe_city}_prophet.joblib"
+    model = None
+    model_used_path = None
+    for prefix in PROPHET_PREFIXS:
+        try:
+            model = load_joblib(filename, prefix)
+            model_used_path = f"{prefix}/{filename}"
+            break
+        except Exception:
+            model = None
+    
+    if model is None:
+        return jsonify({"error": f"Prophet model for {city} not found."}), 404
 
     try:
-        data = generate_short_term_forecast(city, base)
-        return jsonify({"status": "success", "city": city, "forecast": data}), 200
+        if hasattr(model, "make_future_dataframe"):
+            future = model.make_future_dataframe(periods=periods, freq="M")
+            forecast = model.predict(future)
+            result = forecast[["ds", "yhat"]].tail(periods).to_dict(orient="records")
+        elif isinstance(model, pd.DataFrame):
+            result = model.to_dict(orient="records")
+        else:
+            result = []
+        
+        return jsonify({
+            "status": "success",
+            "city": city,
+            "model_file": model_used_path,
+            "forecast": result,
+            "message": "Prophet forecast generated successfully (POST wrapper)"
+        }), 200
     except Exception as e:
-        current_app.logger.exception("Short-term forecast POST failed")
-        return jsonify({"error": "Internal error generating short-term forecast", "details": str(e)}), 500
+        current_app.logger.exception("Prophet forecast POST failed")
+        return jsonify({"error": f"Forecast generation failed: {e}"}), 500

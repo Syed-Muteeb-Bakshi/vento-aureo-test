@@ -20,8 +20,22 @@ def _normalize(s: str) -> str:
     return s
 
 def _load_coords(base_dir: str) -> dict:
-    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-    coords = _load_coords(base_dir)
+    """Load city coordinates from JSON file, with fallback to model filenames."""
+    coords_file = os.path.join(base_dir, "data", "city_coordinates.json")
+    coords = {}
+    
+    # Try to load from JSON file first
+    if os.path.exists(coords_file):
+        try:
+            with open(coords_file, "r", encoding="utf-8") as f:
+                coords = json.load(f)
+        except Exception as e:
+            # Log warning if current_app is available, otherwise just continue
+            try:
+                current_app.logger.warning(f"Failed to load city_coordinates.json: {e}")
+            except:
+                pass
+            coords = {}
 
     # Fallback: derive city list from available prophet model filenames (if coords missing)
     if not coords:
@@ -35,13 +49,19 @@ def _load_coords(base_dir: str) -> dict:
             for folder in cand_folders:
                 if not os.path.exists(folder):
                     continue
-                for f in os.listdir(folder):
-                    if f.endswith("_prophet.joblib"):
-                        city_name = f.replace("_prophet.joblib", "").replace("_", " ")
-                        # no lat/lon available — leave lat/lon None so function will error later with helpful note
-                        coords[city_name] = {"lat": None, "lon": None}
+                try:
+                    for f in os.listdir(folder):
+                        if f.endswith("_prophet.joblib"):
+                            city_name = f.replace("_prophet.joblib", "").replace("_", " ")
+                            # no lat/lon available — leave lat/lon None so function will error later with helpful note
+                            if city_name not in coords:
+                                coords[city_name] = {"lat": None, "lon": None}
+                except Exception:
+                    continue
         except Exception:
             coords = {}
+    
+    return coords
 
 def _find_city_entry(city: str, coords: dict) -> Optional[Tuple[str, dict]]:
     """Return (matched_key, info) or None"""
