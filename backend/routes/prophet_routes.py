@@ -2,6 +2,7 @@
 from flask import Blueprint, jsonify, request
 import os, pandas as pd
 from model_loader import load_joblib
+from flask import current_app
 
 prophet_bp = Blueprint("prophet_bp", __name__)
 
@@ -40,3 +41,25 @@ def get_forecast(city):
         return jsonify({"city": city, "model_file": model_used_path, "forecast": result})
     except Exception as e:
         return jsonify({"error": f"Forecast generation failed: {e}"}), 500
+
+@short_term_bp.route("/short_term_forecast", methods=["POST"])
+def short_term_forecast_post():
+    """
+    POST /api/short_term_forecast
+    Body: { "city": "<city>", "base": 150.0 }
+    """
+    payload = request.get_json(silent=True) or {}
+    city = payload.get("city") or ""
+    if not city:
+        return jsonify({"error": "Missing 'city' in body"}), 400
+    try:
+        base = float(payload.get("base", payload.get("base_aqi", 150.0)))
+    except Exception:
+        base = 150.0
+
+    try:
+        data = generate_short_term_forecast(city, base)
+        return jsonify({"status": "success", "city": city, "forecast": data}), 200
+    except Exception as e:
+        current_app.logger.exception("Short-term forecast POST failed")
+        return jsonify({"error": "Internal error generating short-term forecast", "details": str(e)}), 500

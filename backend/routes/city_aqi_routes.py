@@ -7,6 +7,7 @@ import unicodedata
 import re
 from typing import Optional, Tuple
 
+
 city_bp = Blueprint("city_aqi", __name__)
 
 # helper normalizer
@@ -19,14 +20,28 @@ def _normalize(s: str) -> str:
     return s
 
 def _load_coords(base_dir: str) -> dict:
-    coords_file = os.path.join(base_dir, "data", "city_coordinates.json")
-    if not os.path.exists(coords_file):
-        return {}
-    try:
-        with open(coords_file, "r", encoding="utf-8") as fh:
-            return json.load(fh)
-    except Exception:
-        return {}
+    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    coords = _load_coords(base_dir)
+
+    # Fallback: derive city list from available prophet model filenames (if coords missing)
+    if not coords:
+        try:
+            from model_paths import LOCAL_MODEL_ROOT
+            cand_folders = [
+                os.path.join(LOCAL_MODEL_ROOT, "hybrid_models", "prophet_models"),
+                os.path.join(LOCAL_MODEL_ROOT, "prophet_models")
+            ]
+            coords = {}
+            for folder in cand_folders:
+                if not os.path.exists(folder):
+                    continue
+                for f in os.listdir(folder):
+                    if f.endswith("_prophet.joblib"):
+                        city_name = f.replace("_prophet.joblib", "").replace("_", " ")
+                        # no lat/lon available — leave lat/lon None so function will error later with helpful note
+                        coords[city_name] = {"lat": None, "lon": None}
+        except Exception:
+            coords = {}
 
 def _find_city_entry(city: str, coords: dict) -> Optional[Tuple[str, dict]]:
     """Return (matched_key, info) or None"""

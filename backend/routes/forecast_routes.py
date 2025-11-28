@@ -3,6 +3,7 @@ import os
 import pandas as pd
 from flask import Blueprint, jsonify, request
 from model_loader import load_joblib
+import model_paths
 
 forecast_bp = Blueprint("forecast", __name__)
 MODEL_PREFIX = "prophet_models"
@@ -43,14 +44,32 @@ def get_forecast(city):
 
 @forecast_bp.route("/list_cities", methods=["GET"])
 def list_cities():
-    # Local listing: attempt to read local MODEL_DIR folder for convenience
-    model_root = os.environ.get("MODEL_DIR", "/var/models")
-    folder = os.path.join(model_root, "prophet_models")
-    if not os.path.exists(folder):
-        return jsonify([])
+    # Attempt multiple model locations (hybrid first, then root prophet_models)
+    prefixes = []
+    # model_paths defines local model paths as constants
+    try:
+        model_dir = os.environ.get("MODEL_DIR", model_paths.LOCAL_MODEL_ROOT)
+    except Exception:
+        model_dir = os.environ.get("MODEL_DIR", "/var/models")
+
+    candidates = [
+        os.path.join(model_dir, "hybrid_models", "prophet_models"),
+        os.path.join(model_dir, "prophet_models"),
+    ]
+
+    # Also check cache/tmp locations (if upload_model used)
+    candidates.append(os.path.join(model_dir, "uploaded_models"))
+
     cities = []
-    for f in os.listdir(folder):
-        if f.endswith(".joblib"):
-            clean = f.replace("_prophet.joblib", "").replace("_", " ").title()
-            cities.append(clean)
+    for folder in candidates:
+        try:
+            if not os.path.exists(folder):
+                continue
+            for f in os.listdir(folder):
+                if f.endswith(".joblib"):
+                    clean = f.replace("_prophet.joblib", "").replace("_", " ").title()
+                    if clean not in cities:
+                        cities.append(clean)
+        except Exception:
+            continue
     return jsonify(sorted(cities))

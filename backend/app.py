@@ -42,8 +42,7 @@ TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
 app = Flask(__name__, static_folder=FRONTEND_DIR, template_folder=TEMPLATES_DIR)
 CORS(app)
 
-CORS(app, resources={r"/*": {"origins": "*"}})
-
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 # ==========================
 # BLUEPRINTS
 # ==========================
