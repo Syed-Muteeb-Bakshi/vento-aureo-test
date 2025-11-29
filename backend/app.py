@@ -8,6 +8,12 @@ import pg8000.native
 import model_paths  # sets MODEL_DIR, bucket paths
 
 # ==========================
+# LOCAL DEV TOGGLE
+# ==========================
+# Use LOCAL_DEV=1 to disable Cloud SQL locally
+IS_LOCAL = os.environ.get("LOCAL_DEV", "0") == "1"
+
+# ==========================
 # Cloud SQL Connector Setup
 # ==========================
 PROJECT_ID = "just-smithy-479012-a1"
@@ -19,18 +25,37 @@ DB_USER = os.environ.get("DB_USER", "giorno_geovanna")
 DB_PASS = os.environ.get("DB_PASS", "")
 DB_NAME = os.environ.get("DB_NAME", "gold_experience")
 
-connector = Connector(ip_type=IPTypes.PUBLIC)
+# Only initialize the Cloud SQL connector when NOT in local dev mode
+connector = None
+if not IS_LOCAL:
+    try:
+        connector = Connector(ip_type=IPTypes.PUBLIC)
+        print("Cloud SQL Connector initialized (Cloud Run mode)")
+    except Exception as e:
+        print("ERROR: Failed to initialize Cloud SQL Connector:", e)
+else:
+    print("LOCAL_DEV=1 → Cloud SQL connector DISABLED")
 
 def get_connection():
-    conn = connector.connect(
+    """
+    Provides a DB connection when running on Cloud Run.
+    In local mode: raises an intentional error or returns None.
+    """
+    if IS_LOCAL:
+        print("WARNING: get_connection() called in LOCAL_DEV mode.")
+        # You can either raise OR return None depending on what you want.
+        raise RuntimeError("Cloud SQL disabled in LOCAL_DEV mode")
+
+    if connector is None:
+        raise RuntimeError("Cloud SQL connector not initialized")
+
+    return connector.connect(
         INSTANCE_CONNECTION_NAME,
         "pg8000",
         user=DB_USER,
         password=DB_PASS,
         db=DB_NAME
     )
-    return conn
-
 
 # ==========================
 # Flask App Setup
@@ -42,7 +67,8 @@ TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
 app = Flask(__name__, static_folder=FRONTEND_DIR, template_folder=TEMPLATES_DIR)
 CORS(app)
 
-CORS(app,
+CORS(
+    app,
     resources={r"/*": {"origins": "*"}},
     supports_credentials=True,
     allow_headers=["Content-Type", "x-api-key"],
@@ -64,7 +90,6 @@ from routes.city_aqi_routes import city_bp
 from routes.upload_routes import upload_bp
 from routes.visual_report_routes import visual_bp
 
-
 app.register_blueprint(forecast_bp, url_prefix="/api")
 app.register_blueprint(iot_bp, url_prefix="/api")
 app.register_blueprint(ml_bp, url_prefix="/api")
@@ -84,7 +109,6 @@ app.register_blueprint(visual_bp, url_prefix="/api")
 def health():
     return jsonify({"status": "ok"})
 
-
 # ==========================
 # DASHBOARD FALLBACK
 # ==========================
@@ -96,7 +120,6 @@ def serve_dashboard():
         return send_from_directory(app.static_folder, "dashboard.html")
 
     return "<h3>Frontend deployed on Vercel. Backend active.</h3>"
-
 
 # ==========================
 # GLOBAL AQI ENDPOINT (unchanged)
@@ -130,7 +153,6 @@ def global_aqi():
 
     return jsonify(results)
 
-
 @app.route("/api/db_test")
 def db_test():
     try:
@@ -152,7 +174,19 @@ def add_cors_headers(response):
     return response
 
 # ==========================
-# LOCAL MODE
+# DEBUG ROUTE
+# ==========================
+@app.route("/api/debug_routes")
+def debug_routes():
+    return jsonify([
+        {"rule": str(r), "methods": list(r.methods)}
+        for r in app.url_map.iter_rules()
+    ])
+
+# ==========================
+# LOCAL DEV SERVER
 # ==========================
 if __name__ == "__main__":
+    print("LOCAL_DEV =", IS_LOCAL)
+    print("Starting development server...")
     app.run(debug=True, port=5000)
