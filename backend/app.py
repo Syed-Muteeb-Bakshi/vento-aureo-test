@@ -3,9 +3,6 @@
 import os
 from flask import Flask, jsonify, send_from_directory
 from flask_cors import CORS
-from google.cloud.sql.connector import Connector, IPTypes
-import pg8000.native
-import model_paths  # sets MODEL_DIR, bucket paths
 
 # ==========================
 # LOCAL DEV TOGGLE
@@ -16,6 +13,8 @@ IS_LOCAL = os.environ.get("LOCAL_DEV", "0") == "1"
 # ==========================
 # Cloud SQL Connector Setup
 # ==========================
+# Only import Cloud SQL dependencies when NOT in local dev mode
+connector = None
 PROJECT_ID = "just-smithy-479012-a1"
 REGION = "us-east1"
 INSTANCE = "vento-postgres"
@@ -25,30 +24,30 @@ DB_USER = os.environ.get("DB_USER", "giorno_geovanna")
 DB_PASS = os.environ.get("DB_PASS", "")
 DB_NAME = os.environ.get("DB_NAME", "gold_experience")
 
-# Only initialize the Cloud SQL connector when NOT in local dev mode
-connector = None
 if not IS_LOCAL:
     try:
+        from google.cloud.sql.connector import Connector, IPTypes
+        import pg8000.native
+        
         connector = Connector(ip_type=IPTypes.PUBLIC)
         print("Cloud SQL Connector initialized (Cloud Run mode)")
     except Exception as e:
         print("ERROR: Failed to initialize Cloud SQL Connector:", e)
+        connector = None
 else:
     print("LOCAL_DEV=1 → Cloud SQL connector DISABLED")
 
 def get_connection():
     """
     Provides a DB connection when running on Cloud Run.
-    In local mode: raises an intentional error or returns None.
+    In local mode: raises an intentional error.
     """
     if IS_LOCAL:
-        print("WARNING: get_connection() called in LOCAL_DEV mode.")
-        # You can either raise OR return None depending on what you want.
         raise RuntimeError("Cloud SQL disabled in LOCAL_DEV mode")
-
+    
     if connector is None:
         raise RuntimeError("Cloud SQL connector not initialized")
-
+    
     return connector.connect(
         INSTANCE_CONNECTION_NAME,
         "pg8000",
@@ -78,7 +77,8 @@ CORS(
 # ==========================
 # BLUEPRINTS
 # ==========================
-from routes.forecast_routes import forecast_bp
+# forecast_routes is DISABLED - obsolete, uses local ML models
+# from routes.forecast_routes import forecast_bp
 from routes.iot_routes import iot_bp
 from routes.ml_routes import ml_bp
 from routes.live_aqi_routes import live_aqi_bp
@@ -90,7 +90,8 @@ from routes.city_aqi_routes import city_bp
 from routes.upload_routes import upload_bp
 from routes.visual_report_routes import visual_bp
 
-app.register_blueprint(forecast_bp, url_prefix="/api")
+# forecast_routes blueprint registration DISABLED
+# app.register_blueprint(forecast_bp, url_prefix="/api")
 app.register_blueprint(iot_bp, url_prefix="/api")
 app.register_blueprint(ml_bp, url_prefix="/api")
 app.register_blueprint(live_aqi_bp, url_prefix="/api")
