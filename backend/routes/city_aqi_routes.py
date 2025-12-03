@@ -10,6 +10,9 @@ from typing import Optional, Tuple
 
 city_bp = Blueprint("city_aqi", __name__)
 
+# ML Server URL - should match other route files
+ML_SERVER_URL = "https://extollingly-superfunctional-graciela.ngrok-free.dev"
+
 # helper normalizer
 def _normalize(s: str) -> str:
     if not s:
@@ -94,6 +97,38 @@ def _find_city_entry(city: str, coords: dict) -> Optional[Tuple[str, dict]]:
         best = scored[0][1]
         return best, coords[best]
     return None
+
+@city_bp.route("/list_cities", methods=["GET"])
+def list_cities():
+    """
+    GET /api/list_cities
+    Proxies request to ML server to get list of available cities.
+    """
+    try:
+        resp = requests.get(
+            f"{ML_SERVER_URL}/list_cities",
+            timeout=40
+        )
+        if resp.status_code == 200:
+            cities_data = resp.json()
+            # Handle different response formats
+            if isinstance(cities_data, list):
+                return jsonify(cities_data)
+            elif isinstance(cities_data, dict) and "cities" in cities_data:
+                return jsonify(cities_data["cities"])
+            elif isinstance(cities_data, dict):
+                # If it's a dict with city names as keys, return keys as list
+                return jsonify(list(cities_data.keys()))
+            else:
+                return jsonify(cities_data), resp.status_code
+        else:
+            return jsonify({"error": f"ML server returned status {resp.status_code}"}), resp.status_code
+    except requests.exceptions.RequestException as e:
+        current_app.logger.error(f"Failed to fetch cities from ML server: {e}")
+        return jsonify({"error": f"Failed to connect to ML server: {str(e)}"}), 502
+    except Exception as e:
+        current_app.logger.exception("Unexpected error in list_cities")
+        return jsonify({"error": "Internal error"}), 500
 
 @city_bp.route("/city_aqi/<city>", methods=["GET"])
 def city_aqi(city):

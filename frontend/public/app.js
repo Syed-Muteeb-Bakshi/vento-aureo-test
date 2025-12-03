@@ -788,7 +788,7 @@ async function generatePrediction() {
                 'Content-Type': 'application/json',
                 ...(API_KEY && API_KEY !== 'YOUR_API_KEY_HERE' ? { 'x-api-key': API_KEY } : {})
             },
-            body: JSON.stringify({ city, horizon_months: horizon })
+            body: JSON.stringify({ city: city, horizon_months: horizon })
         });
         clearTimeout(timeoutId);
 
@@ -798,9 +798,12 @@ async function generatePrediction() {
         if (data.error) throw new Error(data.error);
 
         const forecast = data.forecast || [];
+        if (!forecast.length) {
+            throw new Error('No forecast data returned');
+        }
         renderPredictChart(forecast, city);
         const avg = forecast.length ? (forecast.reduce((a, b) => a + (Number(b.predicted_aqi || b.yhat || 0)), 0) / forecast.length).toFixed(2) : 'N/A';
-        stats.textContent = `${city} · Horizon: ${data.forecast_horizon_months || horizon} months · Avg: ${avg}`;
+        stats.textContent = `${city} · Horizon: ${data.horizon_months || data.forecast_horizon_months || horizon} months · Avg: ${avg}`;
 
     } catch (e) {
         console.error('Prediction API failed:', e);
@@ -868,17 +871,28 @@ async function generateDeviceForecasts() {
     statusEl.textContent = 'Fetching forecasts...';
     statusEl.className = 'mt-4 text-sm text-slate-600 dark:text-slate-400';
 
-    const basePayload = {
-        device_id: deviceId,
-        horizon_days: horizonDays,
-        forecast_days: horizonDays,
-        request_source: 'frontend'
-    };
+    // Convert device_id to city name if needed (for now, use device_id as city)
+    const city = deviceId;
 
     const endpoints = [
-        { key: 'shortTerm', name: 'Short-term ML', url: `${API_BASE}/api/short_term_forecast`, payload: { ...basePayload } },
-        { key: 'prophet', name: 'Prophet', url: `${API_BASE}/api/prophet_forecast`, payload: { ...basePayload } },
-        { key: 'hybrid', name: 'Hybrid Ensemble', url: `${API_BASE}/api/hybrid_forecast`, payload: { ...basePayload, horizon_months: Math.max(1, Math.ceil(horizonDays / 30)) } }
+        { 
+            key: 'shortTerm', 
+            name: 'Short-term ML', 
+            url: `${API_BASE}/api/short_term_forecast`, 
+            payload: { city: city, hours: horizonDays * 24 } 
+        },
+        { 
+            key: 'prophet', 
+            name: 'Prophet', 
+            url: `${API_BASE}/api/prophet_forecast`, 
+            payload: { city: city, horizon_days: horizonDays } 
+        },
+        { 
+            key: 'hybrid', 
+            name: 'Hybrid Ensemble', 
+            url: `${API_BASE}/api/hybrid_forecast`, 
+            payload: { city: city, horizon_months: Math.max(1, Math.ceil(horizonDays / 30)) } 
+        }
     ];
 
     const results = await Promise.allSettled(endpoints.map(ep => postJSON(ep.url, ep.payload, 15000)));
@@ -924,6 +938,7 @@ function normalizeForecastSeries(payload) {
             const isoLabel = resolveForecastIsoLabel(point);
             if (!isoLabel) return null;
             const displayLabel = formatForecastDisplayLabel(isoLabel);
+            // Extract AQI value - handle all possible field names
             const rawValue = point.predicted_aqi ?? point.aqi ?? point.value ?? point.yhat ?? point.aqi_pred ?? point.forecast ?? null;
             const value = Number(rawValue);
             if (!Number.isFinite(value)) return null;
@@ -936,7 +951,10 @@ function normalizeForecastSeries(payload) {
 function extractForecastArray(payload) {
     if (!payload) return [];
     if (Array.isArray(payload)) return payload;
+    // Handle short-term forecast structure: { forecast: [{ hour_index, predicted_aqi }] }
     if (Array.isArray(payload.forecast)) return payload.forecast;
+    // Handle daily_forecast structure (fallback format)
+    if (Array.isArray(payload.daily_forecast)) return payload.daily_forecast;
     if (Array.isArray(payload.predictions)) return payload.predictions;
     if (Array.isArray(payload.results)) return payload.results;
     if (Array.isArray(payload.data)) return payload.data;
@@ -944,6 +962,20 @@ function extractForecastArray(payload) {
 }
 
 function resolveForecastIsoLabel(point) {
+    // Handle short-term forecast format: { hour_index, predicted_aqi }
+    if (point.hour_index !== undefined) {
+        // Generate timestamp from hour_index (hours from now)
+        const now = new Date();
+        now.setHours(now.getHours() + (point.hour_index || 0));
+        return now.toISOString();
+    }
+    // Handle day_index format
+    if (point.day_index !== undefined) {
+        const now = new Date();
+        now.setDate(now.getDate() + (point.day_index - 1 || 0));
+        return now.toISOString();
+    }
+    // Standard timestamp/date fields
     const raw = point.timestamp || point.ts || point.date || point.ds || point.time || point.period || null;
     if (!raw) return null;
     const asDate = new Date(raw);

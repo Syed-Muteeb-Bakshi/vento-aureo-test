@@ -41,60 +41,107 @@ def downsample_monthly_to_days(monthly_forecast, horizon_days):
 def short_term_forecast_post():
     """
     POST /api/short_term_forecast
-    Body: { "device_id": "PORTABLE-01", "horizon_days": 7 }
+    Body: { "city": "Mumbai", "hours": 48 } or { "device_id": "PORTABLE-01", "hours": 48 }
     Forwards request to external ML server. If external server replies that no short-term model
-    is available, fallback to hybrid monthly forecast and downsample to days.
+    is available, fallback to hybrid monthly forecast and convert to hourly predictions.
     """
     try:
         data = request.get_json(force=True)
     except Exception:
         return jsonify({"error": "Invalid JSON body"}), 400
 
-    device_id = data.get("device_id") or data.get("city") or ""
-    horizon_days = int(data.get("horizon_days", data.get("hours", 7)))
+    city = data.get("city") or data.get("device_id") or ""
+    hours = int(data.get("hours", data.get("horizon_days", 48)))
+    
+    if not city:
+        return jsonify({"error": "city (or device_id) required"}), 400
 
-    if not device_id:
-        return jsonify({"error": "device_id (or city) required"}), 400
-
-    # First try external short_term
+    # First try external short_term endpoint
     try:
         resp = requests.post(
             f"{ML_SERVER_URL}/short_term",
-            json={"device_id": device_id, "horizon_days": horizon_days},
-            timeout=60
+            json={"city": city, "hours": hours},
+            timeout=40
         )
-        j = resp.json()
-        # If the external service returned a clear 'No short-term model available' message, fall back
-        if resp.status_code != 200 and isinstance(j, dict) and "No short-term model" in str(j.get("detail") or j.get("error") or ""):
-            raise RuntimeError("No short-term model on external ML server")
-        if resp.status_code == 200 and ("forecast" in j or isinstance(j, dict)):
-            return j, resp.status_code
+        resp_data = resp.json()
+        
+        # Check if ML server explicitly says no short-term model available
+        error_msg = str(resp_data.get("detail", "") or resp_data.get("error", "")).lower()
+        if "no short-term model" in error_msg or "short_term error" in error_msg:
+            raise RuntimeError("No short-term model available on ML server")
+        
+        # If successful response with forecast data
+        if resp.status_code == 200:
+            # Check if response has forecast data
+            if "forecast" in resp_data or "hourly" in resp_data or isinstance(resp_data, list):
+                return jsonify(resp_data), 200
+    except RuntimeError:
+        # Explicitly raised when no model available - proceed to fallback
+        current_app.logger.info("Short-term model not available, using hybrid fallback")
+        pass
     except Exception as e:
-        current_app.logger.info("External short_term failed or missing: %s -- falling back to hybrid", str(e))
+        current_app.logger.info(f"External short_term request failed: {e} -- falling back to hybrid")
 
-    # Fallback -> call hybrid (monthly) and downsample
+    # FALLBACK: Use hybrid forecast and convert to hourly predictions
     try:
-        # call local backend hybrid endpoint (preferred) to avoid double-proxy; modify URL if needed
-        # If your backend runs at same host, call internal route by requests to local server:
-        hybrid_url = request.host_url.rstrip("/") + "/api/hybrid_forecast"
-        # compute months needed (ceil)
-        horizon_months = max(1, math.ceil(horizon_days / 30.0))
-        resp2 = requests.post(hybrid_url, json={"city": device_id, "horizon_months": horizon_months}, timeout=60)
-        j2 = resp2.json()
-        if resp2.status_code != 200 or "forecast" not in j2:
-            # as a last resort try the external ML hybrid endpoint
-            resp3 = requests.post(f"{ML_SERVER_URL}/hybrid", json={"city": device_id, "horizon_months": horizon_months}, timeout=60)
-            j2 = resp3.json() if resp3.status_code == 200 else {}
-        monthly = j2.get("forecast", [])
-        daily = downsample_monthly_to_days(monthly, horizon_days)
-        # return structure expected by frontend
-        out = {
-            "device_id": device_id,
-            "horizon_days": horizon_days,
+        # Get hybrid forecast for next 2 months (enough for 48 hours)
+        horizon_months = max(1, math.ceil(hours / (24 * 30)))  # Convert hours to months (approx)
+        
+        hybrid_resp = requests.post(
+            f"{ML_SERVER_URL}/hybrid",
+            json={"city": city, "horizon_months": horizon_months},
+            timeout=40
+        )
+        
+        if hybrid_resp.status_code != 200:
+            raise Exception(f"Hybrid forecast returned status {hybrid_resp.status_code}")
+        
+        hybrid_data = hybrid_resp.json()
+        forecast_list = hybrid_data.get("forecast", [])
+        
+        if not forecast_list:
+            raise Exception("Hybrid forecast returned empty data")
+        
+        # Convert daily/monthly forecast to hourly predictions
+        # Take first few days and interpolate to hourly
+        hourly_forecast = []
+        days_needed = math.ceil(hours / 24)
+        
+        for i, day_data in enumerate(forecast_list[:days_needed]):
+            # Get AQI value for this day
+            aqi_value = day_data.get("predicted_aqi") or day_data.get("aqi") or 0
+            try:
+                aqi_value = float(aqi_value)
+            except (ValueError, TypeError):
+                aqi_value = 0.0
+            
+            # Create 24 hourly entries for this day (or remaining hours)
+            hours_for_day = min(24, hours - len(hourly_forecast))
+            for h in range(hours_for_day):
+                hourly_forecast.append({
+                    "hour_index": len(hourly_forecast),
+                    "predicted_aqi": aqi_value
+                })
+            
+            if len(hourly_forecast) >= hours:
+                break
+        
+        # If we still need more hours, repeat last value
+        while len(hourly_forecast) < hours:
+            last_aqi = hourly_forecast[-1]["predicted_aqi"] if hourly_forecast else 0.0
+            hourly_forecast.append({
+                "hour_index": len(hourly_forecast),
+                "predicted_aqi": last_aqi
+            })
+        
+        # Return structure expected by frontend
+        return jsonify({
+            "city": city,
+            "hours": hours,
             "source": "fallback_hybrid",
-            "daily_forecast": [{"day_index": i+1, "predicted_aqi": float(daily[i])} for i in range(len(daily))]
-        }
-        return jsonify(out), 200
+            "forecast": hourly_forecast[:hours]
+        }), 200
+        
     except Exception as e:
         current_app.logger.exception("Short-term fallback failed")
-        return jsonify({"error": f"Short-term fallback failed: {str(e)}"}), 500
+        return jsonify({"error": f"Short-term forecast unavailable: {str(e)}"}), 500
