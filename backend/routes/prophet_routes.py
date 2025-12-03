@@ -4,7 +4,7 @@ import requests
 
 prophet_bp = Blueprint("prophet_bp", __name__)
 
-ML_SERVER_URL = "https://jacksonville-save-manchester-graduation.trycloudflare.com"
+ML_SERVER_URL = "https://extollingly-superfunctional-graciela.ngrok-free.dev"
 
 # POST route defined first to ensure proper registration
 @prophet_bp.route("/prophet_forecast", methods=["POST"])

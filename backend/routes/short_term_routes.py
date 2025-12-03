@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 
 short_term_bp = Blueprint("short_term_bp", __name__)
 
-API_BASE = "https://summaries-game-hypothesis-chapel.trycloudflare.com"  # or env var
+ML_SERVER_URL = "https://extollingly-superfunctional-graciela.ngrok-free.dev"
 
 def downsample_monthly_to_days(monthly_forecast, horizon_days):
     """monthly_forecast: list of {date: 'YYYY-MM-DD', predicted_aqi: float}
@@ -59,7 +59,7 @@ def short_term_forecast_post():
     # First try external short_term
     try:
         resp = requests.post(
-            f"{API_BASE}/short_term",
+            f"{ML_SERVER_URL}/short_term",
             json={"device_id": device_id, "horizon_days": horizon_days},
             timeout=60
         )
@@ -83,7 +83,7 @@ def short_term_forecast_post():
         j2 = resp2.json()
         if resp2.status_code != 200 or "forecast" not in j2:
             # as a last resort try the external ML hybrid endpoint
-            resp3 = requests.post(f"{API_BASE}/hybrid", json={"city": device_id, "horizon_months": horizon_months}, timeout=60)
+            resp3 = requests.post(f"{ML_SERVER_URL}/hybrid", json={"city": device_id, "horizon_months": horizon_months}, timeout=60)
             j2 = resp3.json() if resp3.status_code == 200 else {}
         monthly = j2.get("forecast", [])
         daily = downsample_monthly_to_days(monthly, horizon_days)

@@ -4,7 +4,7 @@ import requests
 
 hybrid_bp = Blueprint("hybrid_bp", __name__)
 
-ML_SERVER_URL = "https://jacksonville-save-manchester-graduation.trycloudflare.com"
+ML_SERVER_URL = "https://extollingly-superfunctional-graciela.ngrok-free.dev"
 
 # POST route must be defined BEFORE GET route with path parameter to ensure correct matching
 @hybrid_bp.route("/hybrid_forecast", methods=["POST"])
