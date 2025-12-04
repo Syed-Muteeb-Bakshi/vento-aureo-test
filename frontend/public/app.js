@@ -870,30 +870,34 @@ async function generateDeviceForecasts() {
     const deviceId = deviceSelect.value;
     const horizonDays = parseInt(horizonSelect.value, 10) || 7;
 
-    statusEl.textContent = 'Fetching forecasts...';
-    statusEl.className = 'mt-4 text-sm text-slate-600 dark:text-slate-400';
+    // Use selected city from predictive dropdown as canonical forecast target
+    const citySelect = document.getElementById('predict-city');
+    const city = citySelect && citySelect.value ? citySelect.value : DEFAULT_CITY;
 
-    // Convert device_id to city name if needed (for now, use device_id as city)
-    const city = deviceId;
+    statusEl.textContent = `Fetching forecasts for ${city}...`;
+    statusEl.className = 'mt-4 text-sm text-slate-600 dark:text-slate-400';
 
     const endpoints = [
         { 
             key: 'shortTerm', 
             name: 'Short-term ML', 
             url: `${API_BASE}/api/short_term_forecast`, 
-            payload: { city: city, hours: horizonDays * 24 } 
+            // New backend contract: short-term forecast horizon in hours
+            payload: { city, hours: 48 } 
         },
         { 
             key: 'prophet', 
             name: 'Prophet', 
             url: `${API_BASE}/api/prophet_forecast`, 
-            payload: { city: city, horizon_days: horizonDays } 
+            // New backend contract: daily horizon in days
+            payload: { city, horizon_days: 30 } 
         },
         { 
             key: 'hybrid', 
             name: 'Hybrid Ensemble', 
             url: `${API_BASE}/api/hybrid_forecast`, 
-            payload: { city: city, horizon_months: Math.max(1, Math.ceil(horizonDays / 30)) } 
+            // New backend contract: long-term horizon in months
+            payload: { city, horizon_months: 12 } 
         }
     ];
 
@@ -1375,8 +1379,9 @@ function renderPredictChart(forecast, city) {
     const ctx = document.getElementById('predict-chart')?.getContext('2d');
     if (!ctx) return;
 
-    const labels = (forecast || []).map(d => d.date || d.ds);
-    const values = (forecast || []).map(d => Number(d.predicted_aqi || d.yhat || NaN));
+    // New backend contract: forecast is [{ timestamp, aqi }]
+    const labels = (forecast || []).map(d => d.timestamp);
+    const values = (forecast || []).map(d => Number(d.aqi));
 
     if (charts.predict) charts.predict.destroy();
 
