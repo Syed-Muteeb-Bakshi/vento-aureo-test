@@ -1,4 +1,5 @@
 # backend/backend/routes/prophet_routes.py
+import os
 from flask import Blueprint, jsonify, request
 import requests
 from datetime import datetime
@@ -6,7 +7,10 @@ from datetime import datetime
 prophet_bp = Blueprint("prophet_bp", __name__)
 
 # External ML server (ngrok/Cloudflare tunnel)
-ML_SERVER_URL = "https://enclosure-derived-fixtures-dedicated.trycloudflare.com"
+ML_SERVER_URL = os.environ.get(
+    "ML_SERVER_URL",
+    "https://extollingly-superfunctional-graciela.ngrok-free.dev"
+)
 
 
 def _normalize_prophet_response(city: str, raw_json: dict, horizon_days: int):
@@ -77,7 +81,11 @@ def prophet_forecast_post():
         return jsonify({"error": "Invalid JSON body"}), 400
 
     city = data.get("city")
-    horizon = int(data.get("horizon_days", 7) or 7)
+    horizon_raw = data.get("horizon_days", 7)
+    try:
+        horizon = int(horizon_raw or 7)
+    except (TypeError, ValueError):
+        return jsonify({"error": "Invalid 'horizon_days'. Must be an integer."}), 400
 
     if not city:
         return jsonify({"error": "Missing 'city'"}), 400

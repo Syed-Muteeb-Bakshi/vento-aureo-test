@@ -11,7 +11,10 @@ from typing import Optional, Tuple
 city_bp = Blueprint("city_aqi", __name__)
 
 # External ML server (ngrok/Cloudflare tunnel)
-ML_SERVER_URL = "https://enclosure-derived-fixtures-dedicated.trycloudflare.com"
+ML_SERVER_URL = os.environ.get(
+    "ML_SERVER_URL",
+    "https://extollingly-superfunctional-graciela.ngrok-free.dev"
+)
 
 # helper normalizer
 def _normalize(s: str) -> str:

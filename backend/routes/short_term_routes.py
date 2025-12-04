@@ -1,4 +1,5 @@
 # backend/routes/short_term_routes.py
+import os
 from flask import Blueprint, jsonify, request, current_app
 import requests
 import math
@@ -7,7 +8,10 @@ from datetime import datetime, timedelta
 short_term_bp = Blueprint("short_term_bp", __name__)
 
 # External ML server (ngrok/Cloudflare tunnel)
-ML_SERVER_URL = "https://enclosure-derived-fixtures-dedicated.trycloudflare.com"
+ML_SERVER_URL = os.environ.get(
+    "ML_SERVER_URL",
+    "https://extollingly-superfunctional-graciela.ngrok-free.dev"
+)
 
 def downsample_monthly_to_days(monthly_forecast, horizon_days):
     """monthly_forecast: list of {date: 'YYYY-MM-DD', predicted_aqi: float}
@@ -52,7 +56,11 @@ def short_term_forecast_post():
         return jsonify({"error": "Invalid JSON body"}), 400
 
     city = data.get("city") or data.get("device_id") or ""
-    hours = int(data.get("hours", data.get("horizon_days", 48)))
+    hours_raw = data.get("hours", data.get("horizon_days", 48))
+    try:
+        hours = int(hours_raw)
+    except (TypeError, ValueError):
+        return jsonify({"error": "Invalid 'hours' (or 'horizon_days'). Must be an integer."}), 400
 
     if not city:
         return jsonify({"error": "city (or device_id) required"}), 400
