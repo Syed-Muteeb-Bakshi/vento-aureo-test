@@ -350,10 +350,8 @@ function setupEventListeners() {
     // Quick AQI Prediction
     document.getElementById('predict-current-device')?.addEventListener('click', predictCurrentDeviceAQI);
 
-    // Forecast + manual prediction controls
+    // Forecast controls
     document.getElementById('forecast-refresh')?.addEventListener('click', generateDeviceForecasts);
-    document.getElementById('manual-predict-aqi')?.addEventListener('click', () => predictFromManualInputs('aqi'));
-    document.getElementById('manual-predict-category')?.addEventListener('click', () => predictFromManualInputs('category'));
 }
 
 function switchDevice(device) {
@@ -797,13 +795,15 @@ async function generatePrediction() {
         const data = await res.json();
         if (data.error) throw new Error(data.error);
 
-        const forecast = data.forecast || [];
+        const forecast = Array.isArray(data.forecast) ? data.forecast : [];
         if (!forecast.length) {
             throw new Error('No forecast data returned');
         }
         renderPredictChart(forecast, city);
-        const avg = forecast.length ? (forecast.reduce((a, b) => a + (Number(b.predicted_aqi || b.yhat || 0)), 0) / forecast.length).toFixed(2) : 'N/A';
-        stats.textContent = `${city} · Horizon: ${data.horizon_months || data.forecast_horizon_months || horizon} months · Avg: ${avg}`;
+        const avg = forecast.length
+            ? (forecast.reduce((a, b) => a + (Number(b.aqi || 0)), 0) / forecast.length).toFixed(2)
+            : 'N/A';
+        stats.textContent = `${city} · Horizon: ${data.horizon_months || horizon} months · Avg: ${avg}`;
 
     } catch (e) {
         console.error('Prediction API failed:', e);
@@ -846,10 +846,12 @@ async function loadHistoric() {
         const data = await res.json();
         if (data.error) throw new Error(data.error);
 
-        const forecast = data.forecast || [];
-        renderHistoricChart(forecast, city);
-        const avg = forecast.length ? (forecast.reduce((a, b) => a + (Number(b.yhat || b.predicted_aqi || 0)), 0) / forecast.length).toFixed(2) : 'N/A';
-        stats.textContent = `${city} · points: ${forecast.length} · Avg: ${avg}`;
+        const history = Array.isArray(data.history) ? data.history : [];
+        renderHistoricChart(history, city);
+        const avg = history.length
+            ? (history.reduce((a, b) => a + (Number(b.aqi || 0)), 0) / history.length).toFixed(2)
+            : 'N/A';
+        stats.textContent = `${city} · points: ${history.length} · Avg: ${avg}`;
 
     } catch (e) {
         console.error('Historic API failed:', e);
@@ -938,8 +940,7 @@ function normalizeForecastSeries(payload) {
             const isoLabel = resolveForecastIsoLabel(point);
             if (!isoLabel) return null;
             const displayLabel = formatForecastDisplayLabel(isoLabel);
-            // Extract AQI value - handle all possible field names
-            const rawValue = point.predicted_aqi ?? point.aqi ?? point.value ?? point.yhat ?? point.aqi_pred ?? point.forecast ?? null;
+            const rawValue = point.aqi;
             const value = Number(rawValue);
             if (!Number.isFinite(value)) return null;
             return { isoLabel, displayLabel, value: Number(value.toFixed(2)) };
@@ -951,32 +952,12 @@ function normalizeForecastSeries(payload) {
 function extractForecastArray(payload) {
     if (!payload) return [];
     if (Array.isArray(payload)) return payload;
-    // Handle short-term forecast structure: { forecast: [{ hour_index, predicted_aqi }] }
     if (Array.isArray(payload.forecast)) return payload.forecast;
-    // Handle daily_forecast structure (fallback format)
-    if (Array.isArray(payload.daily_forecast)) return payload.daily_forecast;
-    if (Array.isArray(payload.predictions)) return payload.predictions;
-    if (Array.isArray(payload.results)) return payload.results;
-    if (Array.isArray(payload.data)) return payload.data;
     return [];
 }
 
 function resolveForecastIsoLabel(point) {
-    // Handle short-term forecast format: { hour_index, predicted_aqi }
-    if (point.hour_index !== undefined) {
-        // Generate timestamp from hour_index (hours from now)
-        const now = new Date();
-        now.setHours(now.getHours() + (point.hour_index || 0));
-        return now.toISOString();
-    }
-    // Handle day_index format
-    if (point.day_index !== undefined) {
-        const now = new Date();
-        now.setDate(now.getDate() + (point.day_index - 1 || 0));
-        return now.toISOString();
-    }
-    // Standard timestamp/date fields
-    const raw = point.timestamp || point.ts || point.date || point.ds || point.time || point.period || null;
+    const raw = point.timestamp;
     if (!raw) return null;
     const asDate = new Date(raw);
     if (!Number.isNaN(asDate.getTime())) {
@@ -1112,74 +1093,7 @@ function updateForecastSummaries(series) {
     threeWeekEl.textContent = avg(values.slice(0, 21));
 }
 
-function collectManualPredictionPayload() {
-    const getVal = (id) => {
-        const value = parseFloat(document.getElementById(id)?.value);
-        return Number.isFinite(value) ? value : undefined;
-    };
-
-    const payload = {
-        pm25: getVal('predict-input-pm25'),
-        pm10: getVal('predict-input-pm10'),
-        co2: getVal('predict-input-co2'),
-        voc: getVal('predict-input-voc'),
-        temperature: getVal('predict-input-temp'),
-        humidity: getVal('predict-input-humidity')
-    };
-
-    // Remove undefined keys
-    Object.keys(payload).forEach(key => {
-        if (payload[key] === undefined) {
-            delete payload[key];
-        }
-    });
-    return payload;
-}
-
-async function predictFromManualInputs(type) {
-    const output = document.getElementById('manual-prediction-output');
-    const valueEl = document.getElementById('manual-prediction-aqi');
-    const categoryEl = document.getElementById('manual-prediction-category');
-    const modelEl = document.getElementById('manual-prediction-model');
-    const statusEl = document.getElementById('manual-prediction-status');
-    if (!output || !valueEl || !categoryEl || !modelEl || !statusEl) return;
-
-    const payload = collectManualPredictionPayload();
-    if (!Object.keys(payload).length) {
-        showToast('Provide at least one input value for prediction.', 'warning');
-        return;
-    }
-
-    output.classList.remove('hidden');
-    modelEl.textContent = 'Processing...';
-    statusEl.textContent = 'Sending payload to backend...';
-
-    try {
-        const endpoint = type === 'aqi' ? `${API_BASE}/api/predict_aqi` : `${API_BASE}/api/predict_category`;
-        const result = await postJSON(endpoint, payload, 10000);
-
-        if (type === 'aqi') {
-            const predicted = result.aqi_predicted ?? result.predicted_aqi ?? result.aqi ?? null;
-            valueEl.textContent = predicted != null ? Math.round(predicted) : '—';
-            categoryEl.textContent = result.aqi_category || getAQICategory(predicted);
-            updateAQIColor(valueEl, predicted);
-        } else {
-            valueEl.textContent = '—';
-            categoryEl.textContent = result.predicted_category || 'Unknown';
-        }
-
-        modelEl.textContent = result.model_used || 'ML Model';
-        statusEl.textContent = result.message || 'Prediction successful';
-        showToast('Prediction completed successfully.', 'success');
-    } catch (error) {
-        console.error('Manual prediction failed:', error);
-        statusEl.textContent = error.message;
-        modelEl.textContent = 'Error';
-        valueEl.textContent = '—';
-        categoryEl.textContent = '—';
-        showToast('Manual prediction failed. Please retry.', 'error');
-    }
-}
+// Manual AQI Prediction (ML) section and handlers have been removed per requirements.
 
 // ==========================
 // DEVICE VIEW UPDATES
@@ -1507,12 +1421,12 @@ function renderPredictChart(forecast, city) {
     });
 }
 
-function renderHistoricChart(forecast, city) {
+function renderHistoricChart(history, city) {
     const ctx = document.getElementById('historic-chart')?.getContext('2d');
     if (!ctx) return;
 
-    const labels = (forecast || []).map(d => d.ds || d.date);
-    const dataPoints = (forecast || []).map(d => Number(d.yhat || d.predicted_aqi || NaN));
+    const labels = (history || []).map(d => d.timestamp);
+    const dataPoints = (history || []).map(d => Number(d.aqi));
 
     if (charts.historic) charts.historic.destroy();
 

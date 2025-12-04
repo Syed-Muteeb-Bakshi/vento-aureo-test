@@ -10,8 +10,8 @@ from typing import Optional, Tuple
 
 city_bp = Blueprint("city_aqi", __name__)
 
-# ML Server URL - should match other route files
-ML_SERVER_URL = "https://extollingly-superfunctional-graciela.ngrok-free.dev"
+# External ML server (ngrok/Cloudflare tunnel)
+ML_SERVER_URL = "https://enclosure-derived-fixtures-dedicated.trycloudflare.com"
 
 # helper normalizer
 def _normalize(s: str) -> str:
@@ -103,29 +103,35 @@ def list_cities():
     """
     GET /api/list_cities
     Proxies request to ML server to get list of available cities.
+    City names are expected to be in the "{City}_{Country}" format already.
     """
     try:
-        resp = requests.get(
-            f"{ML_SERVER_URL}/list_cities",
-            timeout=40
-        )
-        if resp.status_code == 200:
-            cities_data = resp.json()
-            # Handle different response formats
-            if isinstance(cities_data, list):
-                return jsonify(cities_data)
-            elif isinstance(cities_data, dict) and "cities" in cities_data:
-                return jsonify(cities_data["cities"])
-            elif isinstance(cities_data, dict):
-                # If it's a dict with city names as keys, return keys as list
-                return jsonify(list(cities_data.keys()))
-            else:
-                return jsonify(cities_data), resp.status_code
-        else:
-            return jsonify({"error": f"ML server returned status {resp.status_code}"}), resp.status_code
+        resp = requests.get(f"{ML_SERVER_URL}/list_cities", timeout=40)
+        try:
+            payload = resp.json()
+        except Exception:
+            return jsonify({"error": "ML server returned non-JSON response"}), 502
+
+        if resp.status_code != 200:
+            msg = None
+            if isinstance(payload, dict):
+                msg = payload.get("error") or payload.get("detail")
+            return jsonify({"error": msg or f"ML server status {resp.status_code}"}), 502
+
+        # ML server is considered the source of truth for city naming.
+        # Preserve the format exactly as returned.
+        if isinstance(payload, list):
+            return jsonify(payload)
+        if isinstance(payload, dict) and "cities" in payload and isinstance(payload["cities"], list):
+            return jsonify(payload["cities"])
+        if isinstance(payload, dict):
+            # If dict of {city_name: ...}, return keys
+            return jsonify(list(payload.keys()))
+        return jsonify(payload), 200
+
     except requests.exceptions.RequestException as e:
-        current_app.logger.error(f"Failed to fetch cities from ML server: {e}")
-        return jsonify({"error": f"Failed to connect to ML server: {str(e)}"}), 502
+        current_app.logger.error("Failed to fetch cities from ML server: %s", str(e))
+        return jsonify({"error": f"ML server unavailable: {str(e)}"}), 502
     except Exception as e:
         current_app.logger.exception("Unexpected error in list_cities")
         return jsonify({"error": "Internal error"}), 500
